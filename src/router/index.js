@@ -4,77 +4,89 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Registration from '@/views/Registration.vue'
 import Restoration from '@/views/Restoration.vue'
-import UserProfile from '@/views/UserProfile.vue'
 import TodoLists from '@/views/TodoLists.vue'
 import TodoList from '@/views/TodoList.vue'
 import UserList from '@/views/UserList.vue'
-import UserData from '@/views/UserData.vue'
+import UserProfilePreview from '@/views/UserProfilePreview.vue'
+import UserProfileEdit from '@/views/UserProfileEdit.vue'
+import NotFoundPage from '@/views/common/NotFoundPage.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login
   },
   {
     path: '/registration',
-    name: 'Registration',
+    name: 'registration',
     component: Registration
   },
   {
     path: '/restoration',
-    name: 'Restoration',
+    name: 'restoration',
     component: Restoration
   },
   {
     path: '/profile',
-    name: 'UserProfile',
-    component: UserProfile
+    name: 'user-profile-edit',
+    component: UserProfileEdit
   },
   {
     path: '/lists',
-    name: 'Lists',
+    name: 'todo-lists',
     component: TodoLists
   },
   {
     path: '/list',
-    name: 'List',
+    name: 'todo-list',
     component: TodoList
   },
   {
     path: '/admin/users',
-    name: 'Users',
+    name: 'admin-users',
     component: UserList
   },
   {
     path: '/admin/users/new',
-    name: 'NewUser',
+    name: 'admin-create-user',
     component: Registration
   },
   {
     path: '/admin/users/:user_id',
-    name: 'UserData',
-    component: UserData
+    name: 'admin-user-profile-preview',
+    component: UserProfilePreview
   },
   {
     path: '/admin/users/:user_id/edit',
-    name: 'EditUser',
-    component: UserProfile
+    name: 'admin-user-profile-edit',
+    component: UserProfileEdit
   },
   {
     path: '/admin/users/:user_id/lists',
-    name: 'UserLists',
+    name: 'admin-user-lists',
     component: TodoLists
   },
   {
     path: '/admin/users/:user_id/lists/:list_id',
-    name: 'UserList',
+    name: 'admin-user-list',
     component: TodoList
+  },
+
+  // Common
+  {
+    path: '/404',
+    name: 'not-found',
+    component: NotFoundPage
+  },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/404'
   }
 ]
 
