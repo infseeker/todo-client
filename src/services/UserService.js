@@ -5,6 +5,7 @@ class UserService {
     return await fetch(api.user.login, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(credentials),
     })
       .then((response) => response.json())
@@ -12,7 +13,11 @@ class UserService {
   }
 
   static async getUserData() {
-    return await fetch(api.user.user_data)
+    return await fetch(api.user.user_data, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => console.log(data));
   }

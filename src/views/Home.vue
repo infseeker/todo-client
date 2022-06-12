@@ -29,6 +29,7 @@ export default {
   },
   async mounted() {
     UserService.login({ username: 'mail@mail.com', password: '123123aa' });
+    UserService.getUserData();
   },
 };
 </script>
