@@ -1,7 +1,8 @@
-export const API_ROOT = `http://192.168.0.2:8080/todo/api`;
+export const API_ROOT = `http://192.168.0.2:5000/todo/api`;
 
 export const api = {
   user: {
+    csrf: `${API_ROOT}/user/csrf`,
     check_username: `${API_ROOT}/user/check-username`,
     check_email: `${API_ROOT}/user/check-email`,
     check_password: `${API_ROOT}/user/check-password`,

@@ -1,17 +1,141 @@
-import { api } from '/public/server-api'
+import { api } from '/public/server-api';
 
 class UserService {
-  static async login(credentials) {
+  /**
+   * Returns CSRF Protection Token needed for every request to the API
+   */
+  static async getCSRFToken() {
+    return await fetch(api.user.csrf, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  static async checkUsername(username) {
+    return await fetch(api.user.check_username, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        username: username,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  static async checkEmail(email) {
+    return await fetch(api.user.check_email, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  static async register(username, email, password) {
+    return await fetch(api.user.register, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        username: username,
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * @param {String} accessCode - access code from email after registration
+   */
+  static async activate(email, accessCode) {
+    return await fetch(api.user.activate, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+        access_code: accessCode,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  static async sendRestorationEmail(email) {
+    return await fetch(api.user.restore_email, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * @param {String} accessCode - access code from restoration email
+   */
+  static async restore(email, accessCode, newPassword) {
+    return await fetch(api.user.restore, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+        access_code: accessCode,
+        password: newPassword,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * @param {String} username - username or email
+   */
+  static async login(username, password) {
     return await fetch(api.user.login, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => data);
   }
 
+  /**
+   * Get session of current user. If user logged in - true, not - false.
+   */
+  static async getSession() {
+    return await fetch(api.user.session, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * Get user data if user logged in, else - 401.
+   */
   static async getUserData() {
     return await fetch(api.user.user_data, {
       method: 'GET',
@@ -19,7 +143,51 @@ class UserService {
       credentials: 'include',
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => data);
+  }
+
+  static async logout() {
+    return await fetch(api.user.logout, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   *
+   * @param {String} password - for now we can change password only
+   */
+  static async update(password) {
+    return await fetch(api.user.update, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * Mark user as deleted in DB (not remove it from DB)
+   * @param {String} password - user need to enter password for deleting
+   */
+  static async delete(password) {
+    return await fetch(api.user.delete, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
   }
 }
 
