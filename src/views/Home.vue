@@ -6,68 +6,55 @@
   <button id="csrf" @click="getCSRF">CSRF</button>
   <br />
   <br />
-  <input placeholder="username" type="text" v-model="username" />
-  <button
-    id="check-username"
-    @click="checkUsername(username)"
-  >
-    Check Username
-  </button>
+  <input placeholder="username" v-model="username" />
+  <button @click="checkUsername(username)">Check Username</button>
   <br />
   <br />
-  <input placeholder="email" type="text" v-model="email" />
-  <button id="check-email" @click="checkEmail(email)">
-    Check Email
-  </button>
+  <input placeholder="email" v-model="email" />
+  <button @click="checkEmail(email)">Check Email</button>
   <br />
   <br />
-  <input placeholder="username" type="text" v-model="username" />
-  <input placeholder="email" type="text" v-model="email" />
-  <input placeholder="password" type="password" v-model="password" />
-  <button id="register" @click="register(username, email, password)">
-    Register
-  </button>
+  <input placeholder="username" v-model="username" />
+  <input placeholder="email" v-model="email" />
+  <input placeholder="password" v-model="password" />
+  <button @click="register(username, email, password)">Register</button>
   <br />
   <br />
-  <input placeholder="email" type="text" v-model="email" />
-  <input placeholder="access code" type="text" v-model="code" />
-  <button id="activate" @click="activate(email, code)">activate</button>
+  <input placeholder="email" v-model="email" />
+  <input placeholder="access code" v-model="code" />
+  <button @click="activate(email, code)">activate</button>
   <br />
   <br />
-  <input placeholder="email" type="text" v-model="email" />
-  <button id="restore-Email" @click="restoreEmail(email)">
-    restore Email
-  </button>
+  <input placeholder="email" v-model="email" />
+  <button @click="restoreEmail(email)">restore Email</button>
   <br />
   <br />
-  <input placeholder="email" type="text" v-model="email" />
-  <input placeholder="access code" type="code" v-model="code" />
-  <input placeholder="new password" type="text" v-model="newPassword" />
-  <button id="restore" @click="restore(email, code, newPassword)">
-    restore
-  </button>
+  <input placeholder="email" v-model="email" />
+  <input placeholder="access code" v-model="code" />
+  <input placeholder="new password" v-model="newPassword" />
+  <button @click="restore(email, code, newPassword)">restore</button>
   <br />
   <br />
-  <input placeholder="username" type="text" v-model="username" />
-  <input placeholder="password" type="text" v-model="password" />
-  <button id="login" @click="login(username, password)">login</button>
+  <input placeholder="username / email" v-model="username" />
+  <input placeholder="password" v-model="password" />
+  <button @click="login(username, password)">login</button>
   <br />
   <br />
-  <button id="getSession" @click="getSession">get Session</button>
+  <button @click="getSession">get Session</button>
   <br />
   <br />
-  <button id="getUserData" @click="getUserData">get User Data</button>
+  <button @click="getUserData">get User Data</button>
   <br />
   <br />
-  <button id="logout" @click="logout">logout</button>
+  <button @click="logout">logout</button>
   <br />
   <br />
-  <input placeholder="new password" type="text" v-model="newPassword" />
-  <button id="userUpdate" @click="userUpdate(newPassword)">user Update</button>
+  <input placeholder="new password" v-model="newPassword" />
+  <button @click="userUpdate(newPassword)">user Update</button>
   <br />
   <br />
-    <input placeholder="password" type="text" v-model="password" />
-  <button id="userDelete" @click="userDelete(password)">user Delete</button>
+  <input placeholder="password" v-model="password" />
+  <button @click="userDelete(password)">user Delete</button>
   <br />
   <br />
 </template>
