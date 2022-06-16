@@ -3,6 +3,7 @@
   <TodoLists v-if="user.isAuth && !user.isAdmin"></TodoLists>
   <UserList v-if="user.isAuth && user.isAdmin"></UserList>
 
+  <h2>USER API</h2>
   <button id="csrf" @click="getCSRF">CSRF</button>
   <br />
   <br />
@@ -57,6 +58,49 @@
   <button @click="userDelete(password)">user Delete</button>
   <br />
   <br />
+
+  <h2>LIST API</h2>
+  <button @click="getLists">get lists</button>
+  <br />
+  <br />
+  <input placeholder="title" v-model="listTitle" />
+  <button @click="createList(listTitle)">create list</button>
+  <br />
+  <br />
+  <input placeholder="id" v-model="list.id" />
+  <input placeholder="title" v-model="list.title" />
+  <input type="checkbox" name="is-liked" v-model="list.is_liked" />
+  <label for="is-liked">is liked</label>
+  <button @click="updateList(list)">update list</button>
+  <br />
+  <br />
+  <input placeholder="id" v-model="list.id" />
+  <button @click="deleteList(list)">delete list</button>
+  <br />
+  <br />
+  <input placeholder="list id" v-model="list.id" />
+  <button @click="getListItems(list)">get list items</button>
+  <br />
+  <br />
+  <input placeholder="list id" v-model="list.id" />
+  <input placeholder="title" v-model="listItemTitle" />
+  <button @click="createListItem(list, listItemTitle)">create list item</button>
+  <br />
+  <br />
+  <input placeholder="list id" v-model="listItem.list_id" />
+  <input placeholder="list item id" v-model="listItem.id" />
+  <input placeholder="title" v-model="listItem.title" />
+  <input type="checkbox" name="is-liked" v-model="listItem.is_liked" />
+  <label for="is-liked">is liked</label>
+  <input type="checkbox" name="is-done" v-model="listItem.is_done" />
+  <label for="is-done">is done</label>
+  <button @click="updateListItem(listItem)">update list item</button>
+
+  <br />
+  <br />
+  <input placeholder="list id" v-model="listItem.list_id" />
+  <input placeholder="list item id" v-model="listItem.id" />
+  <button @click="deleteListItem(listItem)">delete list item</button>
 </template>
 
 <script>
@@ -64,6 +108,7 @@ import TodoList from '@/views/TodoList.vue';
 import TodoLists from '@/views/TodoLists.vue';
 import UserList from '@/views/UserList.vue';
 import UserService from '@/services/UserService';
+import ListService from '@/services/ListService';
 
 export default {
   components: {
@@ -85,10 +130,16 @@ export default {
       code: '',
       newPassword: '',
       user: user,
+
+      listTitle: '',
+      list: {},
+      listItemTitle: '',
+      listItem: {},
     };
   },
 
   methods: {
+    // User API
     async getCSRF() {
       await UserService.getCSRFToken().then((data) => {
         console.log(data);
@@ -172,6 +223,55 @@ export default {
     async userDelete(password) {
       console.log(password);
       await UserService.delete(password).then((data) => {
+        console.log(data);
+      });
+    },
+
+    // List API
+    async getLists() {
+      await ListService.getLists().then((data) => {
+        console.log(data);
+      });
+    },
+
+    async createList(title) {
+      await ListService.createList(title).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async updateList(list) {
+      await ListService.updateList(list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async deleteList(list) {
+      await ListService.deleteList(list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async getListItems(list) {
+      await ListService.getListItems(list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async createListItem(list, title) {
+      await ListService.createListItem(list, title).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async updateListItem(listItem) {
+      await ListService.updateListItem(listItem).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async deleteListItem(listItem) {
+      await ListService.deleteListItem(listItem).then((data) => {
         console.log(data);
       });
     },
