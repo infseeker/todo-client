@@ -2,6 +2,8 @@
   <router-link to="/">Главная</router-link>
   <router-link to="/login">Авторизация</router-link>
   <router-link to="/registration">Регистрация</router-link>
+  <router-link to="/lists">Списки</router-link>
+  <router-link to="/admin/users">Админка</router-link>
 
   <router-view></router-view>
 
@@ -19,7 +21,11 @@
 </template>
 
 <script>
-export default {};
+import UserService from './services/UserService';
+
+export default {
+  
+};
 </script>
 
 <style>

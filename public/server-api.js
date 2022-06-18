@@ -46,55 +46,58 @@ export const api = {
 
   admin: {
     users: {
-      get_all_users: `${API_ROOT}/admin/users`,
+      get_users: `${API_ROOT}/admin/users`,
+
+      get_user: function (user_id) {
+        return `${this.get_users}/${user_id}`;
+      },
 
       create_user: function () {
-        return this.get_all_users;
-      },
-      get_user: function (user_id) {
-        return `${this.get_all_users}/${user_id}`;
+        return this.get_users;
       },
       update_user: function (user_id) {
-        return `${this.get_all_users}/${user_id}`;
+        return `${this.get_users}/${user_id}`;
       },
       delete_user: function (user_id) {
-        return `${this.get_all_users}/${user_id}`;
+        return `${this.get_users}/${user_id}`;
       },
     },
 
-    user_lists: {
+    lists: {
+      get_users: `${API_ROOT}/admin/users`,
+
       get_user_lists: function (user_id) {
-        return `${this.get_all_users}/${user_id}/lists`;
+        return `${this.get_users}/${user_id}/lists`;
       },
       create_user_list: function (user_id) {
-        return `${this.get_all_users}/${user_id}/lists`;
+        return `${this.get_users}/${user_id}/lists`;
       },
       update_user_list: function (user_id, user_list_id) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}`;
       },
       delete_user_list: function (user_id, user_list_id) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}`;
       },
 
       get_user_list_items: function (user_id, user_list_id) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}`;
       },
       create_user_list_item: function (user_id, user_list_id) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}`;
       },
       update_user_list_item: function (
         user_id,
         user_list_id,
         user_list_item_id
       ) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}/${user_list_item_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}/${user_list_item_id}`;
       },
       delete_user_list_item: function (
         user_id,
         user_list_id,
         user_list_item_id
       ) {
-        return `${this.get_all_users}/${user_id}/lists/${user_list_id}/${user_list_item_id}`;
+        return `${this.get_users}/${user_id}/lists/${user_list_id}/${user_list_item_id}`;
       },
     },
   },

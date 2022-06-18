@@ -1,6 +1,5 @@
 <template>
   <div class="login-form">
-    {{ text }}
   </div>
 </template>
 

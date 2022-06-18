@@ -95,12 +95,106 @@
   <input type="checkbox" name="is-done" v-model="listItem.is_done" />
   <label for="is-done">is done</label>
   <button @click="updateListItem(listItem)">update list item</button>
-
   <br />
   <br />
   <input placeholder="list id" v-model="listItem.list_id" />
   <input placeholder="list item id" v-model="listItem.id" />
   <button @click="deleteListItem(listItem)">delete list item</button>
+
+  <h2>ADMIN API</h2>
+  <button @click="adminGetUsers">get users</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <button @click="adminGetUser(user.id)">get user</button>
+  <br />
+  <br />
+  <input placeholder="username" v-model="user.username" />
+  <input placeholder="email" v-model="user.email" />
+  <input placeholder="password" v-model="user.password" />
+  <input type="checkbox" name="is-activated" v-model="user.is_activated" />
+  <label for="is-activated">is activated</label>
+  <input type="checkbox" name="is-deleted" v-model="user.is_deleted" />
+  <label for="is-deleted">is deleted</label>
+  <input type="checkbox" name="is-admin" v-model="user.is_admin" />
+  <label for="is-admin">is admin</label>
+  <button @click="adminCreateUser(user)">create user</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="username" v-model="user.username" />
+  <input placeholder="email" v-model="user.email" />
+  <input type="checkbox" name="is-activated" v-model="user.is_activated" />
+  <label for="is-activated">is activated</label>
+  <input type="checkbox" name="is-deleted" v-model="user.is_deleted" />
+  <label for="is-deleted">is deleted</label>
+  <input type="checkbox" name="is-admin" v-model="user.is_admin" />
+  <label for="is-admin">is admin</label>
+  <button @click="adminUpdateUser(user)">update user</button>
+  <br />
+  <br />
+  <input placeholder="id" v-model="user.id" />
+  <button @click="adminDeleteUser(user)">delete user</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <button @click="adminGetUserLists(user)">get user lists</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="title" v-model="listTitle" />
+  <button @click="adminCreateUserList(user, listTitle)">
+    create user list
+  </button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="list.id" />
+  <input placeholder="title" v-model="list.title" />
+  <input type="checkbox" name="is-liked" v-model="list.is_liked" />
+  <label for="is-liked">is liked</label>
+  <button @click="adminUpdateUserList(user, list)">update user list</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="list.id" />
+  <button @click="adminDeleteUserList(user, list)">delete user list</button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="list.id" />
+  <button @click="adminGetUserListItems(user, list)">
+    get user list items
+  </button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="list.id" />
+  <input placeholder="title" v-model="listItemTitle" />
+  <button @click="adminCreateUserListItem(user, list, listItemTitle)">
+    create user list item
+  </button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="listItem.list_id" />
+  <input placeholder="list item id" v-model="listItem.id" />
+  <input placeholder="title" v-model="listItem.title" />
+  <input type="checkbox" name="is-liked" v-model="listItem.is_liked" />
+  <label for="is-liked">is liked</label>
+  <input type="checkbox" name="is-done" v-model="listItem.is_done" />
+  <label for="is-done">is done</label>
+  <button @click="adminUpdateUserListItem(user, listItem)">
+    update user list item
+  </button>
+  <br />
+  <br />
+  <input placeholder="user id" v-model="user.id" />
+  <input placeholder="list id" v-model="listItem.list_id" />
+  <input placeholder="list item id" v-model="listItem.id" />
+  <button @click="adminDeleteUserListItem(user, listItem)">
+    delete user list item
+  </button>
 </template>
 
 <script>
@@ -109,6 +203,7 @@ import TodoLists from '@/views/TodoLists.vue';
 import UserList from '@/views/UserList.vue';
 import UserService from '@/services/UserService';
 import ListService from '@/services/ListService';
+import AdminService from '@/services/AdminService';
 
 export default {
   components: {
@@ -191,7 +286,21 @@ export default {
     async login(username, password) {
       console.log(username, password);
       await UserService.login(username, password).then((data) => {
-        console.log(data);
+        this.$user.isAuth = data.login || false;
+        this.$user.isAdmin = data.admin || false;
+        this.$user.isDeleted = data.deleted || false;
+
+        if (this.$user.isAuth) {
+          if (this.$user.isAdmin) {
+            this.$router.push({ name: 'admin-users' });
+          } else {
+            this.$router.push({ name: 'lists' });
+          }
+        }
+
+        if (this.$user.isDeleted) {
+          alert('Your account was deleted. You may restore it.');
+        }
       });
     },
 
@@ -209,6 +318,7 @@ export default {
 
     async logout() {
       await UserService.logout().then((data) => {
+        this.$user.isAuth = false;
         console.log(data);
       });
     },
@@ -223,6 +333,7 @@ export default {
     async userDelete(password) {
       console.log(password);
       await UserService.delete(password).then((data) => {
+        this.$user.isAuth = false;
         console.log(data);
       });
     },
@@ -274,6 +385,89 @@ export default {
       await ListService.deleteListItem(listItem).then((data) => {
         console.log(data);
       });
+    },
+
+    // Admin API
+    async adminGetUsers() {
+      await AdminService.getUsers().then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminGetUser(user_id) {
+      await AdminService.getUser(user_id).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminCreateUser(user) {
+      await AdminService.createUser(user).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminUpdateUser(user) {
+      await AdminService.updateUser(user).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminDeleteUser(user) {
+      await AdminService.deleteUser(user).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminGetUserLists(user) {
+      await AdminService.getUserLists(user).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminCreateUserList(user, title) {
+      await AdminService.createUserList(user, title).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminUpdateUserList(user, list) {
+      await AdminService.updateUserList(user, list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminDeleteUserList(user, list) {
+      await AdminService.deleteUserList(user, list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminGetUserListItems(user, list) {
+      await AdminService.getUserListItems(user, list).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminCreateUserListItem(user, list, title) {
+      await AdminService.createUserListItem(user, list, title).then((data) => {
+        console.log(data);
+      });
+    },
+
+    async adminUpdateUserListItem(user, list, listItem) {
+      await AdminService.updateUserListItem(user, list, listItem).then(
+        (data) => {
+          console.log(data);
+        }
+      );
+    },
+
+    async adminDeleteUserListItem(user, list, listItem) {
+      await AdminService.deleteUserListItem(user, list, listItem).then(
+        (data) => {
+          console.log(data);
+        }
+      );
     },
   },
 };

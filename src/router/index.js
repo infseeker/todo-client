@@ -1,81 +1,114 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from '@/views/Home.vue'
-import Login from '@/views/Login.vue'
-import Registration from '@/views/Registration.vue'
-import Restoration from '@/views/Restoration.vue'
-import TodoLists from '@/views/TodoLists.vue'
-import TodoList from '@/views/TodoList.vue'
-import UserList from '@/views/UserList.vue'
-import UserProfilePreview from '@/views/UserProfilePreview.vue'
-import UserProfileEdit from '@/views/UserProfileEdit.vue'
-import NotFoundPage from '@/views/common/NotFoundPage.vue'
+import Home from '@/views/Home.vue';
+import Login from '@/views/Login.vue';
+import Registration from '@/views/Registration.vue';
+import Restoration from '@/views/Restoration.vue';
+import TodoLists from '@/views/TodoLists.vue';
+import TodoList from '@/views/TodoList.vue';
+import UserList from '@/views/UserList.vue';
+import UserProfilePreview from '@/views/UserProfilePreview.vue';
+import UserProfileEdit from '@/views/UserProfileEdit.vue';
+import NotFoundPage from '@/views/common/NotFoundPage.vue';
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
   },
   {
     path: '/registration',
     name: 'registration',
-    component: Registration
+    component: Registration,
   },
   {
     path: '/restoration',
     name: 'restoration',
-    component: Restoration
+    component: Restoration,
   },
   {
     path: '/profile',
     name: 'user-profile-edit',
-    component: UserProfileEdit
+    component: UserProfileEdit,
+    meta: {
+      authRequired: true
+    }
   },
   {
     path: '/lists',
-    name: 'todo-lists',
-    component: TodoLists
+    name: 'lists',
+    component: TodoLists,
+    meta: {
+      authRequired: true
+    }
   },
   {
     path: '/list',
-    name: 'todo-list',
-    component: TodoList
+    name: 'list',
+    component: TodoList,
+    meta: {
+      authRequired: true
+    }
   },
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: UserList
+    component: UserList,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
   {
     path: '/admin/users/new',
     name: 'admin-create-user',
-    component: Registration
+    component: Registration,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
   {
     path: '/admin/users/:user_id',
     name: 'admin-user-profile-preview',
-    component: UserProfilePreview
+    component: UserProfilePreview,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
   {
     path: '/admin/users/:user_id/edit',
     name: 'admin-user-profile-edit',
-    component: UserProfileEdit
+    component: UserProfileEdit,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
   {
     path: '/admin/users/:user_id/lists',
     name: 'admin-user-lists',
-    component: TodoLists
+    component: TodoLists,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
   {
     path: '/admin/users/:user_id/lists/:list_id',
     name: 'admin-user-list',
-    component: TodoList
+    component: TodoList,
+    meta: {
+      authRequired: true,
+      adminRequired: true
+    }
   },
 
   // Common
@@ -86,13 +119,13 @@ const routes = [
   },
   {
     path: '/:catchAll(.*)',
-    redirect: '/404'
-  }
-]
+    redirect: '/404',
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
