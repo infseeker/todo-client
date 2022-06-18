@@ -286,9 +286,7 @@ export default {
     async login(username, password) {
       console.log(username, password);
       await UserService.login(username, password).then((data) => {
-        this.$user.isAuth = data.login || false;
-        this.$user.isAdmin = data.admin || false;
-        this.$user.isDeleted = data.deleted || false;
+        this.$user.login(data);
 
         if (this.$user.isAuth) {
           if (this.$user.isAdmin) {
@@ -318,7 +316,7 @@ export default {
 
     async logout() {
       await UserService.logout().then((data) => {
-        this.$user.isAuth = false;
+        this.$user.logout();
         console.log(data);
       });
     },
