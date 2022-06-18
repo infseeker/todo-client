@@ -1,9 +1,12 @@
 <template>
-  <router-link to="/">Главная</router-link>
+  <router-link to="/settings">Настройки</router-link>
+  <router-link to="/">Гостевая</router-link>
   <router-link to="/login">Авторизация</router-link>
   <router-link to="/registration">Регистрация</router-link>
   <router-link to="/lists">Списки</router-link>
-  <router-link to="/admin/users">Админка</router-link>
+  <router-link to="/profile">Профиль</router-link>
+  <router-link to="/admin/users">Админ юзеры</router-link>
+  <router-link to="/admin/users/656">Админ юзер 656</router-link>
 
   <router-view></router-view>
 

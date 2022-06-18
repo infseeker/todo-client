@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Home from '@/views/Home.vue';
+import Settings from '@/views/Settings.vue';
 import Login from '@/views/Login.vue';
 import Registration from '@/views/Registration.vue';
 import Restoration from '@/views/Restoration.vue';
@@ -15,46 +16,66 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: TodoList,
+    meta: {
+      guestRequired: true
+    },
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings,
+    meta: {
+      // guestRequired: true
+    },
   },
   {
     path: '/login',
     name: 'login',
     component: Login,
+    meta: {
+      guestRequired: true
+    },
   },
   {
     path: '/registration',
     name: 'registration',
     component: Registration,
+    meta: {
+      guestRequired: true
+    },
   },
   {
     path: '/restoration',
     name: 'restoration',
     component: Restoration,
+    meta: {
+      guestRequired: true
+    },
   },
   {
     path: '/profile',
     name: 'user-profile-edit',
     component: UserProfileEdit,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
     path: '/lists',
     name: 'lists',
     component: TodoLists,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
-    path: '/list',
+    path: '/lists/:list_id',
     name: 'list',
     component: TodoList,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
     path: '/admin/users',
@@ -62,8 +83,8 @@ const routes = [
     component: UserList,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
   {
     path: '/admin/users/new',
@@ -71,8 +92,8 @@ const routes = [
     component: Registration,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
   {
     path: '/admin/users/:user_id',
@@ -80,8 +101,8 @@ const routes = [
     component: UserProfilePreview,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
   {
     path: '/admin/users/:user_id/edit',
@@ -89,8 +110,8 @@ const routes = [
     component: UserProfileEdit,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
   {
     path: '/admin/users/:user_id/lists',
@@ -98,8 +119,8 @@ const routes = [
     component: TodoLists,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
   {
     path: '/admin/users/:user_id/lists/:list_id',
@@ -107,15 +128,15 @@ const routes = [
     component: TodoList,
     meta: {
       authRequired: true,
-      adminRequired: true
-    }
+      adminRequired: true,
+    },
   },
 
   // Common
   {
     path: '/404',
     name: 'not-found',
-    component: NotFoundPage
+    component: NotFoundPage,
   },
   {
     path: '/:catchAll(.*)',

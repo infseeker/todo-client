@@ -20,10 +20,10 @@ app.config.globalProperties.$user = {
     this.isDeleted = data.deleted || false;
   },
 
-  logout: function() {
+  logout: function () {
     this.isAuth = false;
     this.isAdmin = false;
-  }
+  },
 };
 
 app.config.globalProperties.$store = {};
@@ -40,6 +40,14 @@ router.beforeResolve(async (to) => {
     if (to.meta.adminRequired && !user.isAdmin) {
       router.push({ name: 'login' });
       console.log({ message: 'You do not have permissions enough' });
+    }
+
+    if (to.meta.guestRequired && user.isAuth) {
+      if (user.isAdmin) {
+        router.push({ name: 'admin-users' });
+      } else {
+        router.push({ name: 'lists' });
+      }
     }
   }
 
