@@ -1,4 +1,5 @@
 <template>
+  <div>{{ this.$user}}</div>
   <h2>USER API</h2>
   <button id="csrf" @click="getCSRF">CSRF</button>
   <br />
@@ -229,9 +230,14 @@ export default {
     };
   },
 
+  beforeMount() {
+    
+  },
+
   methods: {
     // User API
     async getCSRF() {
+      console.log(this.$user)
       await UserService.getCSRFToken().then((data) => {
         console.log(data);
       });
