@@ -1,4 +1,5 @@
 import { api } from '/public/server-api';
+import { app } from '../main'
 
 class UserService {
   /**
@@ -10,14 +11,15 @@ class UserService {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     })
-      .then((response) => response.json())
-      .then((data) => data);
   }
 
   static async checkUsername(username) {
     return await fetch(api.user.check_username, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         username: username,
@@ -30,7 +32,10 @@ class UserService {
   static async checkEmail(email) {
     return await fetch(api.user.check_email, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
@@ -43,7 +48,10 @@ class UserService {
   static async register(username, email, password) {
     return await fetch(api.user.register, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         username: username,
@@ -61,7 +69,10 @@ class UserService {
   static async activate(email, accessCode) {
     return await fetch(api.user.activate, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
@@ -75,7 +86,10 @@ class UserService {
   static async sendRestorationEmail(email) {
     return await fetch(api.user.restore_email, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
@@ -91,7 +105,10 @@ class UserService {
   static async restore(email, accessCode, newPassword) {
     return await fetch(api.user.restore, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
@@ -109,7 +126,10 @@ class UserService {
   static async login(username, password) {
     return await fetch(api.user.login, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         username: username,
@@ -139,7 +159,10 @@ class UserService {
   static async getUserData() {
     return await fetch(api.user.user_data, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
     })
       .then((response) => response.json())
@@ -163,7 +186,10 @@ class UserService {
   static async update(password) {
     return await fetch(api.user.update, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         password: password,
@@ -180,7 +206,10 @@ class UserService {
   static async delete(password) {
     return await fetch(api.user.delete, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.token
+      },
       credentials: 'include',
       body: JSON.stringify({
         password: password,

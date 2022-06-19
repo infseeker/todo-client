@@ -3,12 +3,10 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
   return {
     plugins: [vue()],
     server: {
-      host: env.VITE_HOST,
+      host: '0.0.0.0',
     },
     resolve: {
       alias: {
@@ -19,6 +17,10 @@ export default defineConfig(({ command, mode }) => {
 
     css: {
       devSourcemap: true,
+    },
+
+    esbuild: {
+      drop: ['console', 'debugger'],
     },
   };
 });

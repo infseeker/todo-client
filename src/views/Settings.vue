@@ -1,8 +1,4 @@
 <template>
-  <TodoList v-if="!user.isAuth"></TodoList>
-  <TodoLists v-if="user.isAuth && !user.isAdmin"></TodoLists>
-  <UserList v-if="user.isAuth && user.isAdmin"></UserList>
-
   <h2>USER API</h2>
   <button id="csrf" @click="getCSRF">CSRF</button>
   <br />

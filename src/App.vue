@@ -27,7 +27,53 @@
 import UserService from './services/UserService';
 
 export default {
-  
+  async beforeCreate() {
+    const csrf = this.$csrf;
+    const router = this.$router;
+    const user = this.$user;
+
+    await router.beforeResolve(async (to) => {
+      function checkPermissions() {
+        if (to.meta.authRequired && !user.isAuth) {
+          router.push({ name: 'login' });
+          console.log({ message: 'You are not authenticated' });
+        }
+
+        if (to.meta.adminRequired && !user.isAdmin) {
+          router.push({ name: 'login' });
+          console.log({ message: 'You do not have permissions enough' });
+        }
+
+        if (to.meta.guestRequired && user.isAuth) {
+          if (user.isAdmin) {
+            router.push({ name: 'admin-users' });
+          } else {
+            router.push({ name: 'lists' });
+          }
+        }
+      }
+
+      if (!user.isLoaded) {
+        await UserService.getSession().then(async (data) => {
+          user.isLoaded = true;
+          user.isAuth = data.login || false;
+          user.isAdmin = data.admin || false;
+
+          console.log('Before user load:', user);
+          checkPermissions();
+
+          await UserService.getCSRFToken().then((res) => {
+            csrf.token = res.headers.get([
+              'X-CSRFToken',
+            ]);
+          });
+        });
+      } else {
+        console.log('After user load:', user);
+        checkPermissions();
+      }
+    });
+  },
 };
 </script>
 
