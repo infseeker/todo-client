@@ -7,7 +7,7 @@ class AdminService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -20,7 +20,7 @@ class AdminService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -33,7 +33,7 @@ class AdminService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(user),
@@ -47,7 +47,7 @@ class AdminService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(user),
@@ -61,7 +61,7 @@ class AdminService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include'
     })
@@ -74,7 +74,7 @@ class AdminService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -87,7 +87,7 @@ class AdminService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -103,7 +103,7 @@ class AdminService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(list),
@@ -117,7 +117,7 @@ class AdminService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include'
     })
@@ -130,7 +130,7 @@ class AdminService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -143,7 +143,7 @@ class AdminService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -159,7 +159,7 @@ class AdminService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(listItem),
@@ -173,7 +173,7 @@ class AdminService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include'
     })

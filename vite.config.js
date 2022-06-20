@@ -20,7 +20,7 @@ export default defineConfig(({ command, mode }) => {
     },
 
     esbuild: {
-      drop: ['console', 'debugger'],
+      // drop: ['console', 'debugger'],
     },
   };
 });

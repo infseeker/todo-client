@@ -14,33 +14,34 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto" v-if="!user.isAuth">
-          <li class="nav-item">
-            <router-link :to="{name: 'login'}" class="nav-link">Вход</router-link>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item" v-if="!this.$user.isAuth">
+            <router-link :to="{ name: 'login' }" class="nav-link"
+              >Вход</router-link
+            >
           </li>
-          <li class="nav-item">
-            <router-link :to="{name: 'registration'}" class="nav-link">Регистрация</router-link>
+          <li class="nav-item" v-if="!this.$user.isAuth">
+            <router-link :to="{ name: 'registration' }" class="nav-link"
+              >Регистрация</router-link
+            >
           </li>
-        </ul>
-
-        <ul class="navbar-nav ms-auto" v-if="user.isAuth && !user.isAdmin">
-          <li class="nav-item">
-            <router-link :to="{name: 'profile'}" class="nav-link">Профиль</router-link>
+          <li class="nav-item" v-if="this.$user.isAuth && this.$user.isAdmin">
+            <router-link
+              :to="{ name: 'registration' }"
+              class="nav-link"
+              href="#"
+              >Админка</router-link
+            >
           </li>
-          <li class="nav-item">
-            <a @click="logout" class="nav-link" style="cursor: pointer">Выход</a>
+          <li class="nav-item" v-if="this.$user.isAuth">
+            <router-link :to="{ name: 'profile' }" class="nav-link"
+              >Профиль</router-link
+            >
           </li>
-        </ul>
-
-        <ul class="navbar-nav ms-auto" v-if="user.isAuth && user.isAdmin">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Админка</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Профиль</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Выход</a>
+          <li class="nav-item" v-if="this.$user.isAuth">
+            <a @click="logout" class="nav-link" style="cursor: pointer"
+              >Выход</a
+            >
           </li>
         </ul>
       </div>
@@ -49,31 +50,23 @@
 </template>
 
 <script>
-import UserService from '../../services/UserService'
-
+import UserService from '../../services/UserService';
 
 export default {
   data() {
-    return {
-      user: this.$user,
-    };
+    return {};
   },
 
   methods: {
-    async logout() {
-      await UserService.logout().then((data) => {
+    logout() {
+      UserService.logout().then((data) => {
         this.$user.logout();
-        this.$router.push('/')
-        console.log(data);
-        console.log(this.$user);
-      });
-    }
-  },
+        this.$router.push('/');
 
-  mounted() {
-    console.log(this.$user)
-    // this.user = this.$user
-  }
+        console.log(data);
+      });
+    },
+  },
 };
 </script>
 

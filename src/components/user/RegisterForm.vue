@@ -1,15 +1,15 @@
 <template>
   <div class="login-form">
-    <input placeholder="username" v-model="username" />
+    <input placeholder="username" v-model="user.username" />
     <br />
     <br />
-    <input placeholder="email" v-model="email" />
+    <input placeholder="email" v-model="user.email" />
     <br />
     <br />
-    <input placeholder="password" v-model="password" />
+    <input placeholder="password" v-model="user.password" />
     <br />
     <br />
-    <button @click="register(username, email, password)">Register</button>
+    <button @click="register(user.username, user.email, user.password)">Register</button>
   </div>
 </template>
 
@@ -17,7 +17,9 @@
 export default {
   name: 'register-form',
   data() {
-    return {};
+    return {
+      user: {}
+    };
   },
 };
 </script>

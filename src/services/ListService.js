@@ -7,7 +7,7 @@ class ListService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -20,7 +20,7 @@ class ListService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -36,7 +36,7 @@ class ListService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(list),
@@ -50,7 +50,7 @@ class ListService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include'
     })
@@ -63,7 +63,7 @@ class ListService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -76,7 +76,7 @@ class ListService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -92,7 +92,7 @@ class ListService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify(listItem),
@@ -106,7 +106,7 @@ class ListService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include'
     })

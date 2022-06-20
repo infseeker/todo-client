@@ -18,7 +18,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -34,7 +34,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -50,7 +50,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -71,7 +71,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -88,7 +88,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -107,7 +107,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -128,7 +128,7 @@ class UserService {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -161,7 +161,7 @@ class UserService {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
     })
@@ -188,7 +188,7 @@ class UserService {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -208,7 +208,7 @@ class UserService {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.token
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
       },
       credentials: 'include',
       body: JSON.stringify({
