@@ -55,7 +55,7 @@ const routes = [
   },
   {
     path: '/profile',
-    name: 'user-profile-edit',
+    name: 'profile',
     component: UserProfileEdit,
     meta: {
       authRequired: true,

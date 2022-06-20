@@ -16,19 +16,19 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto" v-if="!user.isAuth">
           <li class="nav-item">
-            <a class="nav-link" href="#">Вход</a>
+            <router-link :to="{name: 'login'}" class="nav-link">Вход</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Регистрация</a>
+            <router-link :to="{name: 'registration'}" class="nav-link">Регистрация</router-link>
           </li>
         </ul>
 
         <ul class="navbar-nav ms-auto" v-if="user.isAuth && !user.isAdmin">
           <li class="nav-item">
-            <a class="nav-link" href="#">Профиль</a>
+            <router-link :to="{name: 'profile'}" class="nav-link">Профиль</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Выход</a>
+            <a @click="logout" class="nav-link" style="cursor: pointer">Выход</a>
           </li>
         </ul>
 
@@ -49,12 +49,25 @@
 </template>
 
 <script>
+import UserService from '../../services/UserService'
+
 
 export default {
   data() {
     return {
       user: this.$user,
     };
+  },
+
+  methods: {
+    async logout() {
+      await UserService.logout().then((data) => {
+        this.$user.logout();
+        this.$router.push('/')
+        console.log(data);
+        console.log(this.$user);
+      });
+    }
   },
 
   mounted() {

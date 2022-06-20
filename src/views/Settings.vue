@@ -1,5 +1,4 @@
 <template>
-  <div>{{ this.$user}}</div>
   <h2>USER API</h2>
   <button id="csrf" @click="getCSRF">CSRF</button>
   <br />
@@ -221,17 +220,13 @@ export default {
       password: '',
       code: '',
       newPassword: '',
-      user: user,
+      user: {},
 
       listTitle: '',
       list: {},
       listItemTitle: '',
       listItem: {},
     };
-  },
-
-  beforeMount() {
-    
   },
 
   methods: {
