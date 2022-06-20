@@ -1,7 +1,24 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">ToDo by @infseeker</a>
+      <router-link
+        v-if="!this.$user.isAuth"
+        :to="{ name: 'home' }"
+        class="navbar-brand"
+        >ToDo by @infseeker</router-link
+      >
+      <router-link
+        v-if="this.$user.isAuth && !this.$user.isAdmin"
+        :to="{ name: 'lists' }"
+        class="navbar-brand"
+        >ToDo by @infseeker</router-link
+      >
+      <router-link
+        v-if="this.$user.isAuth && this.$user.isAdmin"
+        :to="{ name: 'admin-users' }"
+        class="navbar-brand"
+        >ToDo by @infseeker</router-link
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -26,10 +43,7 @@
             >
           </li>
           <li class="nav-item" v-if="this.$user.isAuth && this.$user.isAdmin">
-            <router-link
-              :to="{ name: 'registration' }"
-              class="nav-link"
-              href="#"
+            <router-link :to="{ name: 'registration' }" class="nav-link"
               >Админка</router-link
             >
           </li>
@@ -39,7 +53,12 @@
             >
           </li>
           <li class="nav-item" v-if="this.$user.isAuth">
-            <a @click="logout" class="nav-link" style="cursor: pointer"
+            <a
+              href="/logout"
+              onclick="event.preventDefault(); event.stopPropagation();"
+              @click="logout"
+              class="nav-link"
+              style="cursor: pointer"
               >Выход</a
             >
           </li>
