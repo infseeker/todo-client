@@ -5,6 +5,7 @@
   <router-link to="/">Гостевая</router-link>
   <router-link to="/login">Авторизация</router-link>
   <router-link to="/registration">Регистрация</router-link>
+  <br>
   <router-link to="/lists">Списки</router-link>
   <router-link to="/profile">Профиль</router-link>
   <router-link to="/admin/users">Админ юзеры</router-link>
