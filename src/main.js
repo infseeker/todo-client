@@ -19,7 +19,3 @@ app.config.globalProperties.$csrf = reactive(csrf);
 app.config.globalProperties.$store = reactive({});
 
 app.use(router).use(VueReCaptcha, { siteKey: "6LcX-58gAAAAAJ94B93UPTv-K3YnLZn8J3M2j-wr" }).mount('#app');
-
-// reCaptcha
-// site key: 6LcX-58gAAAAAJ94B93UPTv-K3YnLZn8J3M2j-wr
-// secret key: 6LcX-58gAAAAAH1pfXSFLozuwHd1XR0NZDtSz-TO
