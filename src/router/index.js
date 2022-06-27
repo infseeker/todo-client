@@ -4,7 +4,9 @@ import Settings from '@/views/Settings.vue';
 import Login from '@/views/Login.vue';
 import Registration from '@/views/Registration.vue';
 import Activation from '@/views/Activation.vue';
+import RestorationEmail from '@/views/RestorationEmail.vue';
 import Restoration from '@/views/Restoration.vue';
+import DeletedUser from '@/views/DeletedUser.vue';
 import TodoLists from '@/views/TodoLists.vue';
 import TodoList from '@/views/TodoList.vue';
 import UserList from '@/views/UserList.vue';
@@ -54,9 +56,27 @@ const routes = [
     },
   },
   {
+    path: '/restoration-email',
+    name: 'restoration-email',
+    component: RestorationEmail,
+    meta: {
+      guestRequired: true,
+      hideNav: true
+    },
+  },
+  {
     path: '/restoration',
     name: 'restoration',
     component: Restoration,
+    meta: {
+      guestRequired: true,
+      hideNav: true
+    },
+  },
+  {
+    path: '/deleted-user',
+    name: 'deleted-user',
+    component: DeletedUser,
     meta: {
       guestRequired: true,
       hideNav: true

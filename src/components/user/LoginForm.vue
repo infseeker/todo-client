@@ -11,6 +11,16 @@
               Неправильное имя пользователя или пароль
             </div>
           </div>
+          <div v-if="activated" class="mb-3">
+            <div class="alert alert-success" role="alert">
+              Ваша учётная запись была активирована. Теперь вы можете войти.
+            </div>
+          </div>
+          <div v-if="restored" class="mb-3">
+            <div class="alert alert-success" role="alert">
+              Ваша учётная запись была восстановлена. Теперь вы можете войти.
+            </div>
+          </div>
           <div class="mb-3">
             <input placeholder="Введите имя / email" v-model="username" class="form-control" />
             <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Введите имя пользователя / email
@@ -34,14 +44,15 @@
                 <label class="form-check-label" for="remember-me">
                   Запомнить меня
                 </label>
-                <router-link :to="{ name: 'restoration' }">
+                <router-link :to="{ name: 'restoration-email' }">
                   <small>Забыли пароль?</small>
                 </router-link>
               </div>
             </div>
           </div>
           <div class="mb-3">
-            <button @click="login(username, password)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Войти</button>
+            <button @click="login(username, password)" :disabled="isDisabled" type="button"
+              class="btn btn-primary w-100">Войти</button>
           </div>
 
           <p class="text-center">
@@ -91,6 +102,8 @@ export default {
       password: '',
       showPassword: false,
       submitError: false,
+      restored: false,
+      activated: false,
       isDisabled: false
     };
   },
@@ -108,38 +121,52 @@ export default {
   },
 
   methods: {
+    getUserDataFromLocalStorage() {
+      this.restored = localStorage.getItem('restored');
+      this.activated = localStorage.getItem('activated');
+    },
+
     async login(username, password) {
       console.log(username, password);
 
-      this.isDisabled = true;
       this.submitError = false;
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.isDisabled = true;
+
         this.recaptcha().then((token) => {
           UserService.login(username, password, token).then((data) => {
-            this.$user.login(data);
+            if (data.success) {
+              this.$user.login(data);
 
-            if (this.$user.isAuth) {
-              if (this.$user.isAdmin) {
-                this.$router.push({ name: 'admin-users' });
-              } else {
-                this.$router.push({ name: 'lists' });
+              localStorage.removeItem('activated');
+              localStorage.removeItem('restored');
+
+              if (this.$user.isAuth) {
+                if (this.$user.isAdmin) {
+                  this.$router.push({ name: 'admin-users' });
+                } else {
+                  this.$router.push({ name: 'lists' });
+                }
               }
-            }
-
-            if (this.$user.isDeleted) {
-              alert('Your account was deleted. You can restore it.');
-            }
-
-            if (!data.success) {
-              this.submitError = true;
-              this.isDisabled = false;
+            } else {
+              if (data.deleted) {
+                this.$user.isDeleted = true;
+                this.$router.push({ name: 'deleted-user' })
+              } else {
+                this.submitError = true;
+                this.isDisabled = false;
+              }
             }
           });
         })
       }
     },
+  },
+
+  mounted() {
+    this.getUserDataFromLocalStorage();
   }
 }
 </script>

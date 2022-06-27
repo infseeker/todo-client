@@ -8,48 +8,43 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Неправильное имя пользователя или пароль
+              Неверный код восстановления
             </div>
           </div>
-          <div class="mb-3">
-            <input placeholder="Введите имя / email" v-model="username" class="form-control" />
-            <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Введите имя пользователя / email
-            </div>
-          </div>
+          <p>
+            На электронный адрес {{ this.email }} было отправлено письмо с кодом
+            восстановления.
+          </p>
+          <p>
+            Код восстановления действителен в течение 15 минут.
+          </p>
+
           <div class="mb-3 form-password-toggle">
             <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
-              <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
+              <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
+              <input v-else type="password" placeholder="Введите новый пароль" v-model="password"
+                class="form-control" />
               <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
                 <i v-if="showPassword" class="bx bx-show"></i>
                 <i v-else class="bx bx-hide"></i>
               </span>
             </div>
-            <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Введите пароль</div>
-          </div>
-          <div class="mb-4">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="remember-me" checked>
-              <div class="d-flex justify-content-between">
-                <label class="form-check-label" for="remember-me">
-                  Запомнить меня
-                </label>
-                <router-link :to="{ name: 'restoration' }">
-                  <small>Забыли пароль?</small>
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <button @click="login(username, password)" type="button" class="btn btn-primary w-100">Войти</button>
+            <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль (длина: 8-15
+              символов, латинские буквы, мин. 1 цифра)</div>
           </div>
 
-          <p class="text-center">
-            <span>Ещё нет аккаунта? </span>
-            <router-link :to="{ name: 'registration' }">
-              <span>Зарегистрироваться</span>
-            </router-link>
-          </p>
+          <div class="mb-3">
+            <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
+              placeholder="Введите код восстановления" class="form-control" />
+            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код восстановления (4 цифры)
+            </div>
+          </div>
+
+
+          <div class="mb-3">
+            <button @click="restore(email, password, code)" :disabled="isDisabled" type="button"
+              class="btn btn-primary w-100">Восстановить доступ</button>
+          </div>
 
           <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
             <a href="https://policies.google.com/privacy">Privacy Policy</a> and
@@ -63,9 +58,10 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required, minLength } from '@vuelidate/validators'
+import { helpers, required, numeric, maxLength, minLength } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
+const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/);
 
 export default {
   setup() {
@@ -87,59 +83,77 @@ export default {
   data() {
     return {
       v$: useValidate(),
-      username: '',
+      code: '',
+      email: this.$user.email || this.getUserEmailFromLocalStorage(),
       password: '',
       showPassword: false,
-      submitError: false
+      submitError: false,
+      storage: {},
+      isDisabled: false,
     };
   },
 
   validations() {
     return {
-      username: {
-        required,
-
-      },
       password: {
         required,
+        passwordFormat
+      },
+
+      code: {
+        required,
+        numeric,
+        maxLength: maxLength(4),
+        minLength: minLength(4),
       },
     }
   },
 
   methods: {
-    async login(username, password) {
-      console.log(username, password);
+    getUserEmailFromLocalStorage() {
+      return localStorage.getItem('email');
+    },
+
+    checkCodeFormat(event) {
+      if (event.type === 'paste') {
+        if (!/^[0-9]{4}$/.test(event.clipboardData.getData('text'))) return event.preventDefault();
+      }
+
+      if (event.type === 'keypress') {
+        if (!/^[0-9]$/.test(event.key) || this.code.toString().length > 3) return event.preventDefault();
+      }
+    },
+
+    async restore(email, password, code) {
+      console.log(email, password, code);
 
       this.v$.$validate();
 
-
-
-
-
       if (!this.v$.$error) {
+        this.isDisabled = true;
+
         this.recaptcha().then((token) => {
-          UserService.login(username, password, token).then((data) => {
-            this.$user.login(data);
+          UserService.restore(email, password, code, token).then((data) => {
+            if (data.success) {
+              localStorage.removeItem('email');
+              localStorage.restored = true;
 
-            if (this.$user.isAuth) {
-              if (this.$user.isAdmin) {
-                this.$router.push({ name: 'admin-users' });
-              } else {
-                this.$router.push({ name: 'lists' });
-              }
-            }
-
-            if (this.$user.isDeleted) {
-              alert('Your account was deleted. You can restore it.');
-            }
-
-            if (!data.success) {
+              this.$user.isDeleted = false;
+              this.$router.push({ name: 'login' });
+            } else {
               this.submitError = true;
+              this.isDisabled = false;
             }
           });
         })
       }
     },
+  },
+
+  mounted() {
+    if (!this.email) {
+      this.$router.push({ name: 'restoration-email' })
+    }
   }
 }
 </script>

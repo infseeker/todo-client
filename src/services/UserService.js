@@ -67,7 +67,7 @@ class UserService {
   /**
    * @param {String} accessCode - access code from email after registration
    */
-  static async activate(email, accessCode) {
+  static async activate(email, accessCode, token) {
     return await fetch(api.user.activate, {
       method: 'POST',
       headers: { 
@@ -78,13 +78,14 @@ class UserService {
       body: JSON.stringify({
         email: email,
         access_code: accessCode,
+        token: token,
       }),
     })
       .then((response) => response.json())
       .then((data) => data);
   }
 
-  static async sendRestorationEmail(email) {
+  static async sendRestorationEmail(email, token) {
     return await fetch(api.user.restore_email, {
       method: 'POST',
       headers: { 
@@ -94,6 +95,7 @@ class UserService {
       credentials: 'include',
       body: JSON.stringify({
         email: email,
+        token: token
       }),
     })
       .then((response) => response.json())
@@ -103,7 +105,7 @@ class UserService {
   /**
    * @param {String} accessCode - access code from restoration email
    */
-  static async restore(email, accessCode, newPassword) {
+  static async restore(email, newPassword, accessCode, token) {
     return await fetch(api.user.restore, {
       method: 'POST',
       headers: { 
@@ -113,8 +115,9 @@ class UserService {
       credentials: 'include',
       body: JSON.stringify({
         email: email,
-        access_code: accessCode,
         password: newPassword,
+        access_code: accessCode,
+        token: token
       }),
     })
       .then((response) => response.json())

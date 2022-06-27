@@ -8,27 +8,25 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Неверный код активации
+              Пользователя с таким email не существует
             </div>
           </div>
           <p>
-            На электронный адрес {{ this.email }} было отправлено письмо с кодом
-            активации.
+            Для восстановления доступа введите email, который был указан при регистрации.
           </p>
           <p>
-            Код активации действителен в течение 15 минут.
+            На email будет выслано письмо с кодом восстановления доступа.
           </p>
 
           <div class="mb-3">
-            <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-              placeholder="Введите код активации" class="form-control" />
-            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код активации (4 цифры)
+            <input v-model="email" placeholder="Введите email" class="form-control" />
+            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email: некорректный формат
             </div>
           </div>
 
           <div class="mb-3">
-            <button @click="activate(email, code)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Активировать</button>
+            <button @click="restoreEmail(email)" :disabled="isDisabled" type="button"
+              class="btn btn-primary w-100">Получить код восстаноления</button>
           </div>
 
           <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
@@ -43,9 +41,10 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
+import { helpers, required, minLength } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
+const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/);
 
 export default {
   setup() {
@@ -67,43 +66,26 @@ export default {
   data() {
     return {
       v$: useValidate(),
-      code: '',
-      email: this.$user.email || this.getUserEmailFromLocalStorage(),
+      email: '',
       showPassword: false,
       submitError: false,
-      storage: {},
       isDisabled: false,
     };
   },
 
   validations() {
     return {
-      code: {
+      email: {
         required,
-        numeric,
-        maxLength: maxLength(4),
-        minLength: minLength(4),
+        minLength: minLength(5),
+        emailFormat
       },
     }
   },
 
   methods: {
-    getUserEmailFromLocalStorage() {
-      return localStorage.getItem('email');
-    },
-
-    checkCodeFormat(event) {
-      if (event.type === 'paste') {
-        if (!/^[0-9]{4}$/.test(event.clipboardData.getData('text'))) return event.preventDefault();
-      }
-
-      if (event.type === 'keypress') {
-        if (!/^[0-9]$/.test(event.key) || this.code.toString().length > 3) return event.preventDefault();
-      }
-    },
-
-    async activate(email, code) {
-      console.log(email, code);
+    async restoreEmail(email) {
+      console.log(email);
 
       this.v$.$validate();
 
@@ -111,11 +93,11 @@ export default {
         this.isDisabled = true;
         
         this.recaptcha().then((token) => {
-          UserService.activate(email, code, token).then((data) => {
+          UserService.sendRestorationEmail(email, token).then((data) => {
             if (data.success) {
-              localStorage.removeItem('email');
-              localStorage.activated = true;
-              this.$router.push({ name: 'login' });
+              this.$user.email = email;
+              localStorage.email = email;
+              this.$router.push({ name: 'restoration' });
             } else {
               this.submitError = true;
               this.isDisabled = false;
@@ -125,12 +107,6 @@ export default {
       }
     },
   },
-
-  mounted() {
-    if (!this.email) {
-      this.$router.push({ name: 'registration' })
-    }
-  }
 }
 </script>
 

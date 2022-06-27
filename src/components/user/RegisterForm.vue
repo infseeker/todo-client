@@ -151,11 +151,12 @@ export default {
       this.submitError = false;
       this.usernameExists = false;
       this.emailExists = false;
-      this.isDisabled = true;
 
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.isDisabled = true;
+        
         this.recaptcha().then((token) => {
           UserService.checkUsername(username).then((data) => {
             console.log(data);
