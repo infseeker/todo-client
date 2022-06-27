@@ -56,7 +56,7 @@
             <input type="file" class="form-control" id="inputGroupFile">
           </div>
           <div class="mb-3">
-            <button @click="register(username, email, password)" type="button"
+            <button @click="register(username, email, password)" :disabled="isDisabled" type="button"
               class="btn btn-primary w-100">Зарегистрироваться</button>
           </div>
           <p class="text-center">
@@ -113,7 +113,8 @@ export default {
       showPassword: false,
       submitError: false,
       usernameExists: false,
-      emailExists: false
+      emailExists: false,
+      isDisabled: false
     };
   },
 
@@ -150,6 +151,7 @@ export default {
       this.submitError = false;
       this.usernameExists = false;
       this.emailExists = false;
+      this.isDisabled = true;
 
       this.v$.$validate();
 
@@ -168,16 +170,19 @@ export default {
                       this.$router.push({ name: 'activation' });
                     } else {
                       this.submitError = true;
+                      this.isDisabled = false;
                     }
                   })
                 } else {
                   this.emailExists = true;
                   this.submitError = true;
+                  this.isDisabled = false;
                 }
               })
             } else {
               this.usernameExists = true;
               this.submitError = true;
+              this.isDisabled = false;
             }
           })
         })

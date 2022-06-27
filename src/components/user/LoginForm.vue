@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <button @click="login(username, password)" type="button" class="btn btn-primary w-100">Войти</button>
+            <button @click="login(username, password)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Войти</button>
           </div>
 
           <p class="text-center">
@@ -90,7 +90,8 @@ export default {
       username: '',
       password: '',
       showPassword: false,
-      submitError: false
+      submitError: false,
+      isDisabled: false
     };
   },
 
@@ -110,11 +111,9 @@ export default {
     async login(username, password) {
       console.log(username, password);
 
+      this.isDisabled = true;
+      this.submitError = false;
       this.v$.$validate();
-
-
-
-
 
       if (!this.v$.$error) {
         this.recaptcha().then((token) => {
@@ -135,6 +134,7 @@ export default {
 
             if (!data.success) {
               this.submitError = true;
+              this.isDisabled = false;
             }
           });
         })

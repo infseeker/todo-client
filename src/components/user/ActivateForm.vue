@@ -27,7 +27,8 @@
           </div>
 
           <div class="mb-3">
-            <button @click="activate(email, code)" type="button" class="btn btn-primary w-100">Активировать</button>
+            <button @click="activate(email, code)" :disabled="isDisabled" type="button"
+              class="btn btn-primary w-100">Активировать</button>
           </div>
 
           <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
@@ -71,6 +72,7 @@ export default {
       showPassword: false,
       submitError: false,
       storage: {},
+      isDisabled: false,
     };
   },
 
@@ -103,6 +105,7 @@ export default {
     async activate(email, code) {
       console.log(email, code);
 
+      this.isDisabled = true;
       this.v$.$validate();
 
       if (!this.v$.$error) {
@@ -113,6 +116,7 @@ export default {
               this.$router.push({ name: 'login' });
             } else {
               this.submitError = true;
+              this.isDisabled = false;
             }
           });
         })
