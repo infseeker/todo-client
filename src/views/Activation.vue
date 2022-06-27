@@ -1,15 +1,15 @@
 <template>
   <div class="restoration">
-    <RestoreForm></RestoreForm>
+    <ActivateForm></ActivateForm>
   </div>
 </template>
 
 <script>
-import RestoreForm from '../components/user/RestoreForm.vue';
+import ActivateForm from '../components/user/ActivateForm.vue';
 
 export default {
   components: {
-    RestoreForm,
+    ActivateForm,
   },
 };
 </script>

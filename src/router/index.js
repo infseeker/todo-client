@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { app } from '../main'
 
-import Home from '@/views/Home.vue';
 import Settings from '@/views/Settings.vue';
 import Login from '@/views/Login.vue';
 import Registration from '@/views/Registration.vue';
+import Activation from '@/views/Activation.vue';
 import Restoration from '@/views/Restoration.vue';
 import TodoLists from '@/views/TodoLists.vue';
 import TodoList from '@/views/TodoList.vue';
@@ -32,7 +31,8 @@ const routes = [
     name: 'login',
     component: Login,
     meta: {
-      guestRequired: true
+      guestRequired: true,
+      hideNav: true
     },
   },
   {
@@ -40,7 +40,17 @@ const routes = [
     name: 'registration',
     component: Registration,
     meta: {
-      guestRequired: true
+      guestRequired: true,
+      hideNav: true
+    },
+  },
+  {
+    path: '/activation',
+    name: 'activation',
+    component: Activation,
+    meta: {
+      guestRequired: true,
+      hideNav: true
     },
   },
   {
@@ -48,7 +58,8 @@ const routes = [
     name: 'restoration',
     component: Restoration,
     meta: {
-      guestRequired: true
+      guestRequired: true,
+      hideNav: true
     },
   },
   {

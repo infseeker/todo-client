@@ -1,32 +1,27 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <router-link :to="{ name: 'home' }" class="navbar-brand">ToDo by @infseeker</router-link>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item" v-if="!this.$user.isAuth">
-            <router-link :to="{ name: 'login' }" class="nav-link">Вход</router-link>
-          </li>
-          <li class="nav-item" v-if="!this.$user.isAuth">
-            <router-link :to="{ name: 'registration' }" class="nav-link">Регистрация</router-link>
-          </li>
-          <li class="nav-item" v-if="this.$user.isAuth && this.$user.isAdmin">
-            <router-link :to="{ name: 'registration' }" class="nav-link">Админка</router-link>
-          </li>
-          <li class="nav-item" v-if="this.$user.isAuth">
-            <router-link :to="{ name: 'profile' }" class="nav-link">Профиль</router-link>
-          </li>
-          <li class="nav-item" v-if="this.$user.isAuth">
-            <a href="/logout" onclick="event.preventDefault(); event.stopPropagation();" @click="logout"
-              class="nav-link" style="cursor: pointer">Выход</a>
-          </li>
-        </ul>
-      </div>
+  <nav class="layout-navbar navbar navbar-detached align-items-center bg-navbar-theme">
+    <div class="navbar-nav-right d-flex align-items-center">
+      <router-link :to="{ name: 'home' }" class="navbar-nav align-items-center fs-4">
+        <i class='bx bxs-cat' style="font-size: 3rem;"></i>
+      </router-link>
+      <ul class="navbar-nav flex-row align-items-center ms-auto">
+        <li v-if="!this.$user.isAuth">
+          <router-link :to="{ name: 'registration' }" class="btn btn-primary">Регистрация</router-link>
+        </li>
+        <li v-if="!this.$user.isAuth">
+          <router-link :to="{ name: 'login' }" class="btn btn-primary ms-2">Вход</router-link>
+        </li>
+        <li v-if="this.$user.isAuth && this.$user.isAdmin">
+          <router-link :to="{ name: 'registration' }" class="btn btn-primary ms-2">Админка</router-link>
+        </li>
+        <li v-if="this.$user.isAuth">
+          <router-link :to="{ name: 'profile' }" class="btn btn-primary ms-2">Профиль</router-link>
+        </li>
+        <li v-if="this.$user.isAuth">
+          <a href="/logout" onclick="event.preventDefault(); event.stopPropagation();" @click="logout"
+            style="cursor: pointer" class="btn btn-primary ms-2">Выход</a>
+        </li>
+      </ul>
     </div>
   </nav>
 </template>
@@ -52,5 +47,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.btn {
+  font-weight: 600;
+}
 </style>

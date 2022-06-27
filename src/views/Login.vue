@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <h1>Login Page</h1>
     <LoginForm></LoginForm>
   </div>
 </template>
@@ -14,3 +13,6 @@ export default {
   }
 }
 </script>
+
+<style>
+</style>

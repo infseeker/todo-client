@@ -7,6 +7,7 @@ class User {
     this.isAuth = data.login || false;
     this.isAdmin = data.admin || false;
     this.isDeleted = data.deleted || false;
+    this.email = data.email || false
   }
 
   login(data) {
@@ -16,6 +17,7 @@ class User {
   logout() {
     this.isAuth = false;
     this.isAdmin = false;
+    this.email = false;
   }
 }
 

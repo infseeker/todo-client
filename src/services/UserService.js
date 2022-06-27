@@ -45,7 +45,7 @@ class UserService {
       .then((data) => data);
   }
 
-  static async register(username, email, password) {
+  static async register(username, email, password, token) {
     return await fetch(api.user.register, {
       method: 'POST',
       headers: { 
@@ -57,6 +57,7 @@ class UserService {
         username: username,
         email: email,
         password: password,
+        token: token
       }),
     })
       .then((response) => response.json())
@@ -122,8 +123,9 @@ class UserService {
 
   /**
    * @param {String} username - username or email
+   * @param {String} token - reCaptcha v3 token
    */
-  static async login(username, password) {
+  static async login(username, password, token) {
     return await fetch(api.user.login, {
       method: 'POST',
       headers: { 
@@ -134,6 +136,7 @@ class UserService {
       body: JSON.stringify({
         username: username,
         password: password,
+        token: token,
       }),
     })
       .then((response) => response.json())
