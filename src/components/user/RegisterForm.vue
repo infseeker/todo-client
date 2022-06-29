@@ -2,7 +2,7 @@
   <div class="login-form authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" v-on:keyup.enter="register(username, email, password)">
           <h4 class="mb-4">ToDo by
             <a href="https://github.com/infseeker">@infseeker</a> 👋
           </h4>
@@ -78,7 +78,7 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { helpers, required, minLength, maxLength, alpha, email, sameAs } from '@vuelidate/validators'
+import { helpers, required, minLength, maxLength, alpha, sameAs } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 // Backend formats

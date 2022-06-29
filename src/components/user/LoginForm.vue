@@ -2,7 +2,7 @@
   <div class="login-form authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" v-on:keyup.enter="login(username, password)">
           <h4 class="mb-4">ToDo by
             <a href="https://github.com/infseeker">@infseeker</a> 👋
           </h4>

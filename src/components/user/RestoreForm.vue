@@ -2,7 +2,7 @@
   <div class="login-form authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" v-on:keyup.enter="restore(email, password, code)">
           <h4 class="mb-4">ToDo by
             <a href="https://github.com/infseeker">@infseeker</a> 👋
           </h4>
@@ -33,6 +33,19 @@
               символов, латинские буквы, мин. 1 цифра)</div>
           </div>
 
+          <div class="mb-3 form-password-toggle">
+            <div class="input-group input-group-merge">
+              <input v-if="showPassword" placeholder="Повторите новый пароль" v-model="passwordRepeat" class="form-control" />
+              <input v-else type="password" placeholder="Повторите новый пароль" v-model="passwordRepeat"
+                class="form-control" />
+              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+                <i v-if="showPassword" class="bx bx-show"></i>
+                <i v-else class="bx bx-hide"></i>
+              </span>
+            </div>
+            <div v-if="this.v$.passwordRepeat.$error" class="invalid-feedback d-block mx-2">Повторите пароль</div>
+          </div>
+
           <div class="mb-3">
             <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
               placeholder="Введите код восстановления" class="form-control" />
@@ -58,7 +71,7 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { helpers, required, numeric, maxLength, minLength } from '@vuelidate/validators'
+import { helpers, required, numeric, maxLength, minLength, sameAs } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/);
@@ -86,6 +99,7 @@ export default {
       code: '',
       email: this.$user.email || this.getUserEmailFromLocalStorage(),
       password: '',
+      passwordRepeat: '',
       showPassword: false,
       submitError: false,
       storage: {},
@@ -98,6 +112,11 @@ export default {
       password: {
         required,
         passwordFormat
+      },
+
+      passwordRepeat: {
+        required,
+        sameAs: sameAs(this.password)
       },
 
       code: {
