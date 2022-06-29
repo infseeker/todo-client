@@ -33,19 +33,6 @@
               символов, латинские буквы, мин. 1 цифра)</div>
           </div>
 
-          <div class="mb-3 form-password-toggle">
-            <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Повторите новый пароль" v-model="passwordRepeat" class="form-control" />
-              <input v-else type="password" placeholder="Повторите новый пароль" v-model="passwordRepeat"
-                class="form-control" />
-              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-                <i v-if="showPassword" class="bx bx-show"></i>
-                <i v-else class="bx bx-hide"></i>
-              </span>
-            </div>
-            <div v-if="this.v$.passwordRepeat.$error" class="invalid-feedback d-block mx-2">Повторите пароль</div>
-          </div>
-
           <div class="mb-3">
             <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
               placeholder="Введите код восстановления" class="form-control" />
@@ -99,7 +86,6 @@ export default {
       code: '',
       email: this.$user.email || this.getUserEmailFromLocalStorage(),
       password: '',
-      passwordRepeat: '',
       showPassword: false,
       submitError: false,
       storage: {},
@@ -112,11 +98,6 @@ export default {
       password: {
         required,
         passwordFormat
-      },
-
-      passwordRepeat: {
-        required,
-        sameAs: sameAs(this.password)
       },
 
       code: {

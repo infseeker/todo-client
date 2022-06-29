@@ -39,22 +39,6 @@
             <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Формат пароля (длина: 8-15
               символов, латинские буквы, мин. 1 цифра)</div>
           </div>
-          <div class="mb-3 form-password-toggle">
-            <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Повторите пароль" v-model="passwordRepeat" class="form-control" />
-              <input v-else type="password" placeholder="Повторите пароль" v-model="passwordRepeat"
-                class="form-control" />
-              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-                <i v-if="showPassword" class="bx bx-show"></i>
-                <i v-else class="bx bx-hide"></i>
-              </span>
-            </div>
-            <div v-if="this.v$.passwordRepeat.$error" class="invalid-feedback d-block mx-2">Повторите пароль</div>
-          </div>
-          <div class="mb-4 input-group custom-file-button">
-            <label class="input-group-text" for="inputGroupFile">Выберите аватар</label>
-            <input type="file" class="form-control" id="inputGroupFile">
-          </div>
           <div class="mb-3">
             <button @click="register(username, email, password)" :disabled="isDisabled" type="button"
               class="btn btn-primary w-100">Зарегистрироваться</button>
@@ -109,7 +93,6 @@ export default {
       username: '',
       email: '',
       password: '',
-      passwordRepeat: '',
       showPassword: false,
       submitError: false,
       usernameExists: false,
@@ -136,11 +119,6 @@ export default {
         required,
         passwordFormat
       },
-
-      passwordRepeat: {
-        required,
-        sameAs: sameAs(this.password)
-      }
     }
   },
 
