@@ -8,7 +8,7 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Пользователя с таким email не существует
+              Пользователя с таким email не существует.
             </div>
           </div>
           <p>

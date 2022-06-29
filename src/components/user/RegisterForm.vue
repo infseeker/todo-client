@@ -8,7 +8,7 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Проверьте корректность данных
+              Проверьте корректность данных.
             </div>
           </div>
           <div class="mb-3">

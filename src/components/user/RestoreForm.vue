@@ -8,7 +8,7 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Неверный код восстановления
+              Код восстановления неверен, либо уже истёк.
             </div>
           </div>
           <p>

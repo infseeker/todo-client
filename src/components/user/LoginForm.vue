@@ -8,7 +8,7 @@
           </h4>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
-              Неправильное имя пользователя или пароль
+              Неправильное имя пользователя или пароль.
             </div>
           </div>
           <div v-if="activated" class="mb-3">
@@ -154,6 +154,11 @@ export default {
               if (data.deleted) {
                 this.$user.isDeleted = true;
                 this.$router.push({ name: 'deleted-user' })
+              } else if (data.non_activated) {
+                this.$user.isNotActivated = true;
+                this.$user.email = data.email;
+                localStorage.email = data.email;
+                this.$router.push({ name: 'activation' })
               } else {
                 this.submitError = true;
                 this.isDisabled = false;
