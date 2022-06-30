@@ -1,6 +1,5 @@
 // export const API_ROOT = `http://192.168.0.2:5000/todo/api`;
-// export const API_ROOT = `http://192.168.0.2:8080/todo/api`;
-export const API_ROOT = `https://infseek-todo.herokuapp.com/todo/api`;
+export const API_ROOT = `http://192.168.0.2:8080/todo/api`;
 
 export const api = {
   user: {
