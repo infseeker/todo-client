@@ -1,13 +1,23 @@
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.custom-file-button input[type=file] {
+  margin-left: -2px !important;
 }
 
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+.custom-file-button input[type=file]::-webkit-file-upload-button {
+  display: none;
+}
+
+.custom-file-button input[type=file]::file-selector-button {
+  display: none;
+}
+
+.custom-file-button:hover label {
+  /* background-color: #dde0e3; */
+  cursor: pointer;
+}
+
+.badge {
+  text-transform: initial;
+  font-size: 1rem;
 }
 
 .container-sm {

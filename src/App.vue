@@ -42,6 +42,7 @@ export default {
 
       // Load and set csrf token
       UserService.getCSRFToken().then((res) => {
+        console.log(res.headers.get(['X-CSRFToken']));
         this.$csrf.setToken(res.headers.get(['X-CSRFToken']));
       });
     },

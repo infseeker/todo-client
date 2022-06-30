@@ -96,7 +96,6 @@ export default {
           UserService.sendRestorationEmail(email, token).then((data) => {
             if (data.success) {
               this.$user.email = email;
-              localStorage.email = email;
               this.$router.push({ name: 'restoration' });
             } else {
               this.submitError = true;

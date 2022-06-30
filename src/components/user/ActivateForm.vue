@@ -16,16 +16,23 @@
               Ваша учётная запись ещё не активирована.
             </div>
           </div>
-          <p>
-            На электронный адрес {{ this.email }} было отправлено письмо с кодом
+          <p v-if="!showEmailField">
+            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с кодом
             активации.
           </p>
           <p>
-            Код активации действителен в течение 15 минут. 
+            Код активации действителен в течение 15 минут.
           </p>
           <p>
             Если учётная запись не будет активирована в течение указанного времени, она будет удалена.
           </p>
+
+          <div v-if="showEmailField" class="mb-3">
+            <input placeholder="Введите email" v-model="email" class="form-control" />
+            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
+              корректный формат email)
+            </div>
+          </div>
 
           <div class="mb-3">
             <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
@@ -51,9 +58,10 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
+import { required, numeric, maxLength, minLength, helpers } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
+const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/);
 
 export default {
   setup() {
@@ -76,7 +84,8 @@ export default {
     return {
       v$: useValidate(),
       code: '',
-      email: this.$user.email || this.getUserEmailFromLocalStorage(),
+      email: this.$user.email || '',
+      showEmailField: false,
       showPassword: false,
       submitError: false,
       storage: {},
@@ -92,14 +101,15 @@ export default {
         maxLength: maxLength(4),
         minLength: minLength(4),
       },
+
+      email: {
+        required,
+        emailFormat,
+      },
     }
   },
 
   methods: {
-    getUserEmailFromLocalStorage() {
-      return localStorage.getItem('email');
-    },
-
     checkCodeFormat(event) {
       if (event.type === 'paste') {
         if (!/^[0-9]{4}$/.test(event.clipboardData.getData('text'))) return event.preventDefault();
@@ -117,12 +127,11 @@ export default {
 
       if (!this.v$.$error) {
         this.isDisabled = true;
-        
+
         this.recaptcha().then((token) => {
           UserService.activate(email, code, token).then((data) => {
             if (data.success) {
-              localStorage.removeItem('email');
-              localStorage.activated = true;
+              this.$user.isActivated = true;
               this.$router.push({ name: 'login' });
             } else {
               this.submitError = true;
@@ -135,8 +144,8 @@ export default {
   },
 
   mounted() {
-    if (!this.email) {
-      this.$router.push({ name: 'registration' })
+    if(!this.$user.email) {
+      this.showEmailField = true;
     }
   }
 }

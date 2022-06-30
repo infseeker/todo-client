@@ -121,11 +121,6 @@ export default {
   },
 
   methods: {
-    getUserDataFromLocalStorage() {
-      this.restored = localStorage.getItem('restored');
-      this.activated = localStorage.getItem('activated');
-    },
-
     async login(username, password) {
       console.log(username, password);
 
@@ -139,9 +134,6 @@ export default {
           UserService.login(username, password, token).then((data) => {
             if (data.success) {
               this.$user.login(data);
-
-              localStorage.removeItem('activated');
-              localStorage.removeItem('restored');
 
               if (this.$user.isAuth) {
                 if (this.$user.isAdmin) {
@@ -157,7 +149,6 @@ export default {
               } else if (data.non_activated) {
                 this.$user.isNotActivated = true;
                 this.$user.email = data.email;
-                localStorage.email = data.email;
                 this.$router.push({ name: 'activation' })
               } else {
                 this.submitError = true;
@@ -171,7 +162,8 @@ export default {
   },
 
   mounted() {
-    this.getUserDataFromLocalStorage();
+    this.restored = this.$user.isRestored;
+    this.activated = this.$user.isActivated;
   }
 }
 </script>

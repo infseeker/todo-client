@@ -66,8 +66,8 @@ import { helpers, required, minLength, maxLength, alpha, sameAs } from '@vuelida
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 // Backend formats
-const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/)
-const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/)
+const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/);
+const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/);
 
 export default {
 
@@ -145,7 +145,6 @@ export default {
                     console.log(data);
                     if (data.success) {
                       this.$user.email = email;
-                      localStorage.email = email;
                       this.$router.push({ name: 'activation' });
                     } else {
                       this.submitError = true;
@@ -172,20 +171,4 @@ export default {
 </script>
 
 <style>
-.custom-file-button input[type=file] {
-  margin-left: -2px !important;
-}
-
-.custom-file-button input[type=file]::-webkit-file-upload-button {
-  display: none;
-}
-
-.custom-file-button input[type=file]::file-selector-button {
-  display: none;
-}
-
-.custom-file-button:hover label {
-  /* background-color: #dde0e3; */
-  cursor: pointer;
-}
 </style>

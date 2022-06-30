@@ -11,13 +11,20 @@
               Код восстановления неверен, либо уже истёк.
             </div>
           </div>
-          <p>
-            На электронный адрес {{ this.email }} было отправлено письмо с кодом
+          <p v-if="!showEmailField">
+            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с кодом
             восстановления.
           </p>
           <p>
             Код восстановления действителен в течение 15 минут.
           </p>
+
+          <div v-if="showEmailField" class="mb-3">
+            <input placeholder="Введите email" v-model="email" class="form-control" />
+            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
+              корректный формат email)
+            </div>
+          </div>
 
           <div class="mb-3 form-password-toggle">
             <div class="input-group input-group-merge">
@@ -58,9 +65,10 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { helpers, required, numeric, maxLength, minLength, sameAs } from '@vuelidate/validators'
+import { helpers, required, numeric, maxLength, minLength } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
+const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/);
 const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/);
 
 export default {
@@ -84,7 +92,8 @@ export default {
     return {
       v$: useValidate(),
       code: '',
-      email: this.$user.email || this.getUserEmailFromLocalStorage(),
+      email: this.$user.email || '',
+      showEmailField: false,
       password: '',
       showPassword: false,
       submitError: false,
@@ -95,6 +104,11 @@ export default {
 
   validations() {
     return {
+      email: {
+        required,
+        emailFormat,
+      },
+
       password: {
         required,
         passwordFormat
@@ -135,9 +149,7 @@ export default {
         this.recaptcha().then((token) => {
           UserService.restore(email, password, code, token).then((data) => {
             if (data.success) {
-              localStorage.removeItem('email');
-              localStorage.restored = true;
-
+              this.$user.isRestored = true;
               this.$user.isDeleted = false;
               this.$router.push({ name: 'login' });
             } else {
@@ -151,8 +163,8 @@ export default {
   },
 
   mounted() {
-    if (!this.email) {
-      this.$router.push({ name: 'restoration-email' })
+    if(!this.$user.email) {
+      this.showEmailField = true;
     }
   }
 }
