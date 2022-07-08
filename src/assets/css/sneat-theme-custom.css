@@ -1,12 +1,12 @@
-.custom-file-button input[type=file] {
+.custom-file-button input[type='file'] {
   margin-left: -2px !important;
 }
 
-.custom-file-button input[type=file]::-webkit-file-upload-button {
+.custom-file-button input[type='file']::-webkit-file-upload-button {
   display: none;
 }
 
-.custom-file-button input[type=file]::file-selector-button {
+.custom-file-button input[type='file']::file-selector-button {
   display: none;
 }
 
@@ -25,9 +25,9 @@
 }
 
 .layout-navbar.navbar-detached {
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .authentication-wrapper.authentication-basic {
@@ -80,4 +80,20 @@
 
 .grecaptcha-badge {
   visibility: hidden;
+}
+
+.home-link {
+  position: relative;
+  top: 0.3rem;
+  font-size: 3rem;
+}
+
+.navbar-nav a.btn {
+  padding: 0.3rem 0.4rem;
+}
+
+.navbar-nav .bx {
+  font-size: 1.4rem;
+  position: relative;
+  top: 0.2rem;
 }
