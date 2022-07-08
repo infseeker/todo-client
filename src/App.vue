@@ -1,18 +1,6 @@
 <template>
   <div class="container-sm bg-gray-50 dark:bg-gray-900">
     <UserNavigation v-if="!this.$route.meta.hideNav"></UserNavigation>
-    <div id="temp" v-if="!this.$route.meta.hideNav">
-      <div>{{ this.$user }}</div>
-      <router-link to="/settings">Настройки</router-link>
-      <router-link to="/">Гостевая</router-link>
-      <router-link to="/login">Авторизация</router-link>
-      <router-link to="/registration">Регистрация</router-link>
-      <br>
-      <router-link to="/lists">Списки</router-link>
-      <router-link to="/profile">Профиль</router-link>
-      <router-link to="/admin/users">Админ юзеры</router-link>
-      <router-link to="/admin/users/656">Админ юзер 656</router-link>
-    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -42,7 +30,6 @@ export default {
 
       // Load and set csrf token
       UserService.getCSRFToken().then((res) => {
-        console.log(res.headers.get(['X-CSRFToken']));
         this.$csrf.setToken(res.headers.get(['X-CSRFToken']));
       });
     },
