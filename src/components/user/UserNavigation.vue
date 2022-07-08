@@ -14,7 +14,7 @@
           </router-link>
         </li>
         <li v-if="this.$user.isAuth && this.$user.isAdmin">
-          <router-link :to="{ name: 'registration' }" class="btn btn-primary ms-2" title="Админка"><i class='bx bx-news'></i></router-link>
+          <router-link :to="{ name: 'admin-users' }" class="btn btn-primary ms-2" title="Админка"><i class='bx bx-news'></i></router-link>
         </li>
         <li v-if="this.$user.isAuth">
           <router-link :to="{ name: 'profile' }" class="btn btn-primary ms-2" title="Профиль"><i class='bx bx-user'></i>
