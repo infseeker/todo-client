@@ -94,7 +94,7 @@ export default {
         
         this.recaptcha().then((token) => {
           UserService.sendRestorationEmail(email, token).then((data) => {
-            if (data.success) {
+            if (data.code === 200) {
               this.$user.email = email;
               this.$router.push({ name: 'restoration' });
             } else {

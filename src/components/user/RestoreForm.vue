@@ -148,7 +148,7 @@ export default {
 
         this.recaptcha().then((token) => {
           UserService.restore(email, password, code, token).then((data) => {
-            if (data.success) {
+            if (data.code === 200) {
               this.$user.isRestored = true;
               this.$user.isDeleted = false;
               this.$router.push({ name: 'login' });

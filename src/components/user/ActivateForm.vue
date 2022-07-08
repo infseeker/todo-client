@@ -130,7 +130,7 @@ export default {
 
         this.recaptcha().then((token) => {
           UserService.activate(email, code, token).then((data) => {
-            if (data.success) {
+            if (data.code === 200) {
               this.$user.isActivated = true;
               this.$router.push({ name: 'login' });
             } else {

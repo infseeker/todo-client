@@ -132,7 +132,8 @@ export default {
 
         this.recaptcha().then((token) => {
           UserService.login(username, password, token).then((data) => {
-            if (data.success) {
+            if (data.code === 200) {
+              data.login = true;
               this.$user.login(data);
 
               if (this.$user.isAuth) {
@@ -146,7 +147,7 @@ export default {
               if (data.deleted) {
                 this.$user.isDeleted = true;
                 this.$router.push({ name: 'deleted-user' })
-              } else if (data.non_activated) {
+              } else if (data.inactive) {
                 this.$user.isNotActivated = true;
                 this.$user.email = data.email;
                 this.$router.push({ name: 'activation' })

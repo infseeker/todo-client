@@ -138,12 +138,12 @@ export default {
         this.recaptcha().then((token) => {
           UserService.checkUsername(username).then((data) => {
             console.log(data);
-            if (data.success) {
+            if (data.code === 200) {
               UserService.checkEmail(email).then((data) => {
-                if (data.success) {
+                if (data.code === 200) {
                   UserService.register(username, email, password, token).then((data) => {
                     console.log(data);
-                    if (data.success) {
+                    if (data.code === 200) {
                       this.$user.email = email;
                       this.$router.push({ name: 'activation' });
                     } else {
