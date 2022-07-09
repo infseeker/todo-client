@@ -65,11 +65,9 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { helpers, required, numeric, maxLength, minLength } from '@vuelidate/validators'
+import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
+import { email, password } from '../../helpers/validations'
 import { useReCaptcha } from "vue-recaptcha-v3";
-
-const emailFormat = helpers.regex(/(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/);
-const passwordFormat = helpers.regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@\-$!%*#?&]{8,15}$/);
 
 export default {
   setup() {
@@ -106,12 +104,12 @@ export default {
     return {
       email: {
         required,
-        emailFormat,
+        email,
       },
 
       password: {
         required,
-        passwordFormat
+        password
       },
 
       code: {

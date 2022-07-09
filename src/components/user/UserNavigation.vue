@@ -30,11 +30,13 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import UserService from '../../services/UserService';
 
 export default {
   data() {
-    return {};
+    return {
+    };
   },
 
   methods: {
@@ -47,6 +49,11 @@ export default {
       });
     },
   },
+
+  watch: {
+    $route(to, from) {
+    }
+  }
 };
 </script>
 

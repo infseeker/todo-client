@@ -1,5 +1,18 @@
 <template>
   <div class="profile-edit">
-    <h1>Profile Edit</h1>
+    <ProfileForm></ProfileForm>
   </div>
 </template>
+
+<script>
+import ProfileForm from '../components/user/ProfileForm.vue';
+
+export default {
+  components: {
+    ProfileForm
+  }
+}
+</script>
+
+<style>
+</style>
