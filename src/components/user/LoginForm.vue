@@ -74,7 +74,7 @@
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required, minLength } from '@vuelidate/validators'
+import { required } from '@vuelidate/validators'
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 

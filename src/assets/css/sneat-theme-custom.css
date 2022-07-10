@@ -22,12 +22,12 @@
 
 .container-sm {
   max-width: 870px;
+  margin: 0.75rem auto;
 }
 
 .layout-navbar.navbar-detached {
   width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  margin: 0 auto !important;
 }
 
 .authentication-wrapper.authentication-basic {
@@ -97,3 +97,4 @@
   position: relative;
   top: 0.2rem;
 }
+

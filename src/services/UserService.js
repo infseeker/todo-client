@@ -1,5 +1,5 @@
 import { api } from '/public/server-api';
-import { app } from '../main'
+import { app } from '../main';
 
 class UserService {
   /**
@@ -10,15 +10,15 @@ class UserService {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-    })
+    });
   }
 
   static async checkUsername(username) {
     return await fetch(api.user.check_username, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -32,9 +32,9 @@ class UserService {
   static async checkEmail(email) {
     return await fetch(api.user.check_email, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -48,16 +48,16 @@ class UserService {
   static async register(username, email, password, token) {
     return await fetch(api.user.register, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
         username: username,
         email: email,
         password: password,
-        token: token
+        token: token,
       }),
     })
       .then((response) => response.json())
@@ -70,9 +70,9 @@ class UserService {
   static async activate(email, accessCode, token) {
     return await fetch(api.user.activate, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -88,14 +88,14 @@ class UserService {
   static async sendRestorationEmail(email, token) {
     return await fetch(api.user.restore_email, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
-        token: token
+        token: token,
       }),
     })
       .then((response) => response.json())
@@ -108,16 +108,16 @@ class UserService {
   static async restore(email, newPassword, accessCode, token) {
     return await fetch(api.user.restore, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
         email: email,
         password: newPassword,
         access_code: accessCode,
-        token: token
+        token: token,
       }),
     })
       .then((response) => response.json())
@@ -131,9 +131,9 @@ class UserService {
   static async login(username, password, token) {
     return await fetch(api.user.login, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -165,9 +165,24 @@ class UserService {
   static async getUserData() {
     return await fetch(api.user.user_data, {
       method: 'GET',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * Get user image if user logged in, else - 401.
+   */
+  static async getUserImage() {
+    return await fetch(api.user.user_image, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
     })
@@ -189,16 +204,17 @@ class UserService {
    *
    * @param {String} password - for now we can change password only
    */
-  static async update(password) {
+  static async update(password, image) {
     return await fetch(api.user.update, {
       method: 'PUT',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
         password: password,
+        image: image,
       }),
     })
       .then((response) => response.json())
@@ -212,9 +228,9 @@ class UserService {
   static async delete(password) {
     return await fetch(api.user.delete, {
       method: 'DELETE',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken()
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({

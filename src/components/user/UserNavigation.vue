@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import UserService from '../../services/UserService';
 
 export default {
@@ -49,11 +48,6 @@ export default {
       });
     },
   },
-
-  watch: {
-    $route(to, from) {
-    }
-  }
 };
 </script>
 

@@ -2,17 +2,24 @@
   <div class="profile-form mt-4">
     <div class="card">
       <div class="card-body" v-on:keyup.enter="save(password)">
-        <h4 class="header mb-4">Профиль</h4>
+        <h4 class="header mb-3">Настройки профиля</h4>
+        
         <div v-if="saved" class="mb-3">
           <div class="alert alert-success" role="alert">
             Изменения сохранены.
           </div>
         </div>
+
         <div v-if="errorOnSave" class="mb-3">
           <div class="alert alert-danger" role="alert">
             Изменения не сохранены. Проверьте введённые данные.
           </div>
         </div>
+
+        <div class="user-image">
+          <img v-if="userImage" :src="this.userImage" alt="Аватар пользователя" class="mb-3">
+        </div>
+
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
             <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
@@ -26,34 +33,62 @@
             символов, мин. 1 лат. буква, мин. 1 цифра</div>
         </div>
 
-        <div class="input-group custom-file-button mb-4">
-          <label class="input-group-text" for="inputGroupFile">Выберите аватар</label>
-          <input type="file" class="form-control" id="inputGroupFile" @change="uploadImage($event)" accept="image/*" />
+        <div class="">
+          <div class="input-group custom-file-button">
+            <label class="input-group-text" for="inputGroupFile">Выберите аватар</label>
+            <input type="file" class="form-control" id="inputGroupFile" @change="uploadImage($event)" accept="image/*"
+              ref="file" />
+          </div>
+          <div v-if="wrongImgFormat" class="invalid-feedback d-block mx-2">Изображение: jpeg, png, макс. размер - 5 Мб
+          </div>
         </div>
 
-        <cropper :stencil-component="$options.components.CircleStencil" :debounce="false" ref="cropper" class="cropper"
-          @change="onChange" :src="image.src" :canvas="{ height: 256, width: 256 }" />
-        <div class="button-wrapper">
-          <button class="button" @click="cropImage()">Crop image</button>
-        </div>
+        <cropper v-show="showCropper" :stencil-component="$options.components.CircleStencil" ref="cropper"
+          class="cropper mt-3" :src="image.src" :canvas="{ height: 256, width: 256 }" />
 
-        <!-- <preview v-if="image.src" :width="120" :height="120" :image="result.image" :coordinates="result.coordinates" /> -->
-
-        <div class="mb-3">
+        <div class="mt-4">
           <button @click="save()" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Сохранить</button>
         </div>
+      </div>
+    </div>
+
+
+    <div class="card mt-4">
+      <div class="card-body" v-on:keyup.enter="deleteUser(deletePassword)">
+        <h4 class="header mb-3">Удаление учётной записи</h4>
+
+        <div v-if="wrongDeletePassword" class="alert alert-danger" role="alert">
+          Неверный пароль.
+        </div>
+
+        <div class="mb-4 form-password-toggle">
+          <div class="input-group input-group-merge">
+            <input v-if="showPassword" placeholder="Введите текущий пароль" v-model="deletePassword"
+              class="form-control" />
+            <input v-else type="password" placeholder="Введите текущий пароль" v-model="deletePassword"
+              class="form-control" />
+            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+              <i v-if="showPassword" class="bx bx-show"></i>
+              <i v-else class="bx bx-hide"></i>
+            </span>
+          </div>
+          <div v-if="this.v$.deletePassword.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
+            символов, мин. 1 лат. буква, мин. 1 цифра</div>
+        </div>
+
+        <button @click="deleteUser(deletePassword)" :disabled="delIsDisabled" type="button"
+          class="btn btn-danger w-100">Удалить учётную запись</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { password } from '../../helpers/validations'
-import { Cropper, CircleStencil, Preview } from 'vue-advanced-cropper'
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 
 export default {
@@ -61,17 +96,19 @@ export default {
     return {
       v$: useValidate(),
       password: '',
+      deletePassword: '',
       showPassword: false,
       isDisabled: false,
+      delIsDisabled: false,
+      showCropper: false,
+      wrongImgFormat: false,
+      wrongDeletePassword: false,
       saved: false,
       errorOnSave: false,
+      userImage: `/src/assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`,
       image: {
         src: '',
-        type: "image/jpg",
-      },
-      result: {
-        coordinates: null,
-        image: null
+        type: '',
       },
     }
   },
@@ -79,6 +116,10 @@ export default {
   validations() {
     return {
       password: {
+        password
+      },
+
+      deletePassword: {
         required,
         password
       },
@@ -87,73 +128,157 @@ export default {
 
   components: {
     Cropper,
-    CircleStencil,
-    Preview
+    CircleStencil
   },
 
   methods: {
-    save(password) {
-      this.v$.$validate();
+    save() {
+      this.saved = false;
+      this.errorOnSave = false;
 
-      if (!this.v$.$error) {
-        this.isDisabled = true;
-        this.saved = false;
-        this.errorOnSave = false;
+      const password = this.password;
+      let image = '';
 
-        UserService.update(password).then((data) => {
-          if (data.code === 200) {
-            this.saved = true;
-            this.isDisabled = false;
-          } else {
-            this.errorOnSave = true;
-            this.isDisabled = false;
+      if (password) {
+        this.v$.password.$validate();
+      }
+
+      if (this.image.src) {
+        if (this.image.type === 'image/jpeg' || this.image.type === 'image/png') {
+          const { canvas } = this.$refs.cropper.getResult();
+          if (canvas) {
+            image = canvas.toDataURL(this.image.type);
           }
-        });
+        }
+      }
+
+      if (password || image) {
+        if (!this.v$.password.$error) {
+          this.isDisabled = true;
+
+          UserService.update(password, image).then((data) => {
+            if (data.code === 200) {
+              this.saved = true;
+
+              if(image) {
+                UserService.getUserImage().then(data => {
+                  this.userImage = data.image;
+                })
+              }
+            } else {
+              this.errorOnSave = true;
+            }
+
+            this.isDisabled = false;
+            this.showCropper = false;
+            this.$refs.file.value = null;
+            this.password = '';
+          });
+        }
+      } else {
+        this.errorOnSave = true;
       }
     },
 
     uploadImage(event) {
-      /// Reference to the DOM input element
       const { files } = event.target;
       // Ensure that you have a file before attempting to read it
       if (files && files[0]) {
         // 1. Revoke the object URL, to allow the garbage collector to destroy the uploaded before file
         if (this.image.src) {
-          URL.revokeObjectURL(this.image.src);
+          URL.revokeObjectURL(this.image.src)
         }
         // 2. Create the blob link to the file to optimize performance:
         const blob = URL.createObjectURL(files[0]);
 
-        // 3. Update the image. The type will be derived from the extension and it can lead to an incorrect result:
-        this.image = {
-          src: blob,
-          type: files[0].type,
+        // 3. The steps below are designated to determine a file mime type to use it during the 
+        // getting of a cropped image from the canvas. You can replace it them by the following string, 
+        // but the type will be derived from the extension and it can lead to an incorrect result:
+        //
+        // this.image = {
+        //    src: blob;
+        //    type: files[0].type
+        // }
+
+        // Create a new FileReader to read this image binary data
+        const reader = new FileReader();
+        // Define a callback function to run, when FileReader finishes its job
+        reader.onload = (e) => {
+          // Note: arrow function used here, so that "this.image" refers to the image of Vue component
+          this.image = {
+            // Set the image source (it will look like blob:http://example.com/2c5270a5-18b5-406e-a4fb-07427f5e7b94)
+            src: blob,
+            // Determine the image type to preserve it during the extracting the image from canvas:
+            type: this.getMimeType(e.target.result, files[0].type),
+          };
+
+          if (this.image.src && (this.image.type === 'image/jpeg' || this.image.type === 'image/png') && this.$refs.file.value && this.$refs.file.files[0].size < 5242880) {
+            this.wrongImgFormat = false;
+            this.isDisabled = false;
+            this.showCropper = true;
+          } else {
+            this.wrongImgFormat = true;
+            this.isDisabled = true;
+            this.showCropper = false;
+          }
         };
+        // Start the reader job - read file as a data url (base64 format)
+        reader.readAsArrayBuffer(files[0]);
       }
     },
 
-    cropImage() {
-      const result = this.$refs.cropper.getResult();
-      const newTab = window.open();
-      newTab.document.body.innerHTML = `<img src="${result.canvas.toDataURL(
-        this.image.type
-      )}"></img>`;
-    },
-
-    destroyed() {
-      // Revoke the object URL, to allow the garbage collector to destroy the uploaded before file
-      if (this.image.src) {
-        URL.revokeObjectURL(this.image.src);
+    getMimeType(file, fallback = null) {
+      const byteArray = (new Uint8Array(file)).subarray(0, 4);
+      let header = '';
+      for (let i = 0; i < byteArray.length; i++) {
+        header += byteArray[i].toString(16);
+      }
+      switch (header) {
+        case "89504e47":
+          return "image/png";
+        case "47494638":
+          return "image/gif";
+        case "ffd8ffe0":
+        case "ffd8ffe1":
+        case "ffd8ffe2":
+        case "ffd8ffe3":
+        case "ffd8ffe8":
+          return "image/jpeg";
+        default:
+          return fallback;
       }
     },
 
-    onChange({ coordinates, image }) {
-      this.result = {
-        coordinates,
-        image
-      };
-    },
+    deleteUser(password) {
+      this.v$.deletePassword.$validate();
+
+      if (!this.v$.deletePassword.$error) {
+        this.delIsDisabled = true;
+
+        UserService.delete(password).then((data) => {
+          if (data.code === 200) {
+            UserService.logout().then((data) => {
+              this.$user.logout();
+              this.$router.push('/');
+
+              console.log(data);
+            });
+          } else {
+            this.wrongDeletePassword = true;
+          }
+          this.delIsDisabled = false;
+        });
+      }
+    }
   },
+
+  mounted() {
+    UserService.getUserImage().then(data => {
+      if(data.code === 200) {
+        this.userImage = data.image;
+      }
+    });
+  }
 }
 </script>
 
@@ -163,7 +288,9 @@ export default {
 }
 
 .card-body {
+  width: 100%;
   max-width: 400px;
+  position: relative;
 }
 
 .cropper {
@@ -186,7 +313,17 @@ export default {
   background-color: rgba(255, 255, 255);
 }
 
-.vue-preview {
+.user-image, .user-image img {
   border-radius: 50%;
+}
+
+.user-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-image img {
+  width: 35%;
 }
 </style>
