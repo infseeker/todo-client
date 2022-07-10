@@ -190,6 +190,22 @@ class UserService {
       .then((data) => data);
   }
 
+    /**
+   * Delete user image if user logged in, else - 401.
+   */
+    static async deleteUserImage() {
+      return await fetch(api.user.delete_user_image, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        },
+        credentials: 'include',
+      })
+        .then((response) => response.json())
+        .then((data) => data);
+    }
+
   static async logout() {
     return await fetch(api.user.logout, {
       method: 'GET',

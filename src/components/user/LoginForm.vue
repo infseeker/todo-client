@@ -3,9 +3,10 @@
     <div class="authentication-inner">
       <div class="card">
         <div class="card-body" v-on:keyup.enter="login(username, password)">
-          <h4 class="mb-4">ToDo by
-            <a href="https://github.com/infseeker">@infseeker</a> 👋
-          </h4>
+          <h5 class="mb-4 d-flex justify-content-between">
+            <span>Авторизация</span>
+            <i class="bx bx-log-in"></i>
+          </h5>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
               Неправильное имя пользователя или пароль.
@@ -143,6 +144,9 @@ export default {
                   this.$router.push({ name: 'lists' });
                 }
               }
+
+              this.$user.isRestored = false;
+              this.$user.isActivated = false;
             } else {
               if (data.deleted) {
                 this.$user.isDeleted = true;

@@ -3,9 +3,10 @@
     <div class="authentication-inner">
       <div class="card">
         <div class="card-body" v-on:keyup.enter="register(username, email, password)">
-          <h4 class="mb-4">ToDo by
-            <a href="https://github.com/infseeker">@infseeker</a> 👋
-          </h4>
+          <h5 class="mb-4 d-flex justify-content-between">
+            <span>Регистрация</span>
+            <i class="bx bx-user-plus"></i>
+          </h5>
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
               Проверьте корректность данных.

@@ -2,22 +2,31 @@
   <div class="profile-form mt-4">
     <div class="card">
       <div class="card-body" v-on:keyup.enter="save(password)">
-        <h4 class="header mb-3">Настройки профиля</h4>
-        
-        <div v-if="saved" class="mb-3">
-          <div class="alert alert-success" role="alert">
+        <h5 class="header mb-0">Настройки профиля</h5>
+
+        <div v-if="saved" class="mt-3">
+          <div class="alert alert-success mb-0" role="alert">
             Изменения сохранены.
           </div>
         </div>
 
-        <div v-if="errorOnSave" class="mb-3">
-          <div class="alert alert-danger" role="alert">
+        <div v-if="errorOnImageDelete" class="mt-3">
+          <div class="alert alert-danger mb-0" role="alert">
+            При попытке удалить изображение возникла ошибка.
+          </div>
+        </div>
+
+        <div v-if="errorOnSave" class="mt-3">
+          <div class="alert alert-danger mb-0" role="alert">
             Изменения не сохранены. Проверьте введённые данные.
           </div>
         </div>
 
         <div class="user-image">
-          <img v-if="userImage" :src="this.userImage" alt="Аватар пользователя" class="mb-3">
+          <img v-if="!userImage" :src="this.catImage"
+            alt="Погладь котика" title="Погладь котика" class="mb-3 mt-3">
+          <img v-if="userImage" :src="this.userImage" alt="Аватар пользователя" class="mb-3 mt-3">
+          <span v-if="userImage" class="user-image-delete" title="Удалить аватар" @click="deleteUserImage"></span>
         </div>
 
         <div class="mb-3 form-password-toggle">
@@ -55,7 +64,7 @@
 
     <div class="card mt-4">
       <div class="card-body" v-on:keyup.enter="deleteUser(deletePassword)">
-        <h4 class="header mb-3">Удаление учётной записи</h4>
+        <h5 class="header mb-3">Удаление учётной записи</h5>
 
         <div v-if="wrongDeletePassword" class="alert alert-danger" role="alert">
           Неверный пароль.
@@ -105,7 +114,9 @@ export default {
       wrongDeletePassword: false,
       saved: false,
       errorOnSave: false,
-      userImage: `/src/assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`,
+      errorOnImageDelete: false,
+      userImage: '',
+      catImage: `/src/assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`,
       image: {
         src: '',
         type: '',
@@ -160,7 +171,7 @@ export default {
             if (data.code === 200) {
               this.saved = true;
 
-              if(image) {
+              if (image) {
                 UserService.getUserImage().then(data => {
                   this.userImage = data.image;
                 })
@@ -227,6 +238,18 @@ export default {
       }
     },
 
+    deleteUserImage() {
+      this.errorOnImageDelete = false;
+
+      UserService.deleteUserImage().then(data => {
+        if (data.code === 200) {
+          this.userImage = '';
+        } else {
+          this.errorOnImageDelete = true;
+        }
+      })
+    },
+
     getMimeType(file, fallback = null) {
       const byteArray = (new Uint8Array(file)).subarray(0, 4);
       let header = '';
@@ -274,7 +297,7 @@ export default {
 
   mounted() {
     UserService.getUserImage().then(data => {
-      if(data.code === 200) {
+      if (data.code === 200) {
         this.userImage = data.image;
       }
     });
@@ -313,17 +336,75 @@ export default {
   background-color: rgba(255, 255, 255);
 }
 
-.user-image, .user-image img {
+.user-image,
+.user-image img {
   border-radius: 50%;
 }
 
 .user-image {
+  width: 45%;
+  height: 45%;
+  margin: auto;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: end;
+  position: relative;
 }
 
 .user-image img {
-  width: 35%;
+  width: 80%;
+  height: 80%;
+  display: block;
+  margin: auto;
+}
+
+.user-image:after:hover {
+  content: '\A';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 1);
+  opacity: 1;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+}
+
+.user-image:hover .user-image-delete {
+  display: block;
+}
+
+.user-image-delete {
+  display: none;
+  position: absolute;
+  right: 5%;
+  top: 10%;
+  width: 1.2rem;
+  height: 1.2rem;
+  opacity: 0.7;
+}
+
+.user-image-delete:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.user-image-delete:before,
+.user-image-delete:after {
+  position: absolute;
+  /* left: 10%; */
+  content: ' ';
+  height: 1rem;
+  width: 2px;
+  background-color: #566a7f;
+}
+
+.user-image-delete:before {
+  transform: rotate(45deg);
+}
+
+.user-image-delete:after {
+  transform: rotate(-45deg);
 }
 </style>

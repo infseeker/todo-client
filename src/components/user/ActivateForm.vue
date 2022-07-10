@@ -3,9 +3,12 @@
     <div class="authentication-inner">
       <div class="card">
         <div class="card-body" v-on:keyup.enter="activate(email, code)">
-          <h4 class="mb-4">ToDo by
-            <a href="https://github.com/infseeker">@infseeker</a> 👋
-          </h4>
+
+          <h5 class="mb-4 d-flex justify-content-between">
+            <span>Активация</span>
+            <i class='bx bx-user-check'></i>
+          </h5>
+
           <div v-if="submitError" class="mb-3">
             <div class="alert alert-danger" role="alert">
               Код активации неверен, либо уже истёк.
