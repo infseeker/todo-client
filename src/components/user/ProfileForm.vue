@@ -116,7 +116,7 @@ export default {
       errorOnSave: false,
       errorOnImageDelete: false,
       userImage: '',
-      catImage: `/src/assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`,
+      catImage: new URL(`../../assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`, import.meta.url),
       image: {
         src: '',
         type: '',
@@ -296,6 +296,8 @@ export default {
   },
 
   mounted() {
+    console.log(import.meta.url);
+
     UserService.getUserImage().then(data => {
       if (data.code === 200) {
         this.userImage = data.image;
