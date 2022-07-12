@@ -1,7 +1,19 @@
 import { api } from '/public/server-api';
 import { app } from '../main';
+import router from '../router/index';
 
 class UserService {
+  /**
+   * Redirect user to login page if server session was updated after changing password or user deletion
+   */
+  static _logoutAfterSessionUpdate(response) {
+    if (response.status === 401) {
+      app.config.globalProperties.$user.logout();
+      router.push({ name: 'login' });
+      return;
+    }
+  }
+
   /**
    * Returns CSRF Protection Token needed for every request to the API
    */
@@ -171,7 +183,11 @@ class UserService {
       },
       credentials: 'include',
     })
-      .then((response) => response.json())
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
+      })
       .then((data) => data);
   }
 
@@ -186,25 +202,33 @@ class UserService {
       },
       credentials: 'include',
     })
-      .then((response) => response.json())
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
+      })
       .then((data) => data);
   }
 
-    /**
+  /**
    * Delete user image if user logged in, else - 401.
    */
-    static async deleteUserImage() {
-      return await fetch(api.user.delete_user_image, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
-        },
-        credentials: 'include',
+  static async deleteUserImage() {
+    return await fetch(api.user.delete_user_image, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+      },
+      credentials: 'include',
+    })
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
       })
-        .then((response) => response.json())
-        .then((data) => data);
-    }
+      .then((data) => data);
+  }
 
   static async logout() {
     return await fetch(api.user.logout, {
@@ -212,7 +236,11 @@ class UserService {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     })
-      .then((response) => response.json())
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
+      })
       .then((data) => data);
   }
 
@@ -233,7 +261,11 @@ class UserService {
         image: image,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
+      })
       .then((data) => data);
   }
 
@@ -253,7 +285,11 @@ class UserService {
         password: password,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        this._logoutAfterSessionUpdate(response);
+
+        return response.json();
+      })
       .then((data) => data);
   }
 }
