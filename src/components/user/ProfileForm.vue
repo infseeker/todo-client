@@ -176,6 +176,11 @@ export default {
                   this.userImage = data.image;
                 })
               }
+
+              if (password) {
+                this.$user.logout()
+                this.$router.push({ name: 'login' })
+              }
             } else {
               this.errorOnSave = true;
             }
