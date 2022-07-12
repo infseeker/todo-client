@@ -23,8 +23,8 @@
         </div>
 
         <div class="user-image">
-          <img v-if="!userImage" @click="meow" :src="this.catImage"
-            alt="Погладь котика" title="Погладь котика" class="mb-3 mt-3">
+          <img v-if="!userImage" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
+            class="mb-3 mt-3">
           <img v-if="userImage" :src="this.userImage" alt="Аватар пользователя" class="mb-3 mt-3">
           <span v-if="userImage" class="user-image-delete" title="Удалить аватар" @click="deleteUserImage"></span>
         </div>
@@ -300,10 +300,8 @@ export default {
     },
 
     meow() {
-      const catMeowSoundUrl = new URL(`../../assets/sounds/cat-meow-${Math.floor(Math.random() * 4) + 1}.ogg`, import.meta.url);
+      const catMeowSoundUrl = new URL(`../../assets/sounds/cat-meow-${Math.floor(Math.random() * 4) + 1}.mp3`, import.meta.url);
       const audio = new Audio(catMeowSoundUrl);
-      audio.autoplay = true;
-      audio.volume = 0.04
       audio.play();
     }
   },
