@@ -1,19 +1,7 @@
 import { api } from '/public/server-api';
-import { app } from '../main';
-import router from '../router/index';
+import { csrf } from '../helpers/csrf';
 
 class UserService {
-  /**
-   * Redirect user to login page if server session was updated after changing password or user deletion
-   */
-  static _logoutAfterSessionUpdate(response) {
-    if (response.status === 401) {
-      app.config.globalProperties.$user.logout();
-      router.push({ name: 'login' });
-      return;
-    }
-  }
-
   /**
    * Returns CSRF Protection Token needed for every request to the API
    */
@@ -22,6 +10,8 @@ class UserService {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
+    }).then((res) => {
+      csrf.setToken(res.headers.get(['X-CSRFToken']));
     });
   }
 
@@ -30,7 +20,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -46,7 +36,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -62,7 +52,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -84,7 +74,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -102,7 +92,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -122,7 +112,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -145,7 +135,7 @@ class UserService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -179,15 +169,11 @@ class UserService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 
@@ -202,11 +188,7 @@ class UserService {
       },
       credentials: 'include',
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 
@@ -218,15 +200,11 @@ class UserService {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 
@@ -236,11 +214,7 @@ class UserService {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 
@@ -253,7 +227,7 @@ class UserService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -261,35 +235,26 @@ class UserService {
         image: image,
       }),
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 
   /**
-   * Mark user as deleted in DB (not remove it from DB)
-   * @param {String} password - user need to enter password for deleting
+   * @param {String} password - user needs to enter password for deleting
    */
   static async delete(password) {
     return await fetch(api.user.delete, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': app.config.globalProperties.$csrf.getToken(),
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
       body: JSON.stringify({
         password: password,
       }),
     })
-      .then((response) => {
-        this._logoutAfterSessionUpdate(response);
-
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => data);
   }
 }

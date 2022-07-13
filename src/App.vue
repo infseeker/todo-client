@@ -1,5 +1,5 @@
 <template>
-  <div class="container-sm bg-gray-50 dark:bg-gray-900">
+  <div class="container-sm bg-gray-50 dark bg-gray-900">
     <UserNavigation v-if="!this.$route.meta.hideNav"></UserNavigation>
     <router-view></router-view>
   </div>
@@ -13,11 +13,7 @@ export default {
   components: {
     UserNavigation,
   },
-
-  data() {
-    return {};
-  },
-
+  
   methods: {
     loadAuthData() {
       // Load user auth data
@@ -29,9 +25,7 @@ export default {
       });
 
       // Load and set csrf token
-      UserService.getCSRFToken().then((res) => {
-        this.$csrf.setToken(res.headers.get(['X-CSRFToken']));
-      });
+      UserService.getCSRFToken();
     },
   },
 
