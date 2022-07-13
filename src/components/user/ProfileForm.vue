@@ -172,9 +172,7 @@ export default {
               this.saved = true;
 
               if (image) {
-                UserService.getUserImage().then(data => {
-                  this.userImage = data.image;
-                })
+                this.userImage = image;
               }
 
               if (password) {
@@ -189,6 +187,7 @@ export default {
             this.showCropper = false;
             this.$refs.file.value = null;
             this.password = '';
+            this.image.src = '';
           });
         }
       } else {
@@ -298,7 +297,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card {
   align-items: center;
 }
@@ -386,7 +385,6 @@ export default {
 .user-image-delete:before,
 .user-image-delete:after {
   position: absolute;
-  /* left: 10%; */
   content: ' ';
   height: 1rem;
   width: 2px;
