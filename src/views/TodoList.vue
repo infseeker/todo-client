@@ -22,8 +22,8 @@
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" v-model="currentListItemTitle"
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keyup.enter.exact.prevent="saveEditedListItemTitle($event, item)"
-                @input="checkIfEnterKey($event, item)" @blur="discardEditedListItemTitle(item)"
+                @keyup.enter.exact.prevent="saveEditedListItemTitle(item)"
+                @input="checkIfEnterKey(item)" @blur="discardEditedListItemTitle(item)"
                 @keyup.esc="discardEditedListItemTitle(item)"></textarea>
 
               <i class='todo-list-item-delete bx bx-trash-alt' @click="deleteListItem(item)"></i>
@@ -97,7 +97,7 @@ export default {
       });
     },
 
-    saveEditedListItemTitle($event, item) {
+    saveEditedListItemTitle(item) {
       item.titleEdit = false;
 
       if(!this.currentListItemTitle.trim()) return
@@ -110,11 +110,11 @@ export default {
       }
     },
 
-    checkIfEnterKey($event, item) {
+    checkIfEnterKey(item) {
       const lineBreakRegexMatch = /\r|\n/.exec(this.currentListItemTitle);
 
-      if (lineBreakRegexMatch || $event.inputType === 'insertLineBreak') {
-        this.saveEditedListItemTitle($event, item);
+      if (lineBreakRegexMatch) {
+        this.saveEditedListItemTitle(item);
       }
     },
 
