@@ -15,7 +15,7 @@
 
           <template #item="{ element: item }">
 
-            <li class="todo-list-item list-group-item">
+            <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }">
 
               <i class='todo-list-item-check bx bx-check-circle'
                 :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
@@ -28,14 +28,30 @@
                 @keyup.enter.exact.prevent="saveEditedListItemTitle(item)" @input="checkIfEnterKey(item)"
                 @blur="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"></textarea>
 
-              <i class='todo-list-item-delete bx bx-trash-alt' @click="deleteListItem(item)"></i>
+              <div class="dropdown todo-list-item-menu">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                  aria-expanded="false" @click="openItemMenu($event, item)">
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
 
-              <!-- <i class="bx bx-dots-vertical-rounded" @click="item.showMenu = true" style="font-size: 1.2rem"></i>
+                <ul class="dropdown-menu" style="">
+                  <li class="dropdown-item" @click="editListItemTitle(item)">
+                    <i class="bx bx-edit-alt me-1"></i> Редактировать
+                  </li>
 
-              <div class="dropdown-menu" :class="{ show: item.showMenu }" @blur="item.showMenu = false" style="position: absolute; top: 41%; right: 11%; margin: 0px;">
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-heart me-1"></i> В избранное</a>
-                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Удалить</a>
-              </div> -->
+                  <li class="dropdown-item" v-if="!item.liked" @click="like(item)">
+                    <i class="bx bx-heart me-1"></i> В избранное
+                  </li>
+
+                  <li class="dropdown-item" v-if="item.liked" @click="unlike(item)">
+                    <i class="bx bxs-heart me-1"></i> Из избранного
+                  </li>
+
+                  <li class="dropdown-item" @click="deleteListItem(item)">
+                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> Удалить
+                  </li>
+                </ul>
+              </div>
             </li>
 
           </template>
@@ -125,12 +141,32 @@ export default {
       item.titleEdit = false;
     },
 
+    like(item) {
+      item.liked = true
+
+      if (this.$user && !this.$user.isAuth) {
+        localStorage.setItem('listItems', JSON.stringify(this.listItems));
+      }
+    },
+
+    unlike(item) {
+      item.liked = false
+
+      if (this.$user && !this.$user.isAuth) {
+        localStorage.setItem('listItems', JSON.stringify(this.listItems));
+      }
+    },
+
     deleteListItem(listItem) {
       this.listItems = this.listItems.filter(item => item !== listItem);
 
       if (this.$user && !this.$user.isAuth) {
         localStorage.setItem('listItems', JSON.stringify(this.listItems));
       }
+    },
+
+    openItemMenu($event, item) {
+      $event.preventDefault();
     }
   },
 
@@ -208,8 +244,21 @@ export default {
   text-decoration: line-through;
 }
 
+.todo-list-item-liked {
+  color: #696cff;
+}
+
 .todo-list-item-edit {
   resize: none;
   margin-right: 0.5rem;
 }
+
+.todo-list-item-menu li {
+  cursor: default;
+}
+
+.todo-list-item-menu .bxs-heart {
+  color: #696cff;
+}
+
 </style>

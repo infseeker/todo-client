@@ -3,6 +3,8 @@ import { VueReCaptcha } from 'vue-recaptcha-v3';
 
 import { user } from './models/User';
 
+import 'bootstrap'
+
 import 'boxicons/css/boxicons.min.css';
 import './assets/css/sneat-theme-core.min.css';
 import './assets/css/sneat-theme-default.min.css';
