@@ -8,14 +8,24 @@
             type="text" placeholder="Что будем делать?">
         </div>
 
-        <draggable :list="listItems" @change="rangeListItem" tag="ul" handle=".todo-list-item-handle" item-key="id"
-          :delay="200" :animation="300" easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true"
-          :force-autoscroll-fallback="true" :scroll-sensitivity="30" :scroll-speed="200"
-          class="todo-list-items list-group list-group-flush">
+        <ul class="todo-list-item-filters">
+          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }"
+            @click="setListItemFilter('all')">Все</li>
+          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
+            @click="setListItemFilter('liked')">Избранное</li>
+          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
+            @click="setListItemFilter('done')">Готово</li>
+        </ul>
+
+        <draggable :list="listItems" @change="rangeListItem" tag="ul"
+          handle=".todo-list-item-handle" item-key="id" :delay="200" :animation="300"
+          easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true" :force-autoscroll-fallback="true"
+          :scroll-sensitivity="30" :scroll-speed="200" class="todo-list-items list-group list-group-flush">
 
           <template #item="{ element: item }">
 
-            <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }">
+            <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
+              v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
 
               <i class='todo-list-item-check bx bx-check-circle'
                 :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
@@ -71,6 +81,8 @@ export default {
       newListItemTitle: '',
       currentListItemTitle: '',
       listItems: [],
+      filteredListItems: [],
+      currentListItemFilter: 'all',
     }
   },
 
@@ -89,6 +101,10 @@ export default {
       }
 
       this.newListItemTitle = '';
+    },
+
+    setListItemFilter(filter) {
+      this.currentListItemFilter = filter;
     },
 
     checkListItem(item) {
@@ -204,6 +220,24 @@ export default {
   flex: 2;
 }
 
+.todo-list-item-filters {
+  display: flex;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0;
+  justify-content: center;
+  list-style: none;
+}
+
+.todo-list-item-filters li {
+  margin: 0 0.3rem;
+  cursor: pointer;
+}
+
+.todo-list-current-filter {
+  color: #696cff;
+}
+
 .todo-list-item {
   display: flex;
   align-items: center;
@@ -260,5 +294,4 @@ export default {
 .todo-list-item-menu .bxs-heart {
   color: #696cff;
 }
-
 </style>
