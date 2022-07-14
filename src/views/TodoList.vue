@@ -8,10 +8,13 @@
             type="text" placeholder="Что будем делать?">
         </div>
 
-        <draggable :list="listItems" @change="rangeListItem" item-key="id" handle=".todo-list-item-handle"
-          :disabled="false" :delay="200" :animation="300" :force-fallback="true" easing="cubic-bezier(0.37, 0, 0.63, 1)"
-          tag="ul" class="todo-list-items list-group list-group-flush">
+        <draggable :list="listItems" @change="rangeListItem" tag="ul" handle=".todo-list-item-handle" item-key="id"
+          :delay="200" :animation="300" easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true"
+          :force-autoscroll-fallback="true" :scroll-sensitivity="30" :scroll-speed="200"
+          class="todo-list-items list-group list-group-flush">
+
           <template #item="{ element: item }">
+
             <li class="todo-list-item list-group-item">
 
               <i class='todo-list-item-check bx bx-check-circle'
@@ -22,9 +25,8 @@
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" v-model="currentListItemTitle"
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keyup.enter.exact.prevent="saveEditedListItemTitle(item)"
-                @input="checkIfEnterKey(item)" @blur="discardEditedListItemTitle(item)"
-                @keyup.esc="discardEditedListItemTitle(item)"></textarea>
+                @keyup.enter.exact.prevent="saveEditedListItemTitle(item)" @input="checkIfEnterKey(item)"
+                @blur="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"></textarea>
 
               <i class='todo-list-item-delete bx bx-trash-alt' @click="deleteListItem(item)"></i>
 
@@ -35,6 +37,7 @@
                 <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Удалить</a>
               </div> -->
             </li>
+
           </template>
         </draggable>
 
@@ -100,7 +103,7 @@ export default {
     saveEditedListItemTitle(item) {
       item.titleEdit = false;
 
-      if(!this.currentListItemTitle.trim()) return
+      if (!this.currentListItemTitle.trim()) return
 
       this.currentListItemTitle = this.currentListItemTitle.replace(/[\r\n]/gm, '');
       item.title = this.currentListItemTitle.trim();
