@@ -22,8 +22,9 @@
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" v-model="currentListItemTitle"
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keyup.enter.exact.prevent="saveEditedListItemTitle($event, item)" @input="test($event, item)"
-                @blur="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"></textarea>
+                @keyup.enter.exact.prevent="saveEditedListItemTitle($event, item)"
+                @input="checkIfEnterKey($event, item)" @blur="discardEditedListItemTitle(item)"
+                @keyup.esc="discardEditedListItemTitle(item)"></textarea>
 
               <i class='todo-list-item-delete bx bx-trash-alt' @click="deleteListItem(item)"></i>
 
@@ -61,7 +62,6 @@ export default {
   methods: {
     addListItem(listItemTitle) {
       if (!listItemTitle) return;
-      console.log(listItemTitle);
 
       this.listItems.push({ title: listItemTitle, done: false, liked: false });
 
@@ -99,20 +99,23 @@ export default {
 
     saveEditedListItemTitle($event, item) {
       item.titleEdit = false;
+
+      if(!this.currentListItemTitle.trim()) return
+
       this.currentListItemTitle = this.currentListItemTitle.replace(/[\r\n]/gm, '');
-      item.title = this.currentListItemTitle;
+      item.title = this.currentListItemTitle.trim();
 
       if (this.$user && !this.$user.isAuth) {
         localStorage.setItem('listItems', JSON.stringify(this.listItems));
       }
     },
 
-    test($event, item) {
-      if ($event.inputType === 'insertLineBreak') {
-        $event.preventDefault();
+    checkIfEnterKey($event, item) {
+      const lineBreakRegexMatch = /\r|\n/.exec(this.currentListItemTitle);
+
+      if (lineBreakRegexMatch || $event.inputType === 'insertLineBreak') {
         this.saveEditedListItemTitle($event, item);
       }
-
     },
 
     discardEditedListItemTitle(item) {
@@ -203,6 +206,7 @@ export default {
 }
 
 .todo-list-item-edit {
+  resize: none;
   margin-right: 0.5rem;
 }
 </style>
