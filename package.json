@@ -15,7 +15,8 @@
     "vue": "^3.2.25",
     "vue-advanced-cropper": "^2.8.3",
     "vue-recaptcha-v3": "^2.0.1",
-    "vue-router": "^4.0.15"
+    "vue-router": "^4.0.15",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
