@@ -324,15 +324,15 @@ export default {
 
 .todo-list-item {
   display: flex;
+  align-items: center;
   padding: 0.4rem 0.9rem !important;
   overflow-x: clip;
 }
 
 .todo-list-item-check {
-  font-size: 1.5rem;
-  margin-right: 0.5rem;
+  font-size: 1.6rem;
+  margin-right: 0.3rem;
   cursor: pointer;
-  align-self: center;
 }
 
 .todo-list-item-title {
@@ -359,18 +359,8 @@ export default {
   overflow-wrap: anywhere;
 }
 
-.todo-list-item-menu {
-  align-self: center;
-}
-
 .todo-list-item-edit:focus {
   box-shadow: 0 0 0 1px #696cff;
-}
-
-.todo-list-item-delete {
-  font-size: 1.2rem;
-  margin-left: auto;
-  cursor: pointer;
 }
 
 .todo-list-item.sortable-chosen {
@@ -387,15 +377,28 @@ export default {
 }
 
 .todo-list-item-menu .dropdown-menu {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
   margin: 0
+}
+
+.todo-list-item-menu .dropdown-item {
+  display: flex;
 }
 
 .todo-list-item-menu li {
   cursor: pointer;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.todo-list-item-menu .bx-dots-vertical-rounded {
+  font-size: 1.6rem;
 }
 
 .todo-list-item-menu i {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  padding-right: 0.2rem;
 }
 
 .todo-list-item-menu .bxs-heart {
