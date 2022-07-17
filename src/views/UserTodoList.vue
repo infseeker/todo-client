@@ -113,15 +113,11 @@ export default {
 
   methods: {
     getDataFromLocalStorage() {
-      if (this.$user && !this.$user.isAuth) {
-        this.allListItems = JSON.parse(localStorage.getItem('listItems')) || [];
-      }
+      this.allListItems = JSON.parse(localStorage.getItem('listItems')) || [];
     },
 
     saveDataToLocalStorage() {
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.allListItems));
-      }
+      localStorage.setItem('listItems', JSON.stringify(this.allListItems));
     },
 
     removeUselessSymbols(todoListItemTitle, mode) {

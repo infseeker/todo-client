@@ -10,15 +10,23 @@ import UserService from './services/UserService';
 import UserNavigation from './components/user/UserNavigation.vue';
 
 export default {
+  computed: {
+    currentRoute() {
+      return this.$route
+    }
+  },
+
   components: {
     UserNavigation,
   },
-  
+
   methods: {
     loadAuthData() {
       // Load user auth data
+      console.log(this.$user);
+
       UserService.getSession().then((data) => {
-        this.$user.setAuthData(data);
+        this.$user.login(data);
 
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
@@ -29,9 +37,9 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     this.loadAuthData();
-  },
+  }
 };
 </script>
 

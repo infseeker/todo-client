@@ -7,8 +7,9 @@ import Activation from '@/views/Activation.vue';
 import RestorationEmail from '@/views/RestorationEmail.vue';
 import Restoration from '@/views/Restoration.vue';
 import DeletedUser from '@/views/DeletedUser.vue';
-import TodoLists from '@/views/TodoLists.vue';
-import TodoList from '@/views/TodoList.vue';
+import GuestTodoList from '@/views/GuestTodoList.vue';
+import UserTodoLists from '@/views/UserTodoLists.vue';
+import UserTodoList from '@/views/UserTodoList.vue';
 import UserList from '@/views/UserList.vue';
 import UserProfilePreview from '@/views/UserProfilePreview.vue';
 import UserProfileEdit from '@/views/UserProfileEdit.vue';
@@ -18,7 +19,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: TodoList,
+    component: GuestTodoList,
     meta: {
       guestRequired: true
     },
@@ -93,7 +94,7 @@ const routes = [
   {
     path: '/lists',
     name: 'lists',
-    component: TodoLists,
+    component: UserTodoLists,
     meta: {
       authRequired: true,
     },
@@ -101,7 +102,7 @@ const routes = [
   {
     path: '/lists/:list_id',
     name: 'list',
-    component: TodoList,
+    component: UserTodoList,
     meta: {
       authRequired: true,
     },
@@ -145,7 +146,7 @@ const routes = [
   {
     path: '/admin/users/:user_id/lists',
     name: 'admin-user-lists',
-    component: TodoLists,
+    component: UserTodoLists,
     meta: {
       authRequired: true,
       adminRequired: true,
@@ -154,7 +155,7 @@ const routes = [
   {
     path: '/admin/users/:user_id/lists/:list_id',
     name: 'admin-user-list',
-    component: TodoList,
+    component: UserTodoList,
     meta: {
       authRequired: true,
       adminRequired: true,
@@ -180,6 +181,9 @@ const router = createRouter({
 
 router.setRouteByUserPermissions = function(route, user) {
   const router = this;
+  console.log(route);
+  if(!user.initialRoute) user.initialRoute = route;
+  
   
   if (route.meta.authRequired && !user.isAuth) {
     router.push({ name: 'login' });
