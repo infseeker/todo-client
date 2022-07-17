@@ -1,4 +1,6 @@
 <template>
+  <!-- <div style="position:fixed; top: 0; z-index:5000; color: red; background-color: white;">Sizes: {{ this.systemText }}</div> -->
+
   <div class="todo-list mt-4">
     <div class="card">
       <div class="card-body">
@@ -10,51 +12,71 @@
 
         <ul class="todo-list-item-filters">
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }"
-            @click="setListItemFilter('all')">Все</li>
+            @click="currentListItemFilter = 'all'">
+            Все</li>
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
-            @click="setListItemFilter('liked')">Избранное</li>
+            @click="currentListItemFilter = 'liked'">Избранное</li>
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
-            @click="setListItemFilter('done')">Готово</li>
+            @click="currentListItemFilter = 'done'">Готово</li>
         </ul>
 
-        <draggable :list="listItems" @change="rangeListItem" tag="ul"
+        <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
+        <ul class="todo-list-items list-group list-group-flush"
+          style="visibility: hidden; position: relative; z-index: 0">
+          <li class="todo-list-item" style="position: fixed;">
+            <i class='todo-list-item-check bx bx-check-circle'></i>
+            <span ref="hiddenTitleOfListItem" class="todo-list-item-title">{{ currentListItemTitle }}</span>
+
+            <div class="dropdown todo-list-item-menu">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+
+        <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && allListItems.length === 0) ||
+        (currentListItemFilter === 'liked' && allListItems.filter(item => item.liked === true).length === 0) ||
+        (currentListItemFilter === 'done' && allListItems.filter(item => item.done === true).length === 0)">
+          Здесь пока ничего нет
+        </div>
+
+        <draggable ref="draggableList" :list="allListItems" @change="rangeListItem" tag="ul"
           handle=".todo-list-item-handle" item-key="id" :delay="200" :animation="300"
           easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true" :force-autoscroll-fallback="true"
           :scroll-sensitivity="30" :scroll-speed="200" class="todo-list-items list-group list-group-flush">
 
           <template #item="{ element: item }">
-
             <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
               v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
 
               <i class='todo-list-item-check bx bx-check-circle'
                 :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
 
-              <span class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
+              <span :ref="`titleOfListItem-${allListItems.indexOf(item)}`"
+                class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
                 @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{ item.title }}</span>
 
-              <textarea rows="1" class="todo-list-item-edit form-control" type="text" v-model="currentListItemTitle"
-                v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keyup.enter.exact.prevent="saveEditedListItemTitle(item)" @input="checkIfEnterKey(item)"
-                @blur="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"></textarea>
+              <textarea rows="1" class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle"
+                v-if="item.titleEdit" :ref="`editTitleOfListItem-${allListItems.indexOf(item)}`"
+                @keypress.enter.exact="saveEditedListItemTitle(item)"
+                @input="inputListItemTitleText($event, item)" @blur="discardEditedListItemTitle(item)"
+                @keyup.esc.exact="discardEditedListItemTitle(item)"></textarea>
 
               <div class="dropdown todo-list-item-menu">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                  aria-expanded="false" @click="openItemMenu($event, item)">
+                  aria-expanded="false">
                   <i class="bx bx-dots-vertical-rounded"></i>
                 </button>
 
-                <ul class="dropdown-menu" style="">
+                <ul class="dropdown-menu dropdown-menu-end">
                   <li class="dropdown-item" @click="editListItemTitle(item)">
                     <i class="bx bx-edit-alt me-1"></i> Редактировать
                   </li>
 
-                  <li class="dropdown-item" v-if="!item.liked" @click="like(item)">
-                    <i class="bx bx-heart me-1"></i> В избранное
-                  </li>
-
-                  <li class="dropdown-item" v-if="item.liked" @click="unlike(item)">
-                    <i class="bx bxs-heart me-1"></i> Из избранного
+                  <li class="dropdown-item" @click="toggleLikeListItem(item)">
+                    <i class="bx me-1" :class="{ 'bx-heart': !item.liked, 'bxs-heart': item.liked }"></i>
+                    {{ item.liked ? 'Из избранного' : 'В избранное' }}
                   </li>
 
                   <li class="dropdown-item" @click="deleteListItem(item)">
@@ -80,9 +102,10 @@ export default {
     return {
       newListItemTitle: '',
       currentListItemTitle: '',
-      listItems: [],
-      filteredListItems: [],
+      allListItems: [],
       currentListItemFilter: 'all',
+      systemText: '',
+      currentBodyScrollPosition: 0,
     }
   },
 
@@ -91,43 +114,48 @@ export default {
   },
 
   methods: {
+    getDataFromLocalStorage() {
+      if (this.$user && !this.$user.isAuth) {
+        this.allListItems = JSON.parse(localStorage.getItem('listItems')) || [];
+      }
+    },
+
+    saveDataToLocalStorage() {
+      if (this.$user && !this.$user.isAuth) {
+        localStorage.setItem('listItems', JSON.stringify(this.allListItems));
+      }
+    },
+
     addListItem(listItemTitle) {
       if (!listItemTitle) return;
 
-      this.listItems.push({ title: listItemTitle, done: false, liked: false });
+      const title = listItemTitle.replace(/[\r\n]/gm, '').replace(/ +(?= )/g, '').trim();
+      this.allListItems.push({ title: title, done: false, liked: false });
 
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      this.saveDataToLocalStorage();
 
       this.newListItemTitle = '';
     },
 
-    setListItemFilter(filter) {
-      this.currentListItemFilter = filter;
-    },
+    checkListItem(listItem) {
+      listItem.done = !listItem.done
 
-    checkListItem(item) {
-      item.done = !item.done
-
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      this.saveDataToLocalStorage();
     },
 
     rangeListItem() {
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      this.saveDataToLocalStorage();
     },
 
     editListItemTitle(item) {
       item.titleEdit = true;
       this.currentListItemTitle = item.title;
+      const title = this.$refs[`titleOfListItem-${this.allListItems.indexOf(item)}`];
+      const titleHeight = title.offsetHeight;
 
       this.$nextTick(() => {
-        const editField = this.$refs[`editTitleOfListItem-${this.listItems.indexOf(item)}`];
-        editField.style.height = editField.scrollHeight > 20 && editField.scrollHeight < 50 ? editField.scrollHeight + 2 + 'px' : 74 + 'px';
+        const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
+        editField.style.height = titleHeight + 'px';
         editField.focus();
       });
     },
@@ -137,64 +165,88 @@ export default {
 
       if (!this.currentListItemTitle.trim()) return
 
-      this.currentListItemTitle = this.currentListItemTitle.replace(/[\r\n]/gm, '');
-      item.title = this.currentListItemTitle.trim();
+      this.currentListItemTitle = this.currentListItemTitle.replace(/[\r\n]/gm, '').replace(/ +(?= )/g, '').trim();
+      item.title = this.currentListItemTitle;
 
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      // this.stopAutoScroll();
+
+      this.saveDataToLocalStorage();
     },
 
-    checkIfEnterKey(item) {
-      const lineBreakRegexMatch = /\r|\n/.exec(this.currentListItemTitle);
+    inputListItemTitleText($event, item) {
+      // Not using v-model is for fixing mobile chromium browser bug (not updates model every input event, only every word)
+      $event.target.value = $event.target.value.replace(/ +(?= )/g, '');
+      this.currentListItemTitle = $event.target.value;
 
-      if (lineBreakRegexMatch) {
-        this.saveEditedListItemTitle(item);
-      }
+      this.currentBodyScrollPosition = document.documentElement.scrollTop;
+      // Rerender after every input to redraw textarea for proper resizing
+      this.$nextTick(() => {
+        const lineBreakRegexMatch = /\r|\n/.exec(this.currentListItemTitle);
+
+        if (lineBreakRegexMatch) {
+          this.saveEditedListItemTitle(item);
+        }
+
+        const hiddenField = this.$refs.hiddenTitleOfListItem;
+        if (!this.currentListItemTitle) {
+          hiddenField.innerHTML = '0';
+        }
+
+        const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
+        hiddenField.style.width = editField.clientWidth + 'px';
+        editField.style.height = hiddenField.clientHeight + 'px';
+      });
     },
 
     discardEditedListItemTitle(item) {
       item.titleEdit = false;
     },
 
-    like(item) {
-      item.liked = true
+    toggleLikeListItem(item) {
+      item.liked = !item.liked
 
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
-    },
-
-    unlike(item) {
-      item.liked = false
-
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      this.saveDataToLocalStorage();
     },
 
     deleteListItem(listItem) {
-      this.listItems = this.listItems.filter(item => item !== listItem);
+      this.allListItems = this.allListItems.filter(item => item !== listItem);
+      this.currentListItemTitle = '';
 
-      if (this.$user && !this.$user.isAuth) {
-        localStorage.setItem('listItems', JSON.stringify(this.listItems));
-      }
+      // this.stopAutoScroll();
+
+      this.saveDataToLocalStorage();
     },
 
-    openItemMenu($event, item) {
-      $event.preventDefault();
+    stopAutoScroll() {
+      // Hack for some browsers to stop auto scrolling on page changes
+      const yOffset = window.pageYOffset;
+
+      setTimeout(() => {
+        window.scroll(0, yOffset);
+        window.scrollTo(0, yOffset);
+      });
+
+      this.$nextTick(() => {
+        setTimeout(() => {
+          window.scroll(0, yOffset);
+          window.scrollTo(0, yOffset);
+        });
+      })
     }
   },
 
   mounted() {
-    if (this.$user && !this.$user.isAuth) {
-      this.listItems = JSON.parse(localStorage.getItem('listItems')) || [];
-    }
+    this.getDataFromLocalStorage();
   }
 }
 </script>
 
 <style scoped>
+html,
+body {
+  overflow-x: clip;
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .card-body {
     padding: 0.5rem 0;
@@ -206,6 +258,14 @@ export default {
   }
 }
 
+@supports (-webkit-touch-callout: none) {
+  .todo-list-item-filters {
+    font-size: 1.1rem;
+    margin: 0.6rem !important;
+    margin-top: 1.5rem !important;
+  }
+}
+
 .new-todo-list-item {
   display: flex;
 }
@@ -213,6 +273,7 @@ export default {
 .new-todo-list-item i {
   font-size: 3rem;
   padding-right: 0.5rem;
+  cursor: pointer;
 }
 
 .new-todo-list-item input {
@@ -238,20 +299,63 @@ export default {
   color: #696cff;
 }
 
+.todo-list-empty {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  color: #697a8d73;
+  font-size: 1.2rem;
+}
+
+.todo-list-items {
+  list-style: none;
+}
+
 .todo-list-item {
   display: flex;
-  align-items: center;
+  padding: 0.4rem 0.9rem !important;
+  overflow-x: clip;
 }
 
 .todo-list-item-check {
   font-size: 1.5rem;
   margin-right: 0.5rem;
   cursor: pointer;
+  align-self: center;
 }
 
 .todo-list-item-title {
+  box-sizing: border-box;
+  display: block;
   font-size: 1.2rem;
+  padding: 0.2rem 0.4rem;
+  margin: 0;
   flex: 1;
+  overflow-wrap: anywhere;
+  overflow-x: clip;
+}
+
+.todo-list-item-edit {
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px #d9dee3;
+  min-height: 0;
+  display: block;
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  resize: none;
+  font-size: 1.2rem;
+  overflow: hidden;
+  border: none;
+  overflow-wrap: anywhere;
+  overflow-x: clip;
+}
+
+.todo-list-item-menu {
+  align-self: center;
+}
+
+.todo-list-item-edit:focus {
+  box-shadow: 0 0 0 1px #696cff;
 }
 
 .todo-list-item-delete {
@@ -261,17 +365,17 @@ export default {
 }
 
 .todo-list-item.sortable-chosen {
+  opacity: 0.5;
   cursor: move;
-  cursor: -webkit-grabbing;
 }
 
 .todo-list-item.sortable-ghost {
-  opacity: 0.5;
+  /* opacity: 0.5; */
 }
 
 .todo-list-item.sortable-drag {
-  padding-top: 1.5rem;
-  padding-left: 1.5rem;
+  /* padding-top: 1.5rem; */
+  /* padding-left: 1.5rem; */
 }
 
 .todo-list-item-done {
@@ -282,13 +386,16 @@ export default {
   color: #696cff;
 }
 
-.todo-list-item-edit {
-  resize: none;
-  margin-right: 0.5rem;
+.todo-list-item-menu .dropdown-menu {
+  margin: 0
 }
 
 .todo-list-item-menu li {
-  cursor: default;
+  cursor: pointer;
+}
+
+.todo-list-item-menu i {
+  font-size: 1.5rem;
 }
 
 .todo-list-item-menu .bxs-heart {
