@@ -1,13 +1,12 @@
 <template>
-  <!-- <div style="position:fixed; top: 0; z-index:5000; color: red; background-color: white;">Sizes: {{ this.systemText }}</div> -->
-
   <div class="todo-list mt-4">
     <div class="card">
       <div class="card-body">
         <div class="new-todo-list-item mb-2">
-          <i class='bx bxs-plus-circle' @click="addListItem(newListItemTitle)"></i>
-          <input v-model.trim="newListItemTitle" @keyup.enter="addListItem(newListItemTitle)" class="form-control"
-            type="text" placeholder="Что будем делать?">
+          <i class='bx bxs-plus-circle' @click="createListItem(newListItemTitle)"></i>
+          <input :value="newListItemTitle" @keypress.enter.exact="createListItem(newListItemTitle)"
+            @input="inputNewListItemTitle($event, item)" class="form-control" type="text"
+            placeholder="Что будем делать?">
         </div>
 
         <ul class="todo-list-item-filters">
@@ -59,9 +58,9 @@
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle"
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${allListItems.indexOf(item)}`"
-                @keypress.enter.exact="saveEditedListItemTitle(item)"
-                @input="inputListItemTitleText($event, item)" @blur="discardEditedListItemTitle(item)"
-                @keyup.esc.exact="discardEditedListItemTitle(item)"></textarea>
+                @keypress.enter.exact="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
+                @blur="discardEditedListItemTitle(item)" @keyup.esc.exact="discardEditedListItemTitle(item)"
+                @paste="pasteListItemTitleText($event, item)"></textarea>
 
               <div class="dropdown todo-list-item-menu">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -104,8 +103,7 @@ export default {
       currentListItemTitle: '',
       allListItems: [],
       currentListItemFilter: 'all',
-      systemText: '',
-      currentBodyScrollPosition: 0,
+      isPastedText: false,
     }
   },
 
@@ -126,15 +124,34 @@ export default {
       }
     },
 
-    addListItem(listItemTitle) {
+    removeUselessSymbols(todoListItemTitle, mode) {
+      switch (mode) {
+        case 'all':
+          return todoListItemTitle.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
+
+        case 'spaces':
+          return todoListItemTitle.replace(/( +(?= ))|(^\s)/g, '');
+
+        case 'breaks':
+          return todoListItemTitle.replace(/[\r\n]/g, ' ').replace(/ +(?= )/g, '');
+      }
+    },
+
+    inputNewListItemTitle($event) {
+      $event.target.value = this.removeUselessSymbols($event.target.value, 'all');
+      this.newListItemTitle = $event.target.value;
+    },
+
+    createListItem(listItemTitle) {
       if (!listItemTitle) return;
 
-      const title = listItemTitle.replace(/[\r\n]/gm, '').replace(/ +(?= )/g, '').trim();
+      const title = this.removeUselessSymbols(listItemTitle, 'all');;
+
       this.allListItems.push({ title: title, done: false, liked: false });
 
-      this.saveDataToLocalStorage();
-
       this.newListItemTitle = '';
+
+      this.saveDataToLocalStorage();
     },
 
     checkListItem(listItem) {
@@ -150,35 +167,28 @@ export default {
     editListItemTitle(item) {
       item.titleEdit = true;
       this.currentListItemTitle = item.title;
-      const title = this.$refs[`titleOfListItem-${this.allListItems.indexOf(item)}`];
-      const titleHeight = title.offsetHeight;
+
+      const hiddenField = this.$refs.hiddenTitleOfListItem;
 
       this.$nextTick(() => {
         const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
-        editField.style.height = titleHeight + 'px';
+        hiddenField.style.width = editField.clientWidth + 'px';
+        editField.style.height = hiddenField.clientHeight + 'px';
         editField.focus();
       });
     },
 
-    saveEditedListItemTitle(item) {
-      item.titleEdit = false;
-
-      if (!this.currentListItemTitle.trim()) return
-
-      this.currentListItemTitle = this.currentListItemTitle.replace(/[\r\n]/gm, '').replace(/ +(?= )/g, '').trim();
-      item.title = this.currentListItemTitle;
-
-      // this.stopAutoScroll();
-
-      this.saveDataToLocalStorage();
-    },
-
     inputListItemTitleText($event, item) {
       // Not using v-model is for fixing mobile chromium browser bug (not updates model every input event, only every word)
-      $event.target.value = $event.target.value.replace(/ +(?= )/g, '');
+      $event.target.value = this.removeUselessSymbols($event.target.value, 'spaces');
+
+      if (this.isPastedText) {
+        $event.target.value = this.removeUselessSymbols($event.target.value, 'breaks');
+      }
+      this.isPastedText = false;
+
       this.currentListItemTitle = $event.target.value;
 
-      this.currentBodyScrollPosition = document.documentElement.scrollTop;
       // Rerender after every input to redraw textarea for proper resizing
       this.$nextTick(() => {
         const lineBreakRegexMatch = /\r|\n/.exec(this.currentListItemTitle);
@@ -188,18 +198,44 @@ export default {
         }
 
         const hiddenField = this.$refs.hiddenTitleOfListItem;
+
         if (!this.currentListItemTitle) {
+          // To keep size if hidden field is empty
           hiddenField.innerHTML = '0';
         }
 
         const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
-        hiddenField.style.width = editField.clientWidth + 'px';
-        editField.style.height = hiddenField.clientHeight + 'px';
+
+        if (hiddenField.clientWidth !== editField.clientWidth) {
+          hiddenField.style.width = editField.clientWidth + 'px';
+        }
+
+        if (hiddenField.clientHeight !== editField.clientHeight) {
+          editField.style.height = hiddenField.clientHeight + 'px';
+        }
       });
+    },
+
+    pasteListItemTitleText() {
+      this.isPastedText = true;
+    },
+
+    saveEditedListItemTitle(item) {
+      item.titleEdit = false;
+
+      if (!this.currentListItemTitle.trim()) return
+
+      this.currentListItemTitle = this.removeUselessSymbols(this.currentListItemTitle, 'all').trim();
+      item.title = this.currentListItemTitle;
+
+      this.currentListItemTitle = '';
+
+      this.saveDataToLocalStorage();
     },
 
     discardEditedListItemTitle(item) {
       item.titleEdit = false;
+      this.currentListItemTitle = '';
     },
 
     toggleLikeListItem(item) {
@@ -210,29 +246,9 @@ export default {
 
     deleteListItem(listItem) {
       this.allListItems = this.allListItems.filter(item => item !== listItem);
-      this.currentListItemTitle = '';
-
-      // this.stopAutoScroll();
 
       this.saveDataToLocalStorage();
     },
-
-    stopAutoScroll() {
-      // Hack for some browsers to stop auto scrolling on page changes
-      const yOffset = window.pageYOffset;
-
-      setTimeout(() => {
-        window.scroll(0, yOffset);
-        window.scrollTo(0, yOffset);
-      });
-
-      this.$nextTick(() => {
-        setTimeout(() => {
-          window.scroll(0, yOffset);
-          window.scrollTo(0, yOffset);
-        });
-      })
-    }
   },
 
   mounted() {
@@ -242,11 +258,6 @@ export default {
 </script>
 
 <style scoped>
-html,
-body {
-  overflow-x: clip;
-}
-
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .card-body {
     padding: 0.5rem 0;
@@ -332,7 +343,6 @@ body {
   margin: 0;
   flex: 1;
   overflow-wrap: anywhere;
-  overflow-x: clip;
 }
 
 .todo-list-item-edit {
@@ -347,7 +357,6 @@ body {
   overflow: hidden;
   border: none;
   overflow-wrap: anywhere;
-  overflow-x: clip;
 }
 
 .todo-list-item-menu {
@@ -367,15 +376,6 @@ body {
 .todo-list-item.sortable-chosen {
   opacity: 0.5;
   cursor: move;
-}
-
-.todo-list-item.sortable-ghost {
-  /* opacity: 0.5; */
-}
-
-.todo-list-item.sortable-drag {
-  /* padding-top: 1.5rem; */
-  /* padding-left: 1.5rem; */
 }
 
 .todo-list-item-done {
