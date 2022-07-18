@@ -4,7 +4,7 @@
       <div class="card-body">
         <div class="new-todo-list-item mb-2">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
-          <input :value="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)" class="form-control"
+          <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)" class="form-control"
             type="text" placeholder="Что будем делать?">
         </div>
 
@@ -128,8 +128,8 @@ export default {
       }
     },
 
-    createListItem($event) {
-      let title = $event.target.value;
+    createListItem($event, newListItemTitle) {
+      let title = $event.target.value || newListItemTitle;
       if (!title.trim()) return;
 
       title = this.removeUselessSymbols(title, 'all').trim();
@@ -137,6 +137,7 @@ export default {
       this.allListItems.push({ title: title, done: false, liked: false });
 
       this.newListItemTitle = '';
+      $event.target.value = '';
 
       this.saveDataToLocalStorage();
     },

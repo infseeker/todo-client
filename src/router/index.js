@@ -21,7 +21,7 @@ const routes = [
     name: 'home',
     component: GuestTodoList,
     meta: {
-      guestRequired: true
+      guestRequired: true,
     },
   },
   {
@@ -35,7 +35,7 @@ const routes = [
     component: Login,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -44,7 +44,7 @@ const routes = [
     component: Registration,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -53,7 +53,7 @@ const routes = [
     component: Activation,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -62,7 +62,7 @@ const routes = [
     component: RestorationEmail,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -71,7 +71,7 @@ const routes = [
     component: Restoration,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -80,7 +80,7 @@ const routes = [
     component: DeletedUser,
     meta: {
       guestRequired: true,
-      hideNav: true
+      hideNav: true,
     },
   },
   {
@@ -179,11 +179,10 @@ const router = createRouter({
   routes,
 });
 
-router.setRouteByUserPermissions = function(route, user) {
-  const router = this;
-  console.log(route);
-  if(!user.initialRoute) user.initialRoute = route;
+router.setRouteByUserPermissions = function (route, user) {
+  console.log(user, route);
   
+  const router = this;
   
   if (route.meta.authRequired && !user.isAuth) {
     router.push({ name: 'login' });
@@ -201,15 +200,15 @@ router.setRouteByUserPermissions = function(route, user) {
     } else {
       router.push({ name: 'lists' });
     }
-    console.log({message: 'Router: You are already logged in'})
+    console.log({ message: 'Router: You are already logged in' });
   }
-}
+};
 
-router.setInitialRouteByUserPermissions = function(route, user) {
+router.setInitialRouteByUserPermissions = function (route, user) {
   router.setRouteByUserPermissions(route, user);
   router.beforeEach((to) => {
     router.setRouteByUserPermissions(to, user);
   });
-}
+};
 
 export default router;

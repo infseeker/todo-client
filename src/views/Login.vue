@@ -10,7 +10,7 @@ import LoginForm from '../components/user/LoginForm.vue';
 export default {
   components: {
     LoginForm
-  }
+  },
 }
 </script>
 
