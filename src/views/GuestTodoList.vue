@@ -60,7 +60,7 @@
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${allListItems.indexOf(item)}`"
                 @keypress.enter.exact="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
                 @blur="discardEditedListItemTitle(item)" @keyup.esc.exact="discardEditedListItemTitle(item)"
-                @paste="pasteListItemTitleText($event, item)"></textarea>
+                @keydown="keyPress($event, item)" @paste="pasteListItemTitleText($event, item)"></textarea>
 
               <div class="dropdown todo-list-item-menu">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -104,6 +104,8 @@ export default {
       allListItems: [],
       currentListItemFilter: 'all',
       isPastedText: false,
+      isEnterKey: false,
+      tempListItemTitle: ''
     }
   },
 
@@ -163,6 +165,7 @@ export default {
     editListItemTitle(item) {
       item.titleEdit = true;
       this.currentListItemTitle = item.title;
+      this.tempListItemTitle = item.title;
 
       const hiddenField = this.$refs.hiddenTitleOfListItem;
 
@@ -174,10 +177,16 @@ export default {
       });
     },
 
+    keyPressOnListItemTitleText($event) {
+      const key = $event.which || $event.keyCode || 0;
+
+      if (key === 13) {
+        this.isEnterKey = true;
+      }
+    },
+
     inputListItemTitleText($event, item) {
       // Not using v-model is for fixing mobile chromium browser bug (not updates model every input event, only every word)
-      $event.target.value = this.removeUselessSymbols($event.target.value, 'spaces');
-
       if (this.isPastedText) {
         $event.target.value = this.removeUselessSymbols($event.target.value, 'breaks');
       }
@@ -187,9 +196,13 @@ export default {
 
       // Rerender after every input to redraw textarea for proper resizing
       this.$nextTick(() => {
-        const lineBreakRegexMatch = /\r/.exec(this.currentListItemTitle);
+        const text = $event.target.value;
+        const start = $event.target.selectionStart;
 
-        if (lineBreakRegexMatch) {
+        // Hack to recognize Enter key for mobile devices
+        if (this.isEnterKey || (text.charAt(start - 2).charCodeAt() !== 32 && text.charAt(start - 1).charCodeAt() === 10)) {
+          this.isEnterKey = false;
+
           this.saveEditedListItemTitle(item);
         }
 
