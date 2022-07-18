@@ -4,9 +4,8 @@
       <div class="card-body">
         <div class="new-todo-list-item mb-2">
           <i class='bx bxs-plus-circle' @click="createListItem(newListItemTitle)"></i>
-          <input :value="newListItemTitle" @keypress.enter.exact="createListItem(newListItemTitle)"
-            @input="inputNewListItemTitle($event, item)" class="form-control" type="text"
-            placeholder="Что будем делать?">
+          <input v-model.trim="newListItemTitle" @keypress.enter.exact="createListItem(newListItemTitle)" class="form-control"
+            type="text" placeholder="Что будем делать?">
         </div>
 
         <ul class="todo-list-item-filters">
@@ -20,12 +19,10 @@
         </ul>
 
         <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
-        <ul class="todo-list-items list-group list-group-flush"
-          style="visibility: hidden; position: relative; z-index: 0">
-          <li class="todo-list-item" style="position: fixed;">
+        <ul class="todo-list-item-hidden-title todo-list-items list-group list-group-flush">
+          <li class="todo-list-item">
             <i class='todo-list-item-check bx bx-check-circle'></i>
-            <span ref="hiddenTitleOfListItem" class="todo-list-item-title">{{ currentListItemTitle }}</span>
-
+            <pre ref="hiddenTitleOfListItem" class="todo-list-item-title">{{ currentListItemTitle }}</pre>
             <div class="dropdown todo-list-item-menu">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow">
                 <i class="bx bx-dots-vertical-rounded"></i>
@@ -60,8 +57,7 @@
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${allListItems.indexOf(item)}`"
                 @keypress.enter.exact="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
                 @blur.prevent="discardEditedListItemTitle(item)" @keyup.esc.exact="discardEditedListItemTitle(item)"
-                @keydown="keyPressOnListItemTitleText($event)" @paste="pasteListItemTitleText()"
-                @cut.passive.self.once="cutListItemTitleText()"></textarea>
+                @keydown="keyPressOnListItemTitleText($event)" @paste="pasteListItemTitleText()"></textarea>
 
               <div class="dropdown todo-list-item-menu">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -106,7 +102,6 @@ export default {
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
-      tempListItemTitle: ''
     }
   },
 
@@ -133,13 +128,8 @@ export default {
       }
     },
 
-    inputNewListItemTitle($event) {
-      $event.target.value = this.removeUselessSymbols($event.target.value, 'all');
-      this.newListItemTitle = $event.target.value;
-    },
-
     createListItem(listItemTitle) {
-      if (!listItemTitle) return;
+      if (!listItemTitle.trim()) return;
 
       const title = this.removeUselessSymbols(listItemTitle, 'all');;
 
@@ -161,12 +151,11 @@ export default {
     },
 
     editListItemTitle(item) {
+      const hiddenField = this.$refs.hiddenTitleOfListItem;
       const pageYOffset = window.pageYOffset;
+
       item.titleEdit = true;
       this.currentListItemTitle = item.title;
-      this.tempListItemTitle = item.title;
-
-      const hiddenField = this.$refs.hiddenTitleOfListItem;
 
       this.$nextTick(() => {
         const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
@@ -174,6 +163,7 @@ export default {
         editField.style.height = hiddenField.clientHeight + 'px';
         editField.focus({ preventScroll: true });
 
+        // Fix scroll position for some browsers
         scrollTo(0, pageYOffset);
 
         setTimeout(() => {
@@ -184,14 +174,7 @@ export default {
 
     keyPressOnListItemTitleText($event) {
       const key = $event.which || $event.keyCode || 0;
-
       this.isEnterKey = key === 13 ? true : false;
-
-      // if (key === 13) {
-      //   this.isEnterKey = true;
-      // } else {
-      //   this.isEnterKey = false;
-      // }
     },
 
     inputListItemTitleText($event, item) {
@@ -203,12 +186,12 @@ export default {
 
       this.currentListItemTitle = $event.target.value;
 
-      // Rerender after every input to redraw textarea for proper resizing
+      // Rerender after every input to redraw textarea for proper resizing edit field
       this.$nextTick(() => {
         const text = $event.target.value;
         const start = $event.target.selectionStart;
 
-        // Hack to recognize Enter key for mobile devices
+        // Hack to recognize Enter key on android devices
         if (this.isEnterKey || (text.charAt(start - 2).charCodeAt() !== 32 && text.charAt(start - 1).charCodeAt() === 10)) {
           this.isEnterKey = false;
           this.saveEditedListItemTitle(item);
@@ -235,10 +218,6 @@ export default {
 
     pasteListItemTitleText() {
       this.isPastedText = true;
-    },
-
-    cutListItemTitleText() {
-      console.log('cut');
     },
 
     saveEditedListItemTitle(item) {
@@ -337,6 +316,22 @@ export default {
   justify-content: center;
   color: #697a8d73;
   font-size: 1.2rem;
+}
+
+.todo-list-item-hidden-title {
+  visibility: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.todo-list-item-hidden-title li {
+  position: fixed;
+}
+
+.todo-list-item-hidden-title pre {
+  font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  display: inline-block;
+  white-space: pre-wrap;
 }
 
 .todo-list-items {
