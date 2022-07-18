@@ -3,8 +3,8 @@
     <div class="card">
       <div class="card-body">
         <div class="new-todo-list-item mb-2">
-          <i class='bx bxs-plus-circle' @click="createListItem(newListItemTitle)"></i>
-          <input v-model.trim="newListItemTitle" @keypress.enter.exact="createListItem(newListItemTitle)" class="form-control"
+          <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
+          <input :value="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)" class="form-control"
             type="text" placeholder="Что будем делать?">
         </div>
 
@@ -128,10 +128,11 @@ export default {
       }
     },
 
-    createListItem(listItemTitle) {
-      if (!listItemTitle.trim()) return;
+    createListItem($event) {
+      let title = $event.target.value;
+      if (!title.trim()) return;
 
-      const title = this.removeUselessSymbols(listItemTitle, 'all');;
+      title = this.removeUselessSymbols(title, 'all').trim();
 
       this.allListItems.push({ title: title, done: false, liked: false });
 
@@ -167,8 +168,8 @@ export default {
         scrollTo(0, pageYOffset);
 
         setTimeout(() => {
-          scroll(0, pageYOffset);
-        })
+          scrollTo(0, pageYOffset);
+        });
       });
     },
 
