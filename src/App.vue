@@ -23,14 +23,11 @@ export default {
   methods: {
     loadAuthData() {
       // Load user auth data
-      this.$user.initialPath = window.location.pathname
-      console.log(this.$user);
-
       UserService.getSession().then((data) => {
         this.$user.login(data);
 
         // Set first and other routes depend of user permissions
-        this.$router.setInitialRouteByUserPermissions(this.$router.resolve({ path: this.$user.initialPath }), this.$user);
+        this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
       });
 
       // Load and set csrf token

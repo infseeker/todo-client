@@ -4,8 +4,8 @@
       <div class="card-body">
         <div class="new-todo-list-item mb-2">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
-          <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)" class="form-control"
-            type="text" placeholder="Что будем делать?">
+          <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)"
+            class="form-control" type="text" placeholder="Что будем делать?">
         </div>
 
         <ul class="todo-list-item-filters">
@@ -31,13 +31,13 @@
           </li>
         </ul>
 
-        <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && allListItems.length === 0) ||
-        (currentListItemFilter === 'liked' && allListItems.filter(item => item.liked === true).length === 0) ||
-        (currentListItemFilter === 'done' && allListItems.filter(item => item.done === true).length === 0)">
+        <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
+        (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
+        (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
           Здесь пока ничего нет
         </div>
 
-        <draggable ref="draggableList" :list="allListItems" @change="rangeListItem" tag="ul"
+        <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul"
           handle=".todo-list-item-handle" item-key="id" :delay="200" :animation="300"
           easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true" :force-autoscroll-fallback="true"
           :scroll-sensitivity="30" :scroll-speed="200" class="todo-list-items list-group list-group-flush">
@@ -49,12 +49,12 @@
               <i class='todo-list-item-check bx bx-check-circle'
                 :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
 
-              <span :ref="`titleOfListItem-${allListItems.indexOf(item)}`"
+              <span :ref="`titleOfListItem-${listItems.indexOf(item)}`"
                 class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
                 @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{ item.title }}</span>
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle"
-                v-if="item.titleEdit" :ref="`editTitleOfListItem-${allListItems.indexOf(item)}`"
+                v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
                 @keypress.enter.exact="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
                 @blur.prevent="discardEditedListItemTitle(item)" @keyup.esc.exact="discardEditedListItemTitle(item)"
                 @keydown="keyPressOnListItemTitleText($event)" @paste="pasteListItemTitleText()"></textarea>
@@ -94,11 +94,12 @@
 import draggable from 'vuedraggable'
 
 export default {
+  props: ['listItems'],
+
   data() {
     return {
       newListItemTitle: '',
       currentListItemTitle: '',
-      allListItems: [],
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
@@ -110,14 +111,6 @@ export default {
   },
 
   methods: {
-    getDataFromLocalStorage() {
-      this.allListItems = JSON.parse(localStorage.getItem('listItems')) || [];
-    },
-
-    saveDataToLocalStorage() {
-      localStorage.setItem('listItems', JSON.stringify(this.allListItems));
-    },
-
     removeUselessSymbols(todoListItemTitle, mode) {
       switch (mode) {
         case 'all':
@@ -134,22 +127,22 @@ export default {
 
       title = this.removeUselessSymbols(title, 'all').trim();
 
-      this.allListItems.push({ title: title, done: false, liked: false });
+      this.listItems.push({ title: title, done: false, liked: false });
 
       this.newListItemTitle = '';
       $event.target.value = '';
 
-      this.saveDataToLocalStorage();
+      this.$emit('create', title);
     },
 
-    checkListItem(listItem) {
-      listItem.done = !listItem.done
+    checkListItem(item) {
+      item.done = !item.done
 
-      this.saveDataToLocalStorage();
+      this.$emit('check', item);
     },
 
-    rangeListItem() {
-      this.saveDataToLocalStorage();
+    rangeListItem(item) {
+      this.$emit('range', item);
     },
 
     editListItemTitle(item) {
@@ -160,7 +153,7 @@ export default {
       this.currentListItemTitle = item.title;
 
       this.$nextTick(() => {
-        const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
+        const editField = this.$refs[`editTitleOfListItem-${this.listItems.indexOf(item)}`];
         hiddenField.style.width = editField.clientWidth + 'px';
         editField.style.height = hiddenField.clientHeight + 'px';
         editField.focus({ preventScroll: true });
@@ -206,7 +199,7 @@ export default {
           hiddenField.innerHTML = '0';
         }
 
-        const editField = this.$refs[`editTitleOfListItem-${this.allListItems.indexOf(item)}`];
+        const editField = this.$refs[`editTitleOfListItem-${this.listItems.indexOf(item)}`];
 
         if (hiddenField.clientWidth !== editField.clientWidth) {
           hiddenField.style.width = editField.clientWidth + 'px';
@@ -232,7 +225,7 @@ export default {
 
       this.currentListItemTitle = '';
 
-      this.saveDataToLocalStorage();
+      this.$emit('saveTitle', item);
     },
 
     discardEditedListItemTitle(item) {
@@ -243,18 +236,12 @@ export default {
     toggleLikeListItem(item) {
       item.liked = !item.liked
 
-      this.saveDataToLocalStorage();
+      this.$emit('like', item);
     },
 
     deleteListItem(listItem) {
-      this.allListItems = this.allListItems.filter(item => item !== listItem);
-
-      this.saveDataToLocalStorage();
+      this.$emit('delete', listItem);
     },
-  },
-
-  mounted() {
-    this.getDataFromLocalStorage();
   }
 }
 </script>
@@ -264,162 +251,5 @@ export default {
   .card-body {
     padding: 0.5rem 0;
   }
-
-  .new-todo-list-item {
-    margin: 0.9rem;
-    margin-bottom: 0.5rem
-  }
-}
-
-@supports (-webkit-touch-callout: none) {
-  .todo-list-item-filters {
-    font-size: 1.1rem;
-    margin: 0.6rem !important;
-    margin-top: 1.5rem !important;
-  }
-}
-
-.new-todo-list-item {
-  display: flex;
-}
-
-.new-todo-list-item i {
-  font-size: 3rem;
-  padding-right: 0.5rem;
-  cursor: pointer;
-}
-
-.new-todo-list-item input {
-  display: inline-block;
-  flex: 2;
-}
-
-.todo-list-item-filters {
-  display: flex;
-  margin: 0;
-  margin-top: 1rem;
-  padding: 0;
-  justify-content: center;
-  list-style: none;
-}
-
-.todo-list-item-filters li {
-  margin: 0 0.3rem;
-  cursor: pointer;
-}
-
-.todo-list-current-filter {
-  color: #696cff;
-}
-
-.todo-list-empty {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  color: #697a8d73;
-  font-size: 1.2rem;
-}
-
-.todo-list-item-hidden-title {
-  visibility: hidden;
-  position: relative;
-  z-index: 0;
-}
-
-.todo-list-item-hidden-title li {
-  position: fixed;
-}
-
-.todo-list-item-hidden-title pre {
-  font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  display: inline-block;
-  white-space: pre-wrap;
-}
-
-.todo-list-items {
-  list-style: none;
-}
-
-.todo-list-item {
-  display: flex;
-  align-items: center;
-  padding: 0.4rem 0.9rem !important;
-  overflow-x: clip;
-}
-
-.todo-list-item-check {
-  font-size: 1.6rem;
-  margin-right: 0.3rem;
-  cursor: pointer;
-}
-
-.todo-list-item-title {
-  box-sizing: border-box;
-  display: block;
-  font-size: 1.2rem;
-  padding: 0.2rem 0.4rem;
-  margin: 0;
-  flex: 1;
-  overflow-wrap: anywhere;
-}
-
-.todo-list-item-edit {
-  box-sizing: border-box;
-  box-shadow: 0 0 0 1px #d9dee3;
-  min-height: 0;
-  display: block;
-  padding: 0.2rem 0.4rem;
-  margin: 0;
-  resize: none;
-  font-size: 1.2rem;
-  overflow: hidden;
-  border: none;
-  overflow-wrap: anywhere;
-}
-
-.todo-list-item-edit:focus {
-  box-shadow: 0 0 0 1px #696cff;
-}
-
-.todo-list-item.sortable-chosen {
-  opacity: 0.5;
-  cursor: move;
-}
-
-.todo-list-item-done {
-  text-decoration: line-through;
-}
-
-.todo-list-item-liked {
-  color: #696cff;
-}
-
-.todo-list-item-menu .dropdown-menu {
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-  margin: 0
-}
-
-.todo-list-item-menu .dropdown-item {
-  display: flex;
-}
-
-.todo-list-item-menu li {
-  cursor: pointer;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-}
-
-.todo-list-item-menu .bx-dots-vertical-rounded {
-  font-size: 1.6rem;
-}
-
-.todo-list-item-menu i {
-  font-size: 1.4rem;
-  padding-right: 0.2rem;
-}
-
-.todo-list-item-menu .bxs-heart {
-  color: #696cff;
 }
 </style>

@@ -113,3 +113,163 @@ h5 .bx {
   width: 100%;
   position: relative;
 }
+
+/* To-do list component */
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .new-todo-list-item {
+    margin: 0.9rem;
+    margin-bottom: 0.5rem
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .todo-list-item-filters {
+    font-size: 1.1rem;
+    margin: 0.6rem !important;
+    margin-top: 1.5rem !important;
+  }
+}
+
+.new-todo-list-item {
+  display: flex;
+}
+
+.new-todo-list-item i {
+  font-size: 3rem;
+  padding-right: 0.5rem;
+  cursor: pointer;
+}
+
+.new-todo-list-item input {
+  display: inline-block;
+  flex: 2;
+}
+
+.todo-list-item-filters {
+  display: flex;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0;
+  justify-content: center;
+  list-style: none;
+}
+
+.todo-list-item-filters li {
+  margin: 0 0.3rem;
+  cursor: pointer;
+}
+
+.todo-list-current-filter {
+  color: #696cff;
+}
+
+.todo-list-empty {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  color: #697a8d73;
+  font-size: 1.2rem;
+}
+
+.todo-list-item-hidden-title {
+  visibility: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.todo-list-item-hidden-title li {
+  position: fixed;
+}
+
+.todo-list-item-hidden-title pre {
+  font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  display: inline-block;
+  white-space: pre-wrap;
+}
+
+.todo-list-items {
+  list-style: none;
+}
+
+.todo-list-item {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem !important;
+  overflow-x: clip;
+}
+
+.todo-list-item-check {
+  font-size: 1.6rem;
+  margin-right: 0.3rem;
+  cursor: pointer;
+}
+
+.todo-list-item-title {
+  box-sizing: border-box;
+  display: block;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.todo-list-item-edit {
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px #d9dee3;
+  min-height: 0;
+  display: block;
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  resize: none;
+  font-size: 1.2rem;
+  overflow: hidden;
+  border: none;
+  overflow-wrap: anywhere;
+}
+
+.todo-list-item-edit:focus {
+  box-shadow: 0 0 0 1px #696cff;
+}
+
+.todo-list-item.sortable-chosen {
+  opacity: 0.5;
+  cursor: move;
+}
+
+.todo-list-item-done {
+  text-decoration: line-through;
+}
+
+.todo-list-item-liked {
+  color: #696cff;
+}
+
+.todo-list-item-menu .dropdown-menu {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  margin: 0
+}
+
+.todo-list-item-menu .dropdown-item {
+  display: flex;
+}
+
+.todo-list-item-menu li {
+  cursor: pointer;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.todo-list-item-menu .bx-dots-vertical-rounded {
+  font-size: 1.6rem;
+}
+
+.todo-list-item-menu i {
+  font-size: 1.4rem;
+  padding-right: 0.2rem;
+}
+
+.todo-list-item-menu .bxs-heart {
+  color: #696cff;
+}

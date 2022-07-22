@@ -180,8 +180,6 @@ const router = createRouter({
 });
 
 router.setRouteByUserPermissions = function (route, user) {
-  console.log(user, route);
-  
   const router = this;
   
   if (route.meta.authRequired && !user.isAuth) {

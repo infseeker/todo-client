@@ -16,5 +16,6 @@ import router from '@/router';
 export const app = createApp(App);
 
 app.config.globalProperties.$user = reactive(user);
+app.config.globalProperties.$store = reactive({});
 
 app.use(router).use(VueReCaptcha, { siteKey: "6LcX-58gAAAAAJ94B93UPTv-K3YnLZn8J3M2j-wr" }).mount('#app');
