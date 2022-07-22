@@ -58,8 +58,8 @@ class ListService {
       .then((data) => data);
   }
 
-  static async getListItems(list) {
-    return await fetch(api.lists.get_list_items(list.id), {
+  static async getListItems(list_id) {
+    return await fetch(api.lists.get_list_items(list_id), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

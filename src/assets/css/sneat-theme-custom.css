@@ -217,7 +217,7 @@ h5 .bx {
 .todo-list-item-edit {
   box-sizing: border-box;
   box-shadow: 0 0 0 1px #d9dee3;
-  min-height: 0;
+  min-height: 0 !important;
   display: block;
   padding: 0.2rem 0.4rem;
   margin: 0;

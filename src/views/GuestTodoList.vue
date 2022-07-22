@@ -1,5 +1,5 @@
 <template>
-  <div class="restoration">
+  <div class="guest-todo-list">
     <todo-list :listItems="listItems" @create="saveDataToLocalStorage" @check="saveDataToLocalStorage"
       @range="saveDataToLocalStorage" @save-title="saveDataToLocalStorage" @like="saveDataToLocalStorage"
       @delete="deleteListItem">
