@@ -2,7 +2,7 @@
   <nav class="layout-navbar navbar navbar-detached align-items-center bg-navbar-theme">
     <div class="navbar-nav-right d-flex align-items-center">
       <router-link :to="{ name: 'home' }" class="align-items-center home-link">
-        <i class='bx bx-infinite'></i>
+        <i class='bx bx-list-check'></i>
       </router-link>
       <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li v-if="!this.$user.isAuth">
