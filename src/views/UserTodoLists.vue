@@ -1,7 +1,9 @@
 <template>
   <div class="lists">
     <h1>Lists</h1>
-    <div>{{ this.$store.lists }}</div>
+    <ul>
+      <li v-for="list in this.$store.lists" v-bind:key="list.id">{{ list.title }}</li>
+    </ul>
   </div>
 </template>
 
@@ -11,23 +13,27 @@ import ListService from './../services/ListService';
 export default {
   data() {
     return {
-
     }
   },
-  components: {
 
+  methods: {
+    getLists() {
+      if (!this.$store.lists.length) {
+        ListService.getLists().then(r => {
+          if (r.code === 200) {
+            this.$store.lists = r.data;
+          } else if(r.code === 404) {
+            console.log('Lists of current user not found');
+          } else {
+            console.log('Something went wrong');
+          }
+        });
+      }
+    }
   },
+
   mounted() {
-    if (!this.$store.lists) {
-      ListService.getLists().then(data => {
-        if (data.code === 200) {
-          this.$store.lists = data.data;
-          console.log(this.$store);
-        } else {
-          console.log('Something went wrong');
-        }
-      });
-    }
+    this.getLists();
   }
 }
 </script>
