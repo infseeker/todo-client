@@ -100,7 +100,7 @@ const routes = [
     },
   },
   {
-    path: '/lists/:list_id',
+    path: '/lists/:listId',
     name: 'list',
     component: UserTodoList,
     meta: {
@@ -126,7 +126,7 @@ const routes = [
     },
   },
   {
-    path: '/admin/users/:user_id',
+    path: '/admin/users/:userId',
     name: 'admin-user-profile-preview',
     component: UserProfilePreview,
     meta: {
@@ -135,7 +135,7 @@ const routes = [
     },
   },
   {
-    path: '/admin/users/:user_id/edit',
+    path: '/admin/users/:userId/edit',
     name: 'admin-user-profile-edit',
     component: UserProfileEdit,
     meta: {
@@ -144,7 +144,7 @@ const routes = [
     },
   },
   {
-    path: '/admin/users/:user_id/lists',
+    path: '/admin/users/:userId/lists',
     name: 'admin-user-lists',
     component: UserTodoLists,
     meta: {
@@ -153,7 +153,7 @@ const routes = [
     },
   },
   {
-    path: '/admin/users/:user_id/lists/:list_id',
+    path: '/admin/users/:userId/lists/:listId',
     name: 'admin-user-list',
     component: UserTodoList,
     meta: {

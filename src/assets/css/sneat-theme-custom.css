@@ -194,7 +194,7 @@ h5 .bx {
 .todo-list-item {
   display: flex;
   align-items: center;
-  padding: 0.4rem 0.9rem !important;
+  padding: 0.4rem 0.6rem 0.4rem 0.9rem !important;
   overflow-x: clip;
 }
 
@@ -267,7 +267,7 @@ h5 .bx {
 
 .todo-list-item-menu i {
   font-size: 1.4rem;
-  padding-right: 0.2rem;
+  /* padding-right: 0.2rem; */
 }
 
 .todo-list-item-menu .bxs-heart {

@@ -29,6 +29,15 @@
           <span v-if="userImage" class="user-image-delete" title="Удалить аватар" @click="deleteUserImage"></span>
         </div>
 
+        <div class="mb-2">
+          <span class="badge bg-label-primary"><span class="form-label mb-0">Имя: </span>{{ this.$user.username }}</span>
+        </div>
+
+        <div class="mb-3">
+          
+          <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
+        </div>
+
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
             <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />

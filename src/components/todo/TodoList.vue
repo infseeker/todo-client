@@ -1,7 +1,30 @@
 <template>
   <div class="todo-list mt-4">
-    <div class="card">
+    <div class="card w-100">
       <div class="card-body">
+        <div>
+          <div class="todo-list-title-wrapper">
+            <h4 v-if="listTitle" class="todo-list-title">{{ listTitle }}</h4>
+
+            <div class="todo-list-menu dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                aria-expanded="false" data-bs-offset="-10, 0">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li class="dropdown-item">
+                  <i class="bx bx-edit-alt me-1"></i> Редактировать название
+                </li>
+
+                <li class="dropdown-item">
+                  <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> Удалить список
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="new-todo-list-item mb-2">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
           <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)"
@@ -94,7 +117,7 @@
 import draggable from 'vuedraggable'
 
 export default {
-  props: ['listItems'],
+  props: ['listItems', 'listTitle'],
 
   data() {
     return {
@@ -251,5 +274,27 @@ export default {
   .card-body {
     padding: 0.5rem 0;
   }
+
+  .todo-list-title {
+    padding: 1rem 1.2rem;
+    padding-bottom: 0rem;
+  }
+}
+
+.todo-list-title-wrapper {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: clip;
+}
+
+.todo-list-title {
+  margin-bottom: 0;
+}
+
+.todo-list-menu .btn i {
+  font-size: 1.6rem;
+  margin: 0.6rem;
 }
 </style>

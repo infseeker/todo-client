@@ -1,7 +1,7 @@
 <template>
   <div class="guest-todo-list">
-    <todo-list :listItems="listItems" @create="create" @check="check" @range="range" @save-title="saveTitle"
-      @like="like" @delete="remove">
+    <todo-list v-if="list.items" :listTitle="list.title" :listItems="list.items" @create="create" @check="check" @range="range"
+      @save-title="saveTitle" @like="like" @delete="remove">
     </todo-list>
   </div>
 </template>
@@ -13,7 +13,7 @@ import ListService from '../services/ListService';
 export default {
   data() {
     return {
-      listItems: [],
+      list: {},
     }
   },
 
@@ -35,28 +35,34 @@ export default {
     },
 
     async getListItems() {
-      const listId = parseInt(this.$route.params.list_id);
+      const listId = parseInt(this.$route.params.listId);
       const list = this.$store.lists.find(list => list.id === listId);
+      this.list = list;
 
-      console.log(list, this.$store.lists, this.$route.params.list_id);
+      console.log(this.list);
+
       if (list) {
-        console.log(list)
         if (!list.items || !list.items.length) {
+
           await ListService.getListItems(listId).then(r => {
             if (r.code === 200) {
               list.items = r.data || [];
-              this.listItems = list.items;
+
             } else if (r.code === 404) {
               console.log(`List #${listId} not found`);
+
             } else {
               console.log('Something went wrong');
             }
           })
         } else {
-          console.log('List items already exist in array');
+          this.listItems = list.items;
+
+          console.log(`Items for list #${listId} already exist in list array`);
         }
       } else {
-        console.log(`List #${listId} not found in array`);
+        this.$router.push({ name: 'not-found' })
+        console.log(`List #${listId} not found in list array`);
       }
     },
 
