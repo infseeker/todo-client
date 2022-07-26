@@ -6,16 +6,62 @@
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <h4 class="mb-0">Мои списки</h4>
-          <button type="button" class="new-list btn btn-primary" title="Новый список">
+          <button type="button" class="new-list btn btn-primary" title="Новый список" data-bs-toggle="modal"
+            data-bs-target="#newListModal">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
         <ul v-if="this.$store.lists && this.$store.lists.length" class="user-lists">
           <li v-for="list in this.$store.lists" v-bind:key="list.id">
             <router-link :to="{ name: 'list', params: { listId: list.id } }">{{ list.title }}</router-link>
+
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                aria-expanded="false" data-bs-offset="-10, 0">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li class="dropdown-item">
+                  <i class="bx bx-edit-alt me-1"></i> Редактировать название
+                </li>
+
+                <li class="dropdown-item">
+                  <i class='bx bx-trash-alt me-1'></i> Удалить список
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
         <div v-else class="no-lists mb-3">Здесь ещё нет ни одного списка</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!-- Modal -->
+    <div ref="newListModal" class="modal fade" id="newListModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel1">Новый список</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col mb-3">
+                <input v-model.trim="title" @keyup.enter.exact="create(title)" type="text" class="form-control"
+                  placeholder="Введите название списка">
+                <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button @click="create(title)" type="button" class="btn btn-primary">Создать</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -23,10 +69,23 @@
 
 <script>
 import ListService from './../services/ListService';
+import useValidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import { Modal } from 'bootstrap'
 
 export default {
   data() {
     return {
+      v$: useValidate(),
+      title: '',
+    }
+  },
+
+  validations() {
+    return {
+      title: {
+        required,
+      },
     }
   },
 
@@ -40,6 +99,21 @@ export default {
             console.log('Lists of current user not found');
           } else {
             console.log('Something went wrong');
+          }
+        });
+      }
+    },
+
+    create(title) {
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        ListService.createList(title).then(r => {
+          if (r.code === 200) {
+            this.$store.lists.push(r.data);
+            this.title = '';
+            this.v$.$reset();
+
+            Modal.getInstance(this.$refs['newListModal']).hide();
           }
         });
       }
@@ -72,6 +146,10 @@ export default {
 .lists li {
   overflow: hidden;
   margin: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  /* padding: 0.4rem 0.6rem 0.4rem 0.9rem !important; */
+  overflow-x: clip;
 }
 
 .lists .user-lists a {

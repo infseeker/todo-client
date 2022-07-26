@@ -1,3 +1,8 @@
+/* Popper.js to avoid margin warning */
+.dropdown-menu {
+  margin: 0;
+}
+
 .custom-file-button input[type='file'] {
   margin-left: -2px !important;
 }

@@ -4,7 +4,8 @@
       <div class="card-body">
         <div>
           <div v-if="listTitle" class="todo-list-title-wrapper">
-            <h4 class="todo-list-title">{{ listTitle }}</h4>
+            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
+            <input v-if="listTitleEdit" v-model="listTitle" type="text" class="todo-list-title-edit form-control">
 
             <div class="todo-list-menu dropdown">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -13,12 +14,12 @@
               </button>
 
               <ul class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item">
+                <li @click="listTitleEdit = true" class="dropdown-item">
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
                 <li class="dropdown-item">
-                  <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> Удалить список
+                  <i class="bx bx-trash-alt me-1"></i> Удалить список
                 </li>
               </ul>
             </div>
@@ -126,6 +127,7 @@ export default {
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
+      listTitleEdit: false,
     }
   },
 
@@ -277,7 +279,7 @@ export default {
 
   .todo-list-title {
     padding: 1rem 1.2rem;
-    padding-bottom: 0rem;
+    padding-bottom: 0;
   }
 }
 
@@ -291,6 +293,10 @@ export default {
 
 .todo-list-title {
   margin-bottom: 0;
+}
+
+.todo-list-title-edit {
+  font-size: 1.375rem;
 }
 
 .todo-list-menu .btn i {
