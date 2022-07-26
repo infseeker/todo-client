@@ -57,7 +57,7 @@ export default {
             }
           })
         } else {
-          this.listItems = list.items;
+          this.listItems = list.items;ition: 0
 
           console.log(`Items for list #${listId} already exist in list array`);
         }

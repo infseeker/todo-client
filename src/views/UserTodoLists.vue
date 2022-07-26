@@ -4,8 +4,8 @@
       <div class="card-body">
         <div class="lists-title-wrapper mb-3">
           <h4 class="mb-0">Мои списки</h4>
-          <button @click="this.title = ''; this.isEdit = false;" type="button" class="new-list btn btn-primary"
-            title="Новый список" data-bs-toggle="modal" data-bs-target="#listModal">
+          <button @click="this.title = ''; this.isEdit = false; this.v$.$reset();" type="button"
+            class="new-list btn btn-primary" title="Новый список" data-bs-toggle="modal" data-bs-target="#listModal">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
@@ -51,10 +51,10 @@
           <div class="modal-body">
             <div class="row">
               <div class="col mb-3">
-                <input v-if="!isEdit" v-model.trim="title" @keyup.enter.exact="create(title)" type="text"
+                <input ref="createListTitleInput" v-if="!isEdit" :value="title" @keypress.enter="create($event, title)" type="text"
                   class="form-control" placeholder="Введите название списка">
 
-                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)" type="text"
+                <input ref="editListTitleInput" v-else :value="title" @keypress.enter="save($event, this.currentList, title)" type="text"
                   class="form-control" placeholder="Введите название списка">
 
                 <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
@@ -65,9 +65,9 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
 
-            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary">Создать</button>
+            <button v-if="!isEdit" @click="create($event, title)" type="button" class="btn btn-primary">Создать</button>
 
-            <button ref="saveTitleButton" v-else @click="save(this.currentList, title)" type="button"
+            <button ref="saveTitleButton" v-else @click="save($event, this.currentList, title)" type="button"
               class="btn btn-primary">Сохранить</button>
           </div>
         </div>
@@ -123,11 +123,13 @@ export default {
       }
     },
 
-    create(title) {
+    create($event, title) {
+      this.title = $event.target.value || title || this.$refs['createListTitleInput'].value;
+
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        ListService.createList(title).then(r => {
+        ListService.createList(this.title).then(r => {
           if (r.code === 200) {
             this.$store.lists.push(r.data);
             this.title = '';
