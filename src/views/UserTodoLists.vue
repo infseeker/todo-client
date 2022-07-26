@@ -54,8 +54,8 @@
                 <input v-if="!isEdit" v-model.trim="title" @keyup.enter.exact="create(title)" type="text"
                   class="form-control" placeholder="Введите название списка">
 
-                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)"
-                  type="text" class="form-control" placeholder="Введите название списка">
+                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)" type="text"
+                  class="form-control" placeholder="Введите название списка">
 
                 <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
                 </div>
@@ -65,8 +65,8 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
 
-            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary"
-              data-bs-dismiss="modal">Создать</button>
+            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary">Создать</button>
+
             <button ref="saveTitleButton" v-else @click="save(this.currentList, title)" type="button"
               class="btn btn-primary">Сохранить</button>
           </div>
@@ -132,6 +132,8 @@ export default {
             this.$store.lists.push(r.data);
             this.title = '';
             this.v$.$reset();
+
+            Modal.getInstance(this.$refs['listModal']).hide();
             this.$router.push({ name: 'list', params: { 'listId': r.data.id } });
           }
         });
