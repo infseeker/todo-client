@@ -132,10 +132,9 @@ export default {
         this.isDisabled = true;
 
         this.recaptcha().then((token) => {
-          UserService.login(username, password, token).then((data) => {
-            if (data.code === 200) {
-              data.login = true;
-              this.$user.login(data);
+          UserService.login(username, password, token).then(r => {
+            if (r.code === 200) {
+              this.$user.login(r);
 
               if (this.$user.isAuth) {
                 if (this.$user.isAdmin) {
@@ -148,12 +147,12 @@ export default {
               this.$user.isRestored = false;
               this.$user.isActivated = false;
             } else {
-              if (data.deleted) {
+              if (r.deleted) {
                 this.$user.isDeleted = true;
                 this.$router.push({ name: 'deleted-user' })
-              } else if (data.inactive) {
+              } else if (r.inactive) {
                 this.$user.isNotActivated = true;
-                this.$user.email = data.email;
+                this.$user.email = r.email;
                 this.$router.push({ name: 'activation' })
               } else {
                 this.submitError = true;

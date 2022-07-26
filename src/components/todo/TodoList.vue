@@ -114,7 +114,7 @@
           </template>
         </draggable>
 
-        <TodoListDeletionModal :list="this.list" @delete-list="deleteList"></TodoListDeletionModal>
+        <TodoListDeletionModal v-if="list" :list="this.list" @delete-list="deleteList"></TodoListDeletionModal>
       </div>
     </div>
   </div>
