@@ -1,18 +1,17 @@
-
-
 <template>
   <div class="lists mt-4">
     <div class="card">
       <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="lists-title-wrapper mb-3">
           <h4 class="mb-0">Мои списки</h4>
           <button type="button" class="new-list btn btn-primary" title="Новый список" data-bs-toggle="modal"
             data-bs-target="#newListModal">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
-        <ul v-if="this.$store.lists && this.$store.lists.length" class="user-lists">
-          <li v-for="list in this.$store.lists" v-bind:key="list.id">
+
+        <ul v-if="this.$store.lists && this.$store.lists.length" class="user-lists list-group list-group-flush">
+          <li class="list list-group-item" v-for="list in this.$store.lists" v-bind:key="list.id">
             <router-link :to="{ name: 'list', params: { listId: list.id } }">{{ list.title }}</router-link>
 
             <div class="dropdown">
@@ -114,6 +113,8 @@ export default {
             this.v$.$reset();
 
             Modal.getInstance(this.$refs['newListModal']).hide();
+
+            this.$router.push({ name: 'list', params: { 'listId': r.data.id }});
           }
         });
       }
@@ -127,6 +128,12 @@ export default {
 </script>
 
 <style>
+.lists .lists-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .lists .btn.new-list {
   padding: 0.2rem 0.3rem;
 }
@@ -143,20 +150,26 @@ export default {
   list-style: none;
 }
 
-.lists li {
-  overflow: hidden;
-  margin: 0.4rem 0;
+.lists .list {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  /* padding: 0.4rem 0.6rem 0.4rem 0.9rem !important; */
+  padding: 0.8rem 0.6rem 0.8rem 0.9rem !important;
   overflow-x: clip;
 }
 
+.lists .list .btn .bx {
+  position: relative;
+  top: 0.2rem;
+  font-size: 1.6rem;
+}
+
 .lists .user-lists a {
+  display: block;
   font-size: 1.2rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lists .no-lists {

@@ -1,7 +1,7 @@
 <template>
   <div class="guest-todo-list">
     <todo-list v-if="list.items" :listTitle="list.title" :listItems="list.items" @create="create" @check="check" @range="range"
-      @save-title="saveTitle" @like="like" @delete="remove">
+      @save-title="saveTitle" @like="like" @delete="remove" @save-list-title="saveListTitle">
     </todo-list>
   </div>
 </template>
@@ -89,6 +89,17 @@ export default {
     remove(listItem) {
       console.log('delete', listItem);
       // this.listItems = this.listItems.filter(item => item !== listItem);
+    },
+
+    saveListTitle(listTitle) {
+      this.list.title = listTitle;
+
+      ListService.updateList(this.list).then(r => {
+        if(r.code === 200) {
+          console.log(`List #${this.list.id} was updated`);
+        }
+      })
+      console.log('save list title', listTitle);
     }
   },
 

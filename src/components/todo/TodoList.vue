@@ -5,7 +5,12 @@
         <div>
           <div v-if="listTitle" class="todo-list-title-wrapper">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
-            <input v-if="listTitleEdit" v-model="listTitle" type="text" class="todo-list-title-edit form-control">
+            
+            <form v-if="listTitleEdit" >
+              <input ref="listTitleInput" @keypress.enter.exact.stop.prevent="saveListTitle($event)"
+                @keyup.esc.exact="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
+                class="todo-list-title-edit form-control">
+            </form>
 
             <div class="todo-list-menu dropdown">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -14,7 +19,7 @@
               </button>
 
               <ul class="dropdown-menu dropdown-menu-end">
-                <li @click="listTitleEdit = true" class="dropdown-item">
+                <li @click="editListTitle(listTitle)" class="dropdown-item">
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
@@ -26,13 +31,13 @@
           </div>
         </div>
 
-        <div class="new-todo-list-item mb-2">
+        <div class="new-todo-list-item mb-4">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
           <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)"
             class="form-control" type="text" placeholder="Что будем делать?">
         </div>
 
-        <ul class="todo-list-item-filters">
+        <ul class="todo-list-item-filters mb-2">
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }"
             @click="currentListItemFilter = 'all'">
             Все</li>
@@ -128,6 +133,7 @@ export default {
       isPastedText: false,
       isEnterKey: false,
       listTitleEdit: false,
+      tempListTitle: '',
     }
   },
 
@@ -136,6 +142,26 @@ export default {
   },
 
   methods: {
+    editListTitle(title) {
+      this.listTitleEdit = true;
+      this.tempListTitle = title;
+
+      this.$nextTick(() => {
+        this.$refs['listTitleInput'].focus();
+      })
+    },
+
+    saveListTitle($event) {
+      if (!$event.target.value || $event.target.value.trim().length === 0) return;
+
+      this.listTitleEdit = false;
+      this.$emit('saveListTitle', $event.target.value.trim());
+    },
+
+    discardListTitleEdit() {
+      this.listTitleEdit = false;
+    },
+
     removeUselessSymbols(todoListItemTitle, mode) {
       switch (mode) {
         case 'all':
@@ -270,37 +296,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-  .card-body {
-    padding: 0.5rem 0;
-  }
-
-  .todo-list-title {
-    padding: 1rem 1.2rem;
-    padding-bottom: 0;
-  }
-}
-
-.todo-list-title-wrapper {
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow-x: clip;
-}
-
-.todo-list-title {
-  margin-bottom: 0;
-}
-
-.todo-list-title-edit {
-  font-size: 1.375rem;
-}
-
-.todo-list-menu .btn i {
-  font-size: 1.6rem;
-  margin: 0.6rem;
-}
-</style>
