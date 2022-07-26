@@ -155,6 +155,8 @@ export default {
         ListService.updateList(list).then(r => {
           if (r.code === 200) {
             console.log(`List #${list.id} was updated`);
+            this.title = '';
+            this.v$.$reset();
 
             Modal.getInstance(this.$refs['listModal']).hide();
           }
