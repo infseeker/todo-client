@@ -4,6 +4,12 @@ form {
   margin: 0;
 }
 
+mark {
+  background-color: #e7e7ff;
+  color: #696cff;
+  border-radius: 5px;
+}
+
 /* Popper.js to avoid margin warning */
 .dropdown-menu {
   margin: 0;
@@ -12,6 +18,10 @@ form {
 
 .dropdown-item {
   cursor: pointer;
+}
+
+.lh-2 {
+  line-height: 2 !important;
 }
 
 .custom-file-button input[type='file'] {
