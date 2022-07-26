@@ -3,8 +3,8 @@
     <div class="card w-100">
       <div class="card-body">
         <div>
-          <div class="todo-list-title-wrapper">
-            <h4 v-if="listTitle" class="todo-list-title">{{ listTitle }}</h4>
+          <div v-if="listTitle" class="todo-list-title-wrapper">
+            <h4 class="todo-list-title">{{ listTitle }}</h4>
 
             <div class="todo-list-menu dropdown">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"

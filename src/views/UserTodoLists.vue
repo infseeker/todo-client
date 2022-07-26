@@ -10,11 +10,12 @@
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
-        <ul class="user-lists">
+        <ul v-if="this.$store.lists && this.$store.lists.length" class="user-lists">
           <li v-for="list in this.$store.lists" v-bind:key="list.id">
             <router-link :to="{ name: 'list', params: { listId: list.id } }">{{ list.title }}</router-link>
           </li>
         </ul>
+        <div v-else class="no-lists mb-3">Здесь ещё нет ни одного списка</div>
       </div>
     </div>
   </div>
@@ -78,5 +79,13 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+}
+
+.lists .no-lists {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  color: #697a8d73;
+  font-size: 1.2rem;
 }
 </style>
