@@ -1,7 +1,8 @@
 <template>
   <div class="guest-todo-list">
-    <todo-list v-if="list.items" :listTitle="list.title" :listItems="list.items" @create="create" @check="check" @range="range"
-      @save-title="saveTitle" @like="like" @delete="remove" @save-list-title="saveListTitle">
+    <todo-list v-if="list && list.items" :list="list" :listTitle="list.title" :listItems="list.items" @create="create"
+      @check="check" @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem"
+      @save-list-title="saveListTitle" @delete-list="deleteList">
     </todo-list>
   </div>
 </template>
@@ -86,7 +87,7 @@ export default {
       console.log('like', listItem);
     },
 
-    remove(listItem) {
+    deleteItem(listItem) {
       console.log('delete', listItem);
       // this.listItems = this.listItems.filter(item => item !== listItem);
     },
@@ -95,11 +96,22 @@ export default {
       this.list.title = listTitle;
 
       ListService.updateList(this.list).then(r => {
-        if(r.code === 200) {
+        if (r.code === 200) {
           console.log(`List #${this.list.id} was updated`);
         }
       })
       console.log('save list title', listTitle);
+    },
+
+    deleteList(list) {
+      ListService.deleteList(list).then(r => {
+        if (r.code === 200) {
+          console.log(`List #${list.id} was deleted`);
+
+          this.$store.lists = this.$store.lists.filter(item => item !== list);
+          this.$router.push({ name: 'lists' });
+        }
+      });
     }
   },
 

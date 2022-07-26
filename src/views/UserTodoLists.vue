@@ -4,8 +4,8 @@
       <div class="card-body">
         <div class="lists-title-wrapper mb-3">
           <h4 class="mb-0">Мои списки</h4>
-          <button @click="this.title = ''; this.isEdit = false;" type="button" class="new-list btn btn-primary" title="Новый список"
-            data-bs-toggle="modal" data-bs-target="#listModal">
+          <button @click="this.title = ''; this.isEdit = false;" type="button" class="new-list btn btn-primary"
+            title="Новый список" data-bs-toggle="modal" data-bs-target="#listModal">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
@@ -25,7 +25,8 @@
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
-                <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#listDeletionModal" @click="currentList = list;">
+                <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#listDeletionModal"
+                  @click="currentList = list;">
                   <i class='bx bx-trash-alt me-1'></i> Удалить список
                 </li>
               </ul>
@@ -53,8 +54,8 @@
                 <input v-if="!isEdit" v-model.trim="title" @keyup.enter.exact="create(title)" type="text"
                   class="form-control" placeholder="Введите название списка">
 
-                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)" type="text"
-                  class="form-control" placeholder="Введите название списка">
+                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)"
+                  type="text" class="form-control" placeholder="Введите название списка">
 
                 <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
                 </div>
@@ -64,24 +65,26 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
 
-            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary" data-bs-dismiss="modal">Создать</button>
-            <button v-else @click="save(this.currentList, title)" type="button"
-              class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary"
+              data-bs-dismiss="modal">Создать</button>
+            <button ref="saveTitleButton" v-else @click="save(this.currentList, title)" type="button"
+              class="btn btn-primary">Сохранить</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <TodoListDeletionModal :list="this.currentList" @remove-list="remove"></TodoListDeletionModal>
+  <TodoListDeletionModal :list="this.currentList" @delete-list="deleteList"></TodoListDeletionModal>
 </template>
 
 <script>
 import ListService from './../services/ListService';
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { Modal } from 'bootstrap'
 
-import TodoListDeletionModal  from '../components/todo/TodoListDeletionModal.vue'
+import TodoListDeletionModal from '../components/todo/TodoListDeletionModal.vue'
 
 export default {
   data() {
@@ -150,14 +153,16 @@ export default {
         ListService.updateList(list).then(r => {
           if (r.code === 200) {
             console.log(`List #${list.id} was updated`);
+
+            Modal.getInstance(this.$refs['listModal']).hide();
           }
         });
       }
     },
 
-    remove(list) {
+    deleteList(list) {
       ListService.deleteList(list).then(r => {
-        if(r.code === 200) {
+        if (r.code === 200) {
           console.log(`List #${list.id} was deleted`);
           this.$store.lists = this.$store.lists.filter(item => item !== list);
         }

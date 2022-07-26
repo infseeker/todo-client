@@ -5,8 +5,8 @@
         <div>
           <div v-if="listTitle" class="todo-list-title-wrapper">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
-            
-            <form v-if="listTitleEdit" >
+
+            <form v-if="listTitleEdit">
               <input ref="listTitleInput" @keypress.enter.exact.stop.prevent="saveListTitle($event)"
                 @keyup.esc.exact="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
@@ -23,7 +23,7 @@
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
-                <li class="dropdown-item">
+                <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#listDeletionModal">
                   <i class="bx bx-trash-alt me-1"></i> Удалить список
                 </li>
               </ul>
@@ -114,6 +114,7 @@
           </template>
         </draggable>
 
+        <TodoListDeletionModal :list="this.list" @delete-list="deleteList"></TodoListDeletionModal>
       </div>
     </div>
   </div>
@@ -121,9 +122,10 @@
 
 <script>
 import draggable from 'vuedraggable'
+import TodoListDeletionModal from './TodoListDeletionModal.vue';
 
 export default {
-  props: ['listItems', 'listTitle'],
+  props: ['list', 'listItems', 'listTitle'],
 
   data() {
     return {
@@ -139,6 +141,7 @@ export default {
 
   components: {
     draggable,
+    TodoListDeletionModal
   },
 
   methods: {
@@ -293,6 +296,10 @@ export default {
     deleteListItem(listItem) {
       this.$emit('delete', listItem);
     },
+
+    deleteList(list) {
+      this.$emit('deleteList', list);
+    }
   }
 }
 </script>
