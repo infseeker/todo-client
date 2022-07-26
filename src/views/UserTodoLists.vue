@@ -4,8 +4,8 @@
       <div class="card-body">
         <div class="lists-title-wrapper mb-3">
           <h4 class="mb-0">Мои списки</h4>
-          <button type="button" class="new-list btn btn-primary" title="Новый список" data-bs-toggle="modal"
-            data-bs-target="#newListModal">
+          <button @click="newList" type="button" class="new-list btn btn-primary" title="Новый список"
+            data-bs-toggle="modal" data-bs-target="#listModal">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
@@ -21,7 +21,7 @@
               </button>
 
               <ul class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item">
+                <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#listModal" @click="edit(list)">
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
@@ -39,18 +39,24 @@
 
   <div>
     <!-- Modal -->
-    <div ref="newListModal" class="modal fade" id="newListModal" tabindex="-1" aria-hidden="true">
+    <div ref="listModal" class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel1">Новый список</h5>
+            <h5 v-if="!isEdit" class="modal-title" id="exampleModalLabel1">Новый список</h5>
+            <h5 v-else class="modal-title" id="exampleModalLabel1">Редактирование списка</h5>
+
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col mb-3">
-                <input v-model.trim="title" @keyup.enter.exact="create(title)" type="text" class="form-control"
-                  placeholder="Введите название списка">
+                <input v-if="!isEdit" v-model.trim="title" @keyup.enter.exact="create(title)" type="text"
+                  class="form-control" placeholder="Введите название списка">
+
+                <input v-else v-model.trim="title" @keyup.enter.exact="save(this.currentList, title)" type="text"
+                  class="form-control" placeholder="Введите название списка">
+
                 <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
                 </div>
               </div>
@@ -58,7 +64,10 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
-            <button @click="create(title)" type="button" class="btn btn-primary">Создать</button>
+            
+            <button v-if="!isEdit" @click="create(title)" type="button" class="btn btn-primary">Создать</button>
+            <button v-else @click="save(this.currentList, title)" type="button"
+              class="btn btn-primary">Сохранить</button>
           </div>
         </div>
       </div>
@@ -76,7 +85,9 @@ export default {
   data() {
     return {
       v$: useValidate(),
+      currentList: {},
       title: '',
+      isEdit: false,
     }
   },
 
@@ -103,8 +114,14 @@ export default {
       }
     },
 
+    newList() {
+      this.title = ''
+      this.isEdit = false;
+    },
+
     create(title) {
       this.v$.$validate();
+
       if (!this.v$.$error) {
         ListService.createList(title).then(r => {
           if (r.code === 200) {
@@ -112,9 +129,31 @@ export default {
             this.title = '';
             this.v$.$reset();
 
-            Modal.getInstance(this.$refs['newListModal']).hide();
+            Modal.getInstance(this.$refs['listModal']).hide();
 
-            this.$router.push({ name: 'list', params: { 'listId': r.data.id }});
+            this.$router.push({ name: 'list', params: { 'listId': r.data.id } });
+          }
+        });
+      }
+    },
+
+    edit(list) {
+      this.isEdit = true;
+      this.currentList = list;
+      this.title = list.title;
+    },
+
+    save(list, title) {
+      this.v$.$validate();
+
+      if (!this.v$.$error) {
+        list.title = title;
+
+        ListService.updateList(list).then(r => {
+          if (r.code === 200) {
+            console.log(`List #${list.id} was updated`);
+
+            Modal.getInstance(this.$refs['listModal']).hide();
           }
         });
       }

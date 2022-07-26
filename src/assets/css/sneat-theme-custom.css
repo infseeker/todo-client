@@ -10,6 +10,10 @@ form {
   z-index: 5000;
 }
 
+.dropdown-item {
+  cursor: pointer;
+}
+
 .custom-file-button input[type='file'] {
   margin-left: -2px !important;
 }
