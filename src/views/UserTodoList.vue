@@ -50,8 +50,7 @@ export default {
               list.items = r.data || [];
 
             } else if (r.code === 404) {
-              console.log(`List #${listId} not found`);
-
+              this.$router.push({ name: 'not-found' });
             } else {
               console.log('Something went wrong');
             }
