@@ -51,14 +51,14 @@
           <div class="modal-body">
             <div class="row">
               <div class="col mb-3">
-                <input ref="createListTitleInput" v-if="!isEdit" :value="title" @keypress.enter="create($event)"
-                  type="text" class="form-control" placeholder="Введите название списка">
+                <input v-if="!isEdit" type="text" ref="createListTitleInput" :value="title"
+                  @keypress.enter="create($event)" class="form-control" placeholder="Введите название списка">
 
-                <input ref="editListTitleInput" v-else :value="title" @keypress.enter="save($event, this.currentList)"
-                  type="text" class="form-control" placeholder="Введите название списка">
+                <input v-else type="text" ref="editListTitleInput" :value="title"
+                  @keypress.enter="save($event, this.currentList)" class="form-control"
+                  placeholder="Введите название списка">
 
-                <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка
-                </div>
+                <div v-if="this.v$.title.$error" class="invalid-feedback d-block mx-2">Введите название списка</div>
               </div>
             </div>
           </div>
@@ -110,18 +110,18 @@ export default {
 
   methods: {
     setFocusOnModalInput() {
-      const modalEl = this.$refs['listModal'];
+      const modal = this.$refs['listModal'];
 
       const listener = () => {
         this.$nextTick(() => {
           const input = !this.isEdit ? this.$refs['createListTitleInput'] : this.$refs['editListTitleInput'];
           input.focus();
-
         });
-        modalEl.removeEventListener('shown.bs.modal', listener);
+
+        modal.removeEventListener('shown.bs.modal', listener);
       };
 
-      modalEl.addEventListener('shown.bs.modal', listener);
+      modal.addEventListener('shown.bs.modal', listener);
     },
 
     getLists() {
@@ -175,8 +175,6 @@ export default {
 
     save($event, list) {
       this.title = $event.target.value.trim() || this.$refs['editListTitleInput'].value.trim();
-      console.log(this.title);
-
       this.v$.$validate();
 
       if (!this.v$.$error) {
@@ -184,7 +182,6 @@ export default {
 
         ListService.updateList(list).then(r => {
           if (r.code === 200) {
-            console.log(`List #${list.id} was updated`);
             this.title = '';
             this.v$.$reset();
 
@@ -197,7 +194,6 @@ export default {
     deleteList(list) {
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
-          console.log(`List #${list.id} was deleted`);
           this.$store.lists = this.$store.lists.filter(item => item !== list);
         }
       })
@@ -206,64 +202,6 @@ export default {
 
   mounted() {
     this.getLists();
-  },
-
-  created() {
-
   }
 }
 </script>
-
-<style>
-.lists .lists-title-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.lists .btn.new-list {
-  padding: 0.2rem 0.3rem;
-}
-
-.lists .btn.new-list i {
-  font-size: 1.4rem;
-  position: relative;
-  top: 0.16rem;
-}
-
-.lists .user-lists {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.lists .list {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0.6rem 0.8rem 0.9rem !important;
-  overflow-x: clip;
-}
-
-.lists .list .btn .bx {
-  position: relative;
-  top: 0.2rem;
-  font-size: 1.6rem;
-}
-
-.lists .user-lists a {
-  display: block;
-  font-size: 1.2rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lists .no-lists {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  color: #697a8d73;
-  font-size: 1.2rem;
-}
-</style>

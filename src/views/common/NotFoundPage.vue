@@ -1,6 +1,6 @@
 <template>
   <div class="not-found mt-5">
-    <img :src="imageUrl" alt="Страница не найдена" style="width: 100%; max-height: 70vh" @click="meow">
+    <img :src="imageUrl" alt="Страница не найдена" @click="meow">
   </div>
 </template>
 
@@ -20,3 +20,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+img {
+  width: 100%;
+  max-height: 70vh;
+}
+</style>

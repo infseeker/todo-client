@@ -349,9 +349,61 @@ h5 .bx {
 
 .todo-list-item-menu i {
   font-size: 1.4rem;
-  /* padding-right: 0.2rem; */
 }
 
 .todo-list-item-menu .bxs-heart {
   color: #696cff;
+}
+
+/* User lists page */
+.lists .lists-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lists .btn.new-list {
+  padding: 0.2rem 0.3rem;
+}
+
+.lists .btn.new-list i {
+  font-size: 1.4rem;
+  position: relative;
+  top: 0.16rem;
+}
+
+.lists .user-lists {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lists .list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0.6rem 0.8rem 0.9rem !important;
+  overflow-x: clip;
+}
+
+.lists .list .btn .bx {
+  position: relative;
+  top: 0.2rem;
+  font-size: 1.6rem;
+}
+
+.lists .user-lists a {
+  display: block;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lists .no-lists {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  color: #697a8d73;
+  font-size: 1.2rem;
 }
