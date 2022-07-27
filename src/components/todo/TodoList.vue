@@ -7,8 +7,8 @@
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
 
             <form v-if="listTitleEdit">
-              <input ref="listTitleInput" @keypress.enter.exact.stop.prevent="saveListTitle($event)"
-                @keyup.esc.exact="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
+              <input ref="listTitleInput" @keypress.enter="saveListTitle($event)"
+                @keyup.esc="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
             </form>
 
@@ -33,7 +33,7 @@
 
         <div class="new-todo-list-item mb-4">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
-          <input v-model="newListItemTitle" @keypress.enter.exact="createListItem($event, newListItemTitle)"
+          <input v-model="newListItemTitle" @keypress.enter="createListItem($event, newListItemTitle)"
             class="form-control" type="text" placeholder="Что будем делать?">
         </div>
 
@@ -84,8 +84,8 @@
 
               <textarea rows="1" class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle"
                 v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keypress.enter.exact="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
-                @blur.prevent="discardEditedListItemTitle(item)" @keyup.esc.exact="discardEditedListItemTitle(item)"
+                @keypress.enter="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
+                @blur.prevent="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"
                 @keydown="keyPressOnListItemTitleText($event)" @paste="pasteListItemTitleText()"></textarea>
 
               <div class="dropdown todo-list-item-menu">
