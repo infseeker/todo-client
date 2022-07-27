@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <input placeholder="Введите email" v-model="email" class="form-control" />
+            <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
             <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
               корректный формат email)
             </div>

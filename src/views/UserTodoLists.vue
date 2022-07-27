@@ -109,6 +109,21 @@ export default {
   },
 
   methods: {
+    setFocusOnModalInput() {
+      const modalEl = this.$refs['listModal'];
+
+      const listener = () => {
+        this.$nextTick(() => {
+          const input = !this.isEdit ? this.$refs['createListTitleInput'] : this.$refs['editListTitleInput'];
+          input.focus();
+
+        });
+        modalEl.removeEventListener('shown.bs.modal', listener);
+      };
+
+      modalEl.addEventListener('shown.bs.modal', listener);
+    },
+
     getLists() {
       if (!this.$store.lists.length) {
         ListService.getLists().then(r => {
@@ -127,6 +142,8 @@ export default {
       this.title = '';
       this.isEdit = false;
       this.v$.$reset();
+
+      this.setFocusOnModalInput();
     },
 
     create($event) {
@@ -149,9 +166,11 @@ export default {
     },
 
     edit(list) {
-      this.isEdit = true;
       this.currentList = list;
       this.title = list.title;
+      this.isEdit = true;
+
+      this.setFocusOnModalInput();
     },
 
     save($event, list) {
@@ -187,6 +206,10 @@ export default {
 
   mounted() {
     this.getLists();
+  },
+
+  created() {
+
   }
 }
 </script>

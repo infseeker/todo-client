@@ -10,6 +10,11 @@ mark {
   border-radius: 5px;
 }
 
+.btn-danger {
+  background-color: #ff4f5b;
+  border-color: #ff4f5b;
+}
+
 /* Popper.js to avoid margin warning */
 .dropdown-menu {
   margin: 0;
