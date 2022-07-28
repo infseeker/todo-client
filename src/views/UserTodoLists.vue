@@ -156,6 +156,7 @@ export default {
 
     create($event) {
       this.title = $event.target.value.trim() || this.$refs['createListTitleInput'].value.trim();
+      this.title = this.title.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
 
       this.v$.$validate();
 
