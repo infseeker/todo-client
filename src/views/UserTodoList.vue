@@ -26,10 +26,10 @@ export default {
 
   methods: {
     async getLists() {
-      this.$isLoading.value = true;
+      this.$loader.show();
 
       await ListService.getLists().then(r => {
-        this.$isLoading.value = false;
+        this.$loader.hide();
 
         if (r.code === 200) {
           r.data.forEach(i => {
@@ -50,10 +50,10 @@ export default {
 
       if (list) {
         if (!list.items || !list.items.length) {
-          this.$isLoading.value = true;
+          this.$loader.show();
 
           await ListService.getListItems(listId).then(r => {
-            this.$isLoading.value = false;
+            this.$loader.hide();
 
             if (r.code === 200) {
               const items = [];

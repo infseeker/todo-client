@@ -1,6 +1,6 @@
 <template>
 <div>
-  <loading v-model:active="this.$isLoading.value" loader="dots" :height="100" :width="100" color="#696cff"></loading>
+  <loading v-model:active="this.$loader.shown" loader="dots" :height="100" :width="100" color="#696cff"></loading>
 
   <div class="container-sm bg-gray-50 dark bg-gray-900">
     <UserNavigation v-if="!this.$route.meta.hideNav"></UserNavigation>

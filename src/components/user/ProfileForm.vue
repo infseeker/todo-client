@@ -277,18 +277,18 @@ export default {
       this.v$.deletePassword.$validate();
 
       if (!this.v$.deletePassword.$error) {
-        this.$isLoading.value = true;
+        this.$loader.show();
         this.delIsDisabled = true;
 
         UserService.delete(password).then((data) => {
           if (data.code === 200) {
-            this.$isLoading.value = false;
+            this.$loader.hide();
 
             UserService.logout().then((data) => {
               this.$user.logout();
               this.$router.push('/');
 
-              console.log(data);
+              console.log(data);show
             });
           } else {
             this.wrongDeletePassword = true;

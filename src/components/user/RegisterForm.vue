@@ -129,7 +129,7 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        this.$isLoading.value = true;
+        this.$loader.show();
         this.isDisabled = true;
 
         this.recaptcha().then((token) => {
@@ -141,19 +141,19 @@ export default {
                   
                   UserService.register(username, email, password, token).then((data) => {
                     if (data.code === 200) {
-                      this.$isLoading.value = false;
+                      this.$loader.hide();
 
                       this.$user.email = email;
                       this.$router.push({ name: 'activation' });
                     } else {
-                      this.$isLoading.value = false;
+                      this.$loader.hide();
 
                       this.submitError = true;
                       this.isDisabled = false;
                     }
                   })
                 } else {
-                  this.$isLoading.value = false;
+                  this.$loader.hide();
 
                   this.emailExists = true;
                   this.submitError = true;
@@ -161,7 +161,7 @@ export default {
                 }
               })
             } else {
-              this.$isLoading.value = false;
+              this.$loader.hide();
 
               this.usernameExists = true;
               this.submitError = true;

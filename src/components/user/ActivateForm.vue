@@ -125,17 +125,15 @@ export default {
     },
 
     async activate(email, code) {
-      console.log(email, code);
-
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        this.$isLoading.value = true;
+        this.$loader.show();
         this.isDisabled = true;
 
         this.recaptcha().then((token) => {
           UserService.activate(email, code, token).then((data) => {
-            this.$isLoading.value = false;
+            this.$loader.hide();
 
             if (data.code === 200) {
               this.$user.isActivated = true;

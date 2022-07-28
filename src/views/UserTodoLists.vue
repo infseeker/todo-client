@@ -128,10 +128,10 @@ export default {
 
     getLists() {
       if (!this.$store.lists.length) {
-        this.$isLoading.value = true;
+        this.$loader.show();
 
         ListService.getLists().then(r => {
-          this.$isLoading.value = false;
+          this.$loader.hide();
 
           if (r.code === 200) {
             r.data.forEach(i => {

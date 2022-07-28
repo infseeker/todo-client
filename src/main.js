@@ -2,6 +2,7 @@ import { createApp, reactive, ref } from 'vue';
 import { VueReCaptcha } from 'vue-recaptcha-v3';
 
 import { user } from './models/User';
+import { loader } from './helpers/loader'
 
 import 'bootstrap';
 
@@ -20,17 +21,7 @@ app.config.globalProperties.$user = reactive(user);
 app.config.globalProperties.$store = reactive({ lists: [] });
 app.config.globalProperties.$isLoading = ref(false);
 
-app.config.globalProperties.$loader = reactive({
-  show() {
-    setTimeout(() => {
-      app.config.globalProperties.$isLoading.value = true;
-    }, 500);
-  },
-
-  hide() {
-    app.config.globalProperties.$isLoading.value = false;
-  },
-});
+app.config.globalProperties.$loader = reactive(loader);
 
 app
   .use(router)
