@@ -58,8 +58,8 @@ class ListService {
       .then((data) => data);
   }
 
-  static async getListItems(list_id) {
-    return await fetch(api.lists.get_list_items(list_id), {
+  static async getListItems(listId) {
+    return await fetch(api.lists.get_list_items(listId), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ class ListService {
 
   static async updateListItem(listItem) {
     return await fetch(
-      api.lists.update_list_item(listItem.list_id, listItem.id),
+      api.lists.update_list_item(listItem.listId, listItem.id),
       {
         method: 'PUT',
         headers: {
@@ -97,7 +97,12 @@ class ListService {
           'X-CSRFToken': csrf.getToken(),
         },
         credentials: 'include',
-        body: JSON.stringify(listItem),
+        body: JSON.stringify({
+          title: listItem.title,
+          is_done: listItem.done,
+          is_liked: listItem.liked,
+          position: listItem.position,
+        }),
       }
     )
       .then((response) => response.json())
@@ -105,7 +110,7 @@ class ListService {
   }
 
   static async deleteListItem(listItem) {
-    return await fetch(api.lists.delete_list(listItem.list_id, listItem.id), {
+    return await fetch(api.lists.delete_list_item(listItem.listId, listItem.id), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

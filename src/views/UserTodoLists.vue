@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import List from '../models/List'
 import ListService from './../services/ListService';
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -128,7 +129,9 @@ export default {
       if (!this.$store.lists.length) {
         ListService.getLists().then(r => {
           if (r.code === 200) {
-            this.$store.lists = r.data;
+            r.data.forEach(i => {
+              this.$store.lists.push(new List(i));
+            });
           } else if (r.code === 404) {
             console.log('Lists of current user not found');
           } else {
@@ -154,7 +157,7 @@ export default {
       if (!this.v$.$error) {
         ListService.createList(this.title).then(r => {
           if (r.code === 200) {
-            this.$store.lists.push(r.data);
+            this.$store.lists.push(new List(r.data));
             this.title = '';
             this.v$.$reset();
 
@@ -178,10 +181,9 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        list.title = this.title;
-
-        ListService.updateList(list).then(r => {
+        ListService.updateList({id: list.id, title: this.title}).then(r => {
           if (r.code === 200) {
+            list.title = this.title;
             this.title = '';
             this.v$.$reset();
 

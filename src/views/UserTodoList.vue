@@ -9,6 +9,8 @@
 
 <script>
 import TodoList from '../components/todo/TodoList.vue';
+import List from '../models/List'
+import ListItem from '../models/ListItem'
 import ListService from '../services/ListService';
 
 export default {
@@ -26,7 +28,9 @@ export default {
     async getLists() {
       await ListService.getLists().then(r => {
         if (r.code === 200) {
-          this.$store.lists = r.data;
+          r.data.forEach(i => {
+            this.$store.lists.push(new List(i));
+          });
         } else if (r.code === 404) {
           console.log('Lists of current user not found');
         } else {
@@ -37,18 +41,23 @@ export default {
 
     async getListItems() {
       const listId = parseInt(this.$route.params.listId);
-      const list = this.$store.lists.find(list => list.id === listId);
+      const list = this.$store.lists.find(i => i.id === listId);
       this.list = list;
-
-      console.log(this.list);
 
       if (list) {
         if (!list.items || !list.items.length) {
 
           await ListService.getListItems(listId).then(r => {
             if (r.code === 200) {
-              list.items = r.data || [];
+              const items = [];
 
+              r.data.forEach(i => {
+                items.push(new ListItem(i));
+              })
+
+              items.sort((a, b) => a.id - b.id);
+
+              list.loadItems(items);
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });
             } else {
@@ -56,57 +65,60 @@ export default {
             }
           })
         } else {
-          this.listItems = list.items;ition: 0
-
-          console.log(`Items for list #${listId} already exist in list array`);
+          this.listItems = list.items;
         }
       } else {
         this.$router.push({ name: 'not-found' })
-        console.log(`List #${listId} not found in list array`);
       }
     },
 
     create(title) {
-      console.log('create', title);
+      ListService.createListItem(this.list, title).then(r => {
+        if (r.code === 200) {
+          this.list.addItem(new ListItem(r.data));
+        }
+      })
     },
 
     check(listItem) {
-      console.log('check', listItem);
+      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, done: !listItem.done }).then(r => {
+        listItem.check();
+      });
     },
 
     range(listItem) {
       console.log('range', listItem);
     },
 
-    saveTitle(listItem) {
-      console.log('save title', listItem);
+    saveTitle(listItem, title) {
+      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, title: title }).then(r => {
+        listItem.saveTitle(title);
+      });
     },
 
     like(listItem) {
-      console.log('like', listItem);
+      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, liked: !listItem.liked }).then(r => {
+        listItem.like();
+      });
     },
 
     deleteItem(listItem) {
-      console.log('delete', listItem);
-      // this.listItems = this.listItems.filter(item => item !== listItem);
+      ListService.deleteListItem(listItem).then(r => {
+        this.list.items = this.list.items.filter(item => item !== listItem);
+      });
     },
 
-    saveListTitle(listTitle) {
-      this.list.title = listTitle;
-
-      ListService.updateList(this.list).then(r => {
+    saveListTitle(title) {
+      ListService.updateList({ id: this.list.id, title: title }).then(r => {
         if (r.code === 200) {
-          console.log(`List #${this.list.id} was updated`);
+          this.list.saveTitle(title);
         }
       })
-      console.log('save list title', listTitle);
     },
 
     deleteList(list) {
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
-          console.log(`List #${list.id} was deleted`);
-
           this.$store.lists = this.$store.lists.filter(item => item !== list);
           this.$router.push({ name: 'lists' });
         }
@@ -116,9 +128,7 @@ export default {
 
   mounted() {
     if (!this.$store.lists.length) {
-      this.getLists(r => {
-        this.$store.lists = r.data;
-      }).then(() => {
+      this.getLists().then(() => {
         this.getListItems();
       })
     } else {

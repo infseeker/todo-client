@@ -7,7 +7,7 @@
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
 
             <form v-if="listTitleEdit">
-              <input ref="listTitleInput" @keypress.enter="saveListTitle($event)"
+              <input ref="listTitleInput" @keypress.enter.prevent="saveListTitle($event)"
                 @keyup.esc="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
             </form>
@@ -181,8 +181,6 @@ export default {
 
       title = this.removeUselessSymbols(title, 'all').trim();
 
-      this.listItems.push({ title: title, done: false, liked: false });
-
       this.newListItemTitle = '';
       $event.target.value = '';
 
@@ -190,8 +188,6 @@ export default {
     },
 
     checkListItem(item) {
-      item.done = !item.done
-
       this.$emit('check', item);
     },
 
@@ -275,11 +271,8 @@ export default {
       if (!this.currentListItemTitle.trim()) return
 
       this.currentListItemTitle = this.removeUselessSymbols(this.currentListItemTitle, 'all').trim();
-      item.title = this.currentListItemTitle;
-
+      this.$emit('saveTitle', item, this.currentListItemTitle);
       this.currentListItemTitle = '';
-
-      this.$emit('saveTitle', item);
     },
 
     discardEditedListItemTitle(item) {
@@ -288,8 +281,6 @@ export default {
     },
 
     toggleLikeListItem(item) {
-      item.liked = !item.liked
-
       this.$emit('like', item);
     },
 
