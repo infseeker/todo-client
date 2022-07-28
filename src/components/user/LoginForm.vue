@@ -129,10 +129,13 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.$isLoading.value = true;
         this.isDisabled = true;
 
         this.recaptcha().then((token) => {
           UserService.login(username, password, token).then(r => {
+            this.$isLoading.value = false;
+
             if (r.code === 200) {
               this.$user.login(r);
 

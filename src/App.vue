@@ -1,11 +1,15 @@
 <template>
+<div>
+  <loading v-model:active="this.$isLoading.value"></loading>
   <div class="container-sm bg-gray-50 dark bg-gray-900">
     <UserNavigation v-if="!this.$route.meta.hideNav"></UserNavigation>
     <router-view></router-view>
   </div>
+</div>
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay';
 import UserService from './services/UserService';
 import UserNavigation from './components/user/UserNavigation.vue';
 
@@ -17,6 +21,7 @@ export default {
   },
 
   components: {
+    Loading,
     UserNavigation,
   },
 

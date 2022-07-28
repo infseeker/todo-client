@@ -113,7 +113,7 @@ export default {
         if (r.code === 200) {
           this.list.saveTitle(title);
         }
-      })
+      });
     },
 
     deleteList(list) {
