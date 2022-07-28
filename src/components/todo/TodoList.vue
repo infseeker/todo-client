@@ -158,7 +158,9 @@ export default {
       if (!$event.target.value || $event.target.value.trim().length === 0) return;
 
       this.listTitleEdit = false;
-      this.$emit('saveListTitle', $event.target.value.trim());
+      const title = this.removeUselessSymbols($event.target.value.trim(), 'all');
+      
+      this.$emit('saveListTitle', title);
     },
 
     discardListTitleEdit() {

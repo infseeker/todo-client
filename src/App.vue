@@ -27,6 +27,10 @@ export default {
   },
 
   methods: {
+    test() {
+      console.log('test');
+    },
+
     loadAuthData() {
       // Load user auth data
       UserService.getSession().then((data) => {

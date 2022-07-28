@@ -190,7 +190,7 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        list.title = this.title;
+        list.title = this.title.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
         this.title = '';
         this.v$.$reset();
 
