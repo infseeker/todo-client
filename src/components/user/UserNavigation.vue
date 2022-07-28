@@ -52,10 +52,10 @@ export default {
 
   methods: {
     logout() {
-      this.$isLoading.value = true;
+      this.$loader.show();
 
       UserService.logout().then((data) => {
-        this.$isLoading.value = false;
+        this.$loader.hide();
 
         this.$user.logout();
         this.$store.lists = [];
