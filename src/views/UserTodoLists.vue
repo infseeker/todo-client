@@ -181,22 +181,23 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        ListService.updateList({id: list.id, title: this.title}).then(r => {
+        ListService.updateList({ id: list.id, title: this.title }).then(r => {
           if (r.code === 200) {
-            list.title = this.title;
-            this.title = '';
-            this.v$.$reset();
-
-            Modal.getInstance(this.$refs['listModal']).hide();
           }
         });
+
+        list.title = this.title;
+        this.title = '';
+        this.v$.$reset();
+
+        Modal.getInstance(this.$refs['listModal']).hide();
       }
     },
 
     deleteList(list) {
+      this.$store.lists = this.$store.lists.filter(item => item !== list);
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
-          this.$store.lists = this.$store.lists.filter(item => item !== list);
         }
       })
     }

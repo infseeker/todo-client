@@ -81,8 +81,8 @@ export default {
     },
 
     check(listItem) {
+      listItem.check();
       ListService.updateListItem({ id: listItem.id, listId: listItem.listId, done: !listItem.done }).then(r => {
-        listItem.check();
       });
     },
 
@@ -91,36 +91,38 @@ export default {
     },
 
     saveTitle(listItem, title) {
+      listItem.saveTitle(title);
       ListService.updateListItem({ id: listItem.id, listId: listItem.listId, title: title }).then(r => {
-        listItem.saveTitle(title);
       });
     },
 
     like(listItem) {
+      listItem.like();
       ListService.updateListItem({ id: listItem.id, listId: listItem.listId, liked: !listItem.liked }).then(r => {
-        listItem.like();
       });
     },
 
     deleteItem(listItem) {
+      this.list.items = this.list.items.filter(item => item !== listItem);
       ListService.deleteListItem(listItem).then(r => {
-        this.list.items = this.list.items.filter(item => item !== listItem);
       });
     },
 
     saveListTitle(title) {
+      this.list.saveTitle(title);
+
       ListService.updateList({ id: this.list.id, title: title }).then(r => {
         if (r.code === 200) {
-          this.list.saveTitle(title);
         }
       });
     },
 
     deleteList(list) {
+      this.$store.lists = this.$store.lists.filter(item => item !== list);
+      this.$router.push({ name: 'lists' });
+
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
-          this.$store.lists = this.$store.lists.filter(item => item !== list);
-          this.$router.push({ name: 'lists' });
         }
       });
     }
