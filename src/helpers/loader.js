@@ -4,7 +4,7 @@ export const loader = {
   show() {
     this.timeout = setTimeout(() => {
       this.shown = true;
-    }, 500);
+    }, 1000);
   },
 
   hide() {
