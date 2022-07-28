@@ -123,8 +123,6 @@ export default {
 
   methods: {
     async login(username, password) {
-      console.log(username, password);
-
       this.submitError = false;
       this.v$.$validate();
 

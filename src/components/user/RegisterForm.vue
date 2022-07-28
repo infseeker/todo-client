@@ -122,8 +122,6 @@ export default {
 
   methods: {
     async register(username, email, password) {
-      console.log(username, email, password);
-
       this.submitError = false;
       this.usernameExists = false;
       this.emailExists = false;
@@ -131,31 +129,40 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.$isLoading.value = true;
         this.isDisabled = true;
-        
+
         this.recaptcha().then((token) => {
           UserService.checkUsername(username).then((data) => {
-            console.log(data);
             if (data.code === 200) {
+
               UserService.checkEmail(email).then((data) => {
                 if (data.code === 200) {
+                  
                   UserService.register(username, email, password, token).then((data) => {
-                    console.log(data);
                     if (data.code === 200) {
+                      this.$isLoading.value = false;
+
                       this.$user.email = email;
                       this.$router.push({ name: 'activation' });
                     } else {
+                      this.$isLoading.value = false;
+
                       this.submitError = true;
                       this.isDisabled = false;
                     }
                   })
                 } else {
+                  this.$isLoading.value = false;
+
                   this.emailExists = true;
                   this.submitError = true;
                   this.isDisabled = false;
                 }
               })
             } else {
+              this.$isLoading.value = false;
+
               this.usernameExists = true;
               this.submitError = true;
               this.isDisabled = false;

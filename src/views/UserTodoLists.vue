@@ -65,9 +65,9 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
 
-            <button v-if="!isEdit" @click="create($event)" type="button" class="btn btn-primary">Создать</button>
+            <button :disabled="isDisabled" v-if="!isEdit" @click="create($event)" type="button" class="btn btn-primary">Создать</button>
 
-            <button ref="saveTitleButton" v-else @click="save($event, this.currentList)" type="button"
+            <button :disabled="isDisabled" ref="saveTitleButton" v-else @click="save($event, this.currentList)" type="button"
               class="btn btn-primary">Сохранить</button>
           </div>
         </div>
@@ -94,6 +94,7 @@ export default {
       currentList: {},
       title: '',
       isEdit: false,
+      isDisabled: false,
     }
   },
 
@@ -155,7 +156,11 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.isDisabled = true;
+
         ListService.createList(this.title).then(r => {
+          this.isDisabled = false;
+          
           if (r.code === 200) {
             this.$store.lists.push(new List(r.data));
             this.title = '';
@@ -181,16 +186,16 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        ListService.updateList({ id: list.id, title: this.title }).then(r => {
-          if (r.code === 200) {
-          }
-        });
-
         list.title = this.title;
         this.title = '';
         this.v$.$reset();
 
         Modal.getInstance(this.$refs['listModal']).hide();
+
+        ListService.updateList(list).then(r => {
+          if (r.code === 200) {
+          }
+        });
       }
     },
 

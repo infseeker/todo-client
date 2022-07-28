@@ -174,9 +174,12 @@ export default {
 
       if (password || image) {
         if (!this.v$.password.$error) {
+          this.$isLoading.value = true;
           this.isDisabled = true;
 
           UserService.update(password, image).then((data) => {
+            this.$isLoading.value = false;
+
             if (data.code === 200) {
               this.saved = true;
 
@@ -236,9 +239,12 @@ export default {
     },
 
     deleteUserImage() {
+      this.$isLoading.value = true;
       this.errorOnImageDelete = false;
 
       UserService.deleteUserImage().then(data => {
+        this.$isLoading.value = false;
+
         if (data.code === 200) {
           this.userImage = '';
         } else {
@@ -271,10 +277,13 @@ export default {
       this.v$.deletePassword.$validate();
 
       if (!this.v$.deletePassword.$error) {
+        this.$isLoading.value = true;
         this.delIsDisabled = true;
 
         UserService.delete(password).then((data) => {
           if (data.code === 200) {
+            this.$isLoading.value = false;
+
             UserService.logout().then((data) => {
               this.$user.logout();
               this.$router.push('/');

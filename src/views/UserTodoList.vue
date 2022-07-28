@@ -82,7 +82,7 @@ export default {
 
     check(listItem) {
       listItem.check();
-      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, done: !listItem.done }).then(r => {
+      ListService.updateListItem(listItem).then(r => {
       });
     },
 
@@ -92,13 +92,13 @@ export default {
 
     saveTitle(listItem, title) {
       listItem.saveTitle(title);
-      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, title: title }).then(r => {
+      ListService.updateListItem(listItem).then(r => {
       });
     },
 
     like(listItem) {
       listItem.like();
-      ListService.updateListItem({ id: listItem.id, listId: listItem.listId, liked: !listItem.liked }).then(r => {
+      ListService.updateListItem(listItem).then(r => {
       });
     },
 
