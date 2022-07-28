@@ -26,7 +26,11 @@ export default {
 
   methods: {
     async getLists() {
+      this.$isLoading.value = true;
+
       await ListService.getLists().then(r => {
+        this.$isLoading.value = false;
+
         if (r.code === 200) {
           r.data.forEach(i => {
             this.$store.lists.push(new List(i));
@@ -46,8 +50,11 @@ export default {
 
       if (list) {
         if (!list.items || !list.items.length) {
+          this.$isLoading.value = true;
 
           await ListService.getListItems(listId).then(r => {
+            this.$isLoading.value = false;
+
             if (r.code === 200) {
               const items = [];
 

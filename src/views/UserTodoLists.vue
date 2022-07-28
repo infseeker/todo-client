@@ -128,7 +128,11 @@ export default {
 
     getLists() {
       if (!this.$store.lists.length) {
+        this.$isLoading.value = true;
+
         ListService.getLists().then(r => {
+          this.$isLoading.value = false;
+
           if (r.code === 200) {
             r.data.forEach(i => {
               this.$store.lists.push(new List(i));
