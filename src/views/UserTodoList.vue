@@ -80,7 +80,11 @@ export default {
     },
 
     create(title) {
+      this.$loader.show();
+
       ListService.createListItem(this.list, title).then(r => {
+        this.$loader.hide();
+
         if (r.code === 200) {
           this.list.addItem(new ListItem(r.data));
         }
