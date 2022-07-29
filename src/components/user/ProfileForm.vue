@@ -281,9 +281,9 @@ export default {
         this.delIsDisabled = true;
 
         UserService.delete(password).then((data) => {
+          this.$loader.hide();
+          
           if (data.code === 200) {
-            this.$loader.hide();
-
             UserService.logout().then((data) => {
               this.$user.logout();
               this.$router.push('/');
