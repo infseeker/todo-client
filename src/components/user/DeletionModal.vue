@@ -28,14 +28,15 @@ import { required } from '@vuelidate/validators'
 import { password } from '../../helpers/validations'
 import Modal from '../common/Modal.vue'
 
-export default {
-  props: ['incorrectPassword'],
+import UserService from '../../services/UserService'
 
+export default {
   data() {
     return {
       v$: useValidate(),
       deletionPassword: '',
       isDisabled: false,
+      incorrectPassword: false
     }
   },
 
@@ -55,9 +56,25 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.$loader.show();
         this.isDisabled = true;
+        this.incorrectPassword = false;
+
         const password = this.$refs.password.value;
-        this.$emit('deleteUser', password);
+
+        UserService.delete(password).then((r) => {
+          this.$loader.hide();
+          this.isDisabled = false;
+
+          if (r.code === 200) {
+            UserService.logout().then(() => {
+              this.$user.logout();
+              this.$router.push('/');
+            });
+          } else {
+            this.incorrectPassword = true;
+          }
+        });
       }
     }
   }

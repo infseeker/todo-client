@@ -36,7 +36,6 @@ export default {
   data() {
     return {
       v$: useValidate(),
-      isDisabled: false,
     }
   },
 
@@ -78,6 +77,10 @@ export default {
 
   mounted() {
     this.open();
+  },
+
+  beforeUnmount() {
+    this.close();
   }
 }
 </script>

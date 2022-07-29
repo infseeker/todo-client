@@ -265,20 +265,7 @@ export default {
 
     deleteUser(password) {
       if (!this.v$.deletionPassword.$error) {
-        this.$loader.show();
-
-        UserService.delete(password).then((r) => {
-          this.$loader.hide();
-
-          if (r.code === 200) {
-            UserService.logout().then(() => {
-              this.$user.logout();
-              this.$router.push('/');
-            });
-          } else {
-            this.wrongDeletionPassword = true;
-          }
-        });
+        
       }
     },
 
