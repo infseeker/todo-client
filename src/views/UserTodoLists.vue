@@ -161,9 +161,11 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.$loader.show();
         this.isDisabled = true;
 
         ListService.createList(this.title).then(r => {
+          this.$loader.hide();
           this.isDisabled = false;
           
           if (r.code === 200) {

@@ -287,8 +287,6 @@ export default {
             UserService.logout().then((data) => {
               this.$user.logout();
               this.$router.push('/');
-
-              console.log(data);show
             });
           } else {
             this.wrongDeletePassword = true;
