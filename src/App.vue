@@ -3,7 +3,7 @@
   <loading v-model:active="this.$loader.shown" loader="dots" :height="100" :width="100" color="#696cff"></loading>
 
   <div class="container-sm bg-gray-50 dark bg-gray-900">
-    <UserNavigation v-if="!this.$route.meta.hideNav"></UserNavigation>
+    <user-navigation v-if="!this.$route.meta.hideNav"></user-navigation>
     <router-view></router-view>
   </div>
 </div>
@@ -12,7 +12,7 @@
 <script>
 import Loading from 'vue-loading-overlay';
 import UserService from './services/UserService';
-import UserNavigation from './components/user/UserNavigation.vue';
+import UserNavigation from './components/user/NavBar.vue';
 
 export default {
   computed: {
@@ -27,10 +27,6 @@ export default {
   },
 
   methods: {
-    test() {
-      console.log('test');
-    },
-
     loadAuthData() {
       // Load user auth data
       UserService.getSession().then((data) => {

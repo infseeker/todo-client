@@ -65,10 +65,11 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
 
-            <button :disabled="isDisabled" v-if="!isEdit" @click="create($event)" type="button" class="btn btn-primary">Создать</button>
+            <button :disabled="isDisabled" v-if="!isEdit" @click="create($event)" type="button"
+              class="btn btn-primary">Создать</button>
 
-            <button :disabled="isDisabled" ref="saveTitleButton" v-else @click="save($event, this.currentList)" type="button"
-              class="btn btn-primary">Сохранить</button>
+            <button :disabled="isDisabled" ref="saveTitleButton" v-else @click="save($event, this.currentList)"
+              type="button" class="btn btn-primary">Сохранить</button>
           </div>
         </div>
       </div>
@@ -84,6 +85,7 @@ import ListService from './../services/ListService';
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { Modal } from 'bootstrap'
+import { setFocusOnModalInput } from '../helpers/modalInputFocus'
 
 import TodoListDeletionModal from '../components/todo/TodoListDeletionModal.vue'
 
@@ -111,19 +113,15 @@ export default {
   },
 
   methods: {
-    setFocusOnModalInput() {
-      const modal = this.$refs['listModal'];
+    setFocusOnModalInputCreateEdit() {
+      this.$nextTick(() => {
+        const modal = this.$refs['listModal'];
+        const input = this.$refs['createListTitleInput'];
+        const secondInput = this.$refs['editListTitleInput'];
+        const condition = this.isEdit;
 
-      const listener = () => {
-        this.$nextTick(() => {
-          const input = !this.isEdit ? this.$refs['createListTitleInput'] : this.$refs['editListTitleInput'];
-          input.focus();
-        });
-
-        modal.removeEventListener('shown.bs.modal', listener);
-      };
-
-      modal.addEventListener('shown.bs.modal', listener);
+        setFocusOnModalInput(this, modal, input, condition, secondInput);
+      })
     },
 
     getLists() {
@@ -151,7 +149,7 @@ export default {
       this.isEdit = false;
       this.v$.$reset();
 
-      this.setFocusOnModalInput();
+      this.setFocusOnModalInputCreateEdit()
     },
 
     create($event) {
@@ -167,7 +165,7 @@ export default {
         ListService.createList(this.title).then(r => {
           this.$loader.hide();
           this.isDisabled = false;
-          
+
           if (r.code === 200) {
             this.$store.lists.push(new List(r.data));
             this.title = '';
@@ -185,7 +183,7 @@ export default {
       this.title = list.title;
       this.isEdit = true;
 
-      this.setFocusOnModalInput();
+      this.setFocusOnModalInputCreateEdit();
     },
 
     save($event, list) {

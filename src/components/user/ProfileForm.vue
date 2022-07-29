@@ -30,11 +30,12 @@
         </div>
 
         <div class="mb-2">
-          <span class="badge bg-label-primary"><span class="form-label mb-0">Имя: </span>{{ this.$user.username }}</span>
+          <span class="badge bg-label-primary"><span class="form-label mb-0">Имя: </span>{{ this.$user.username
+          }}</span>
         </div>
 
         <div class="mb-3">
-          
+
           <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
         </div>
 
@@ -70,35 +71,19 @@
       </div>
     </div>
 
-
+    <!-- User deletion -->
     <div class="card mt-4">
       <div class="card-body" v-on:keyup.enter="deleteUser(deletePassword)">
         <h5 class="header mb-3">Удаление учётной записи</h5>
 
-        <div v-if="wrongDeletePassword" class="alert alert-danger" role="alert">
-          Неверный пароль.
-        </div>
-
-        <div class="mb-4 form-password-toggle">
-          <div class="input-group input-group-merge">
-            <input v-if="showPassword" placeholder="Введите текущий пароль" v-model="deletePassword"
-              class="form-control" />
-            <input v-else type="password" placeholder="Введите текущий пароль" v-model="deletePassword"
-              class="form-control" />
-            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-              <i v-if="showPassword" class="bx bx-show"></i>
-              <i v-else class="bx bx-hide"></i>
-            </span>
-          </div>
-          <div v-if="this.v$.deletePassword.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
-            символов, мин. 1 лат. буква, мин. 1 цифра</div>
-        </div>
-
-        <button @click="deleteUser(deletePassword)" :disabled="delIsDisabled" type="button"
-          class="btn btn-danger w-100">Удалить учётную запись</button>
+        <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">Удалить учётную
+          запись</button>
       </div>
     </div>
   </div>
+
+  <deletion-modal v-if="showDeletionUserModal" :incorrectPassword="wrongDeletionPassword" @close="showDeletionUserModal = false" @delete-user="deleteUser">
+  </deletion-modal>
 </template>
 
 <script>
@@ -109,18 +94,20 @@ import { password } from '../../helpers/validations'
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 
+import DeletionModal from './DeletionModal.vue'
+
 export default {
   data() {
     return {
       v$: useValidate(),
       password: '',
-      deletePassword: '',
+      deletionPassword: '',
+      wrongDeletionPassword: false,
       showPassword: false,
       isDisabled: false,
       delIsDisabled: false,
       showCropper: false,
       wrongImgFormat: false,
-      wrongDeletePassword: false,
       saved: false,
       errorOnSave: false,
       errorOnImageDelete: false,
@@ -130,6 +117,8 @@ export default {
         src: '',
         type: '',
       },
+
+      showDeletionUserModal: false,
     }
   },
 
@@ -139,7 +128,7 @@ export default {
         password
       },
 
-      deletePassword: {
+      deletionPassword: {
         required,
         password
       },
@@ -148,7 +137,8 @@ export default {
 
   components: {
     Cropper,
-    CircleStencil
+    CircleStencil,
+    DeletionModal,
   },
 
   methods: {
@@ -274,24 +264,20 @@ export default {
     },
 
     deleteUser(password) {
-      this.v$.deletePassword.$validate();
-
-      if (!this.v$.deletePassword.$error) {
+      if (!this.v$.deletionPassword.$error) {
         this.$loader.show();
-        this.delIsDisabled = true;
 
-        UserService.delete(password).then((data) => {
+        UserService.delete(password).then((r) => {
           this.$loader.hide();
-          
-          if (data.code === 200) {
-            UserService.logout().then((data) => {
+
+          if (r.code === 200) {
+            UserService.logout().then(() => {
               this.$user.logout();
               this.$router.push('/');
             });
           } else {
-            this.wrongDeletePassword = true;
+            this.wrongDeletionPassword = true;
           }
-          this.delIsDisabled = false;
         });
       }
     },
