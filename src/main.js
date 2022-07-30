@@ -1,5 +1,4 @@
-import { createApp, reactive, ref } from 'vue';
-import { VueReCaptcha } from 'vue-recaptcha-v3';
+import { createApp, reactive } from 'vue';
 
 import { user } from './models/User';
 import { loader } from './helpers/loader'
@@ -19,11 +18,6 @@ export const app = createApp(App);
 
 app.config.globalProperties.$user = reactive(user);
 app.config.globalProperties.$store = reactive({ lists: [] });
-app.config.globalProperties.$isLoading = ref(false);
-
 app.config.globalProperties.$loader = reactive(loader);
 
-app
-  .use(router)
-  .use(VueReCaptcha, { siteKey: '6LcX-58gAAAAAJ94B93UPTv-K3YnLZn8J3M2j-wr' })
-  .mount('#app');
+app.use(router).mount('#app');

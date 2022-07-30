@@ -72,6 +72,8 @@ export default {
       const modalEl = this.$refs.modal;
       const modal = Modal.getInstance(modalEl);
       modal.hide();
+      
+      this.$emit('close');
     }
   },
 
@@ -81,6 +83,10 @@ export default {
 
   beforeUnmount() {
     this.close();
+  },
+
+  updated() {
+    console.log('update');
   }
 }
 </script>

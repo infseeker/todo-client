@@ -76,26 +76,10 @@
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { useReCaptcha } from "vue-recaptcha-v3";
+import { recaptcha } from '../../helpers/recaptcha'
 
 
 export default {
-  setup() {
-    const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
-
-    const recaptcha = async () => {
-      await recaptchaLoaded();
-
-      const token = await executeRecaptcha('login')
-
-      return token;
-    }
-
-    return {
-      recaptcha
-    }
-  },
-
   data() {
     return {
       v$: useValidate(),
@@ -130,7 +114,7 @@ export default {
         this.$loader.show();
         this.isDisabled = true;
 
-        this.recaptcha().then((token) => {
+        recaptcha().then((token) => {
           UserService.login(username, password, token).then(r => {
             this.$loader.hide();
 
