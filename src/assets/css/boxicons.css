@@ -1,0 +1,84 @@
+.bx {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  line-height: 1;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.bx-check-circle {
+  background-image: url('../img/icons/bx-check-circle.svg');
+}
+
+.bx-circle {
+  background-image: url('../img/icons/bx-circle.svg');
+}
+
+.bx-dots-vertical-rounded {
+  background-image: url('../img/icons/bx-dots-vertical-rounded.svg');
+}
+
+.bx-edit-alt {
+  background-image: url('../img/icons/bx-edit-alt.svg');
+}
+
+.bx-envelope {
+  background-image: url('../img/icons/bx-envelope.svg');
+}
+
+.bx-heart {
+  background-image: url('../img/icons/bx-heart.svg');
+}
+
+.bx-hide {
+  background-image: url('../img/icons/bx-hide.svg');
+}
+
+.bx-key {
+  background-image: url('../img/icons/bx-key.svg');
+}
+
+.bx-list-check {
+  background-image: url('../img/icons/bx-list-check.svg');
+}
+
+.bx-list-plus {
+  background-image: url('../img/icons/bx-list-plus.svg');
+}
+
+.bx-log-in {
+  background-image: url('../img/icons/bx-log-in.svg');
+}
+
+.bx-log-out {
+  background-image: url('../img/icons/bx-log-out.svg');
+}
+
+.bx-news {
+  background-image: url('../img/icons/bx-news.svg');
+}
+
+.bx-show {
+  background-image: url('../img/icons/bx-show.svg');
+}
+
+.bx-trash-alt {
+  background-image: url('../img/icons/bx-trash-alt.svg');
+}
+
+.bx-user-plus {
+  background-image: url('../img/icons/bx-user-plus.svg');
+}
+
+.bx-user {
+  background-image: url('../img/icons/bx-user.svg');
+}
+
+.bxs-heart {
+  background-image: url('../img/icons/bxs-heart.svg');
+}
+
+.bxs-plus-circle {
+  background-image: url('../img/icons/bxs-plus-circle.svg');
+}
