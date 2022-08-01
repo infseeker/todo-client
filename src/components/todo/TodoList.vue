@@ -75,7 +75,7 @@
             <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
               v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
 
-              <i class='todo-list-item-check bx bx-check-circle'
+              <i class='todo-list-item-check bx'
                 :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
 
               <span :ref="`titleOfListItem-${listItems.indexOf(item)}`"
