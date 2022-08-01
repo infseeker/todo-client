@@ -2,7 +2,7 @@ export const loader = {
   shown: false,
   
   show() {
-    window.focus();
+    document.activeElement.blur();
     
     this.timeout = setTimeout(() => {
       this.shown = true;
