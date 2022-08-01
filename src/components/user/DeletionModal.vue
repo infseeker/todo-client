@@ -11,37 +11,33 @@
 
       <div class="form-password-toggle">
         <div class="input-group input-group-merge">
-          <input v-if="showPassword" @keypress.enter="deleteUser()" v-model="password" type="text" placeholder="Введите пароль" class="form-control" />
-          <input v-else  @keypress.enter="deleteUser()" type="password" v-model="password" placeholder="Введите пароль" class="form-control" />
+          <input v-if="showPassword" @keypress.enter="deleteUser(password)" v-model.trim="password" type="text"
+            placeholder="Введите пароль" class="form-control" />
+            
+          <input v-else @keypress.enter="deleteUser(password)" type="password" v-model.trim="password"
+            placeholder="Введите пароль" class="form-control" />
+
           <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
             <i v-if="showPassword" class="bx bx-show"></i>
             <i v-else class="bx bx-hide"></i>
           </span>
         </div>
-
-        <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
-        символов, мин. 1 лат. буква, мин. 1 цифра</div>
       </div>
     </template>
 
     <template v-slot:buttons>
-      <button :disabled="isDisabled" @click="deleteUser()" type="button" class="btn btn-danger">Удалить</button>
+      <button :disabled="isDisabled" @click="deleteUser(password)" type="button" class="btn btn-danger">Удалить</button>
     </template>
   </modal>
 </template>
 
 <script>
-import useValidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
-import { password } from '../../helpers/validations'
 import Modal from '../common/Modal.vue'
-
 import UserService from '../../services/UserService'
 
 export default {
   data() {
     return {
-      v$: useValidate(),
       password: '',
       showPassword: false,
       isDisabled: false,
@@ -49,40 +45,34 @@ export default {
     }
   },
 
-  validations: {
-    password: {
-      required,
-      password
-    },
-  },
-
   components: {
     Modal
   },
 
   methods: {
-    deleteUser() {
-      this.v$.$validate();
-
-      if (!this.v$.$error) {
-        this.$loader.show();
-        this.isDisabled = true;
-        this.incorrectPassword = false;
-
-        UserService.delete(this.password).then((r) => {
-          this.$loader.hide();
-          this.isDisabled = false;
-
-          if (r.code === 200) {
-            UserService.logout().then(() => {
-              this.$user.logout();
-              this.$router.push('/');
-            });
-          } else {
-            this.incorrectPassword = true;
-          }
-        });
+    deleteUser(password) {
+      if (!password) {
+        this.incorrectPassword = true;
+        return;
       }
+
+      this.$loader.show();
+      this.isDisabled = true;
+      this.incorrectPassword = false;
+
+      UserService.delete(password).then((r) => {
+        this.$loader.hide();
+        this.isDisabled = false;
+
+        if (r.code === 200) {
+          UserService.logout().then(() => {
+            this.$user.logout();
+            this.$router.push('/');
+          });
+        } else {
+          this.incorrectPassword = true;
+        }
+      });
     }
   }
 }
