@@ -164,11 +164,11 @@ export default {
 
       if (password || image) {
         if (!this.v$.password.$error) {
-          this.$isLoading.value = true;
+          this.$loader.show();
           this.isDisabled = true;
 
           UserService.update(password, image).then((data) => {
-            this.$isLoading.value = false;
+            this.$loader.hide();
 
             if (data.code === 200) {
               this.saved = true;
