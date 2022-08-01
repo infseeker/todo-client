@@ -153,7 +153,8 @@ export default {
     },
 
     create($event) {
-      this.title = $event.target.value.trim() || this.$refs['createListTitleInput'].value.trim();
+      const input = this.$refs['createListTitleInput'];
+      this.title = $event.target.value.trim() || input.value.trim();
       this.title = this.title.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
 
       this.v$.$validate();
@@ -187,7 +188,9 @@ export default {
     },
 
     save($event, list) {
-      this.title = $event.target.value.trim() || this.$refs['editListTitleInput'].value.trim();
+      const input = this.$refs['editListTitleInput'];
+      this.title = $event.target.value.trim() || input.value.trim();
+
       this.v$.$validate();
 
       if (!this.v$.$error) {
