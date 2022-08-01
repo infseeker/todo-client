@@ -9,11 +9,19 @@
         Неверный пароль.
       </div>
 
-      <input ref="password" v-model="deletionPassword" type="password" @keypress.enter="deleteUser()" class="form-control"
-        placeholder="Введите текущий пароль">
+      <div class="form-password-toggle">
+        <div class="input-group input-group-merge">
+          <input v-if="showPassword" @keypress.enter="deleteUser()" v-model="password" type="text" placeholder="Введите пароль" class="form-control" />
+          <input v-else  @keypress.enter="deleteUser()" type="password" v-model="password" placeholder="Введите пароль" class="form-control" />
+          <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+            <i v-if="showPassword" class="bx bx-show"></i>
+            <i v-else class="bx bx-hide"></i>
+          </span>
+        </div>
 
-      <div v-if="this.v$.deletionPassword.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
+        <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
         символов, мин. 1 лат. буква, мин. 1 цифра</div>
+      </div>
     </template>
 
     <template v-slot:buttons>
@@ -34,14 +42,15 @@ export default {
   data() {
     return {
       v$: useValidate(),
-      deletionPassword: '',
+      password: '',
+      showPassword: false,
       isDisabled: false,
       incorrectPassword: false
     }
   },
 
   validations: {
-    deletionPassword: {
+    password: {
       required,
       password
     },
@@ -60,9 +69,7 @@ export default {
         this.isDisabled = true;
         this.incorrectPassword = false;
 
-        const password = this.$refs.password.value;
-
-        UserService.delete(password).then((r) => {
+        UserService.delete(this.password).then((r) => {
           this.$loader.hide();
           this.isDisabled = false;
 
