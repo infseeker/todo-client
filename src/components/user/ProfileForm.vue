@@ -73,7 +73,7 @@
 
     <!-- User deletion -->
     <div class="card mt-4">
-      <div class="card-body" v-on:keyup.enter="deleteUser(deletePassword)">
+      <div class="card-body">
         <h5 class="header mb-3">Удаление учётной записи</h5>
 
         <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">Удалить учётную
@@ -82,14 +82,12 @@
     </div>
   </div>
 
-  <deletion-modal v-if="showDeletionUserModal" :incorrectPassword="wrongDeletionPassword" @close="showDeletionUserModal = false" @delete-user="deleteUser">
-  </deletion-modal>
+  <deletion-modal v-if="showDeletionUserModal" @close="showDeletionUserModal = false"></deletion-modal>
 </template>
 
 <script>
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
 import { password } from '../../helpers/validations'
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
@@ -101,11 +99,8 @@ export default {
     return {
       v$: useValidate(),
       password: '',
-      deletionPassword: '',
-      wrongDeletionPassword: false,
       showPassword: false,
       isDisabled: false,
-      delIsDisabled: false,
       showCropper: false,
       wrongImgFormat: false,
       saved: false,
@@ -125,11 +120,6 @@ export default {
   validations() {
     return {
       password: {
-        password
-      },
-
-      deletionPassword: {
-        required,
         password
       },
     }
@@ -260,12 +250,6 @@ export default {
           return "image/jpeg";
         default:
           return fallback;
-      }
-    },
-
-    deleteUser(password) {
-      if (!this.v$.deletionPassword.$error) {
-        
       }
     },
 
