@@ -229,11 +229,11 @@ export default {
     },
 
     deleteUserImage() {
-      this.$isLoading.value = true;
+      this.$loader.show();
       this.errorOnImageDelete = false;
 
       UserService.deleteUserImage().then(data => {
-        this.$isLoading.value = false;
+        this.$loader.hide();
 
         if (data.code === 200) {
           this.userImage = '';
