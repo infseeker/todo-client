@@ -62,7 +62,7 @@ export default {
                 items.push(new ListItem(i));
               })
 
-              items.sort((a, b) => a.id - b.id);
+              items.sort((a, b) => a.position - b.position);
 
               list.loadItems(items);
             } else if (r.code === 404) {
@@ -81,8 +81,10 @@ export default {
 
     create(title) {
       this.$loader.show();
+      const lastListItem = this.list.items[this.list.items.length - 1];
+      const position =  lastListItem ? lastListItem.position + 1 : 1
 
-      ListService.createListItem(this.list, title, this.list.items.length + 1).then(r => {
+      ListService.createListItem(this.list, title, position).then(r => {
         this.$loader.hide();
 
         if (r.code === 200) {
@@ -97,8 +99,26 @@ export default {
       });
     },
 
-    range(listItem) {
-      console.log('range', listItem);
+    range(listItem, newIndex) {
+      const items = this.list.items;
+
+      if (newIndex === 0) {
+        listItem.position = items[1].position / 2;
+      } else if (newIndex === items.length - 1) {
+        listItem.position = items[newIndex - 1].position + 1;
+      } else {
+        listItem.position = (items[newIndex - 1].position + items[newIndex + 1].position) / 2;
+      }
+
+      this.list.items.forEach(i => {
+        console.log(i.position);
+      });
+
+      ListService.updateListItem(listItem).then(r => {
+        if(r.code === 200) {
+
+        }
+      })
     },
 
     saveTitle(listItem, title) {

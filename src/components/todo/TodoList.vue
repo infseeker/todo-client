@@ -193,8 +193,10 @@ export default {
       this.$emit('check', item);
     },
 
-    rangeListItem(item) {
-      this.$emit('range', item);
+    rangeListItem(movedItem) {
+      const item = movedItem.moved.element;
+      const newIndex = movedItem.moved.newIndex;
+      this.$emit('range', item, newIndex);
     },
 
     editListItemTitle(item) {
