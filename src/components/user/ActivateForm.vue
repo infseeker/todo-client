@@ -20,7 +20,8 @@
             </div>
           </div>
           <p v-if="!showEmailField">
-            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с кодом
+            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с
+            кодом
             активации.
           </p>
           <p>
@@ -133,9 +134,12 @@ export default {
   },
 
   mounted() {
-    if(!this.$user.email) {
+    if (!this.$user.email) {
       this.showEmailField = true;
     }
+    
+    const input = document.querySelector('input') || document.querySelector('textarea') || null;
+    input.focus();
   }
 }
 </script>

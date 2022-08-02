@@ -153,6 +153,9 @@ export default {
   mounted() {
     this.restored = this.$user.isRestored;
     this.activated = this.$user.isActivated;
+    
+    const input = document.querySelector('input') || document.querySelector('textarea') || null;
+    input.focus();
   }
 }
 </script>

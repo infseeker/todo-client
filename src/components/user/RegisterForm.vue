@@ -154,6 +154,11 @@ export default {
         })
       }
     },
+  },
+
+  mounted() {
+    const input = document.querySelector('input') || document.querySelector('textarea') || null;
+    input.focus();
   }
 }
 </script>

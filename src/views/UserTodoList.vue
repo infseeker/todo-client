@@ -110,6 +110,7 @@ export default {
         listItem.position = (items[newIndex - 1].position + items[newIndex + 1].position) / 2;
       }
 
+      console.clear();
       this.list.items.forEach(i => {
         console.log(i.position);
       });
