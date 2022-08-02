@@ -71,7 +71,7 @@ class ListService {
       .then((data) => data);
   }
 
-  static async createListItem(list, title) {
+  static async createListItem(list, title, position) {
     return await fetch(api.lists.create_list_item(list.id), {
       method: 'POST',
       headers: {
@@ -81,6 +81,7 @@ class ListService {
       credentials: 'include',
       body: JSON.stringify({
         title: title,
+        position: position,
       }),
     })
       .then((response) => response.json())

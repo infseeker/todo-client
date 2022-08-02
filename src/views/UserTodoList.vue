@@ -82,7 +82,7 @@ export default {
     create(title) {
       this.$loader.show();
 
-      ListService.createListItem(this.list, title).then(r => {
+      ListService.createListItem(this.list, title, this.list.items.length + 1).then(r => {
         this.$loader.hide();
 
         if (r.code === 200) {
@@ -129,7 +129,13 @@ export default {
     },
 
     deleteList(list) {
-      this.$store.lists = this.$store.lists.filter(item => item !== list);
+      // Hack:
+      // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
+      // $nextTick function doesn't work in this case
+      setTimeout(() => {
+        this.$store.lists = this.$store.lists.filter(item => item !== list);
+      }, 0);
+
       this.$router.push({ name: 'lists' });
 
       ListService.deleteList(list).then(r => {
