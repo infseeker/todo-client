@@ -1,9 +1,9 @@
 export const loader = {
   shown: false,
-  
-  show() {
-    document.activeElement.blur();
-    
+
+  show(blur) {
+    if (blur !== false) document.activeElement.blur();
+
     this.timeout = setTimeout(() => {
       this.shown = true;
     }, 1000);

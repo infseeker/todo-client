@@ -80,7 +80,7 @@ export default {
     },
 
     create(title) {
-      this.$loader.show();
+      this.$loader.show(false);
       const lastListItem = this.list.items[this.list.items.length - 1];
       const position =  lastListItem ? lastListItem.position + 1 : 1
 
