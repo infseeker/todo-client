@@ -40,7 +40,7 @@ export default {
         type: '',
       },
       wrongImgFormat: false,
-      isDisabled: false,
+      isDisabled: true,
     }
   },
 
@@ -103,9 +103,6 @@ export default {
     },
 
     saveImage() {
-      this.$loader.show();
-      this.isDisabled = true;
-
       let image;
 
       if (this.image.src) {
@@ -118,6 +115,9 @@ export default {
       }
 
       if (image) {
+        this.$loader.show();
+        this.isDisabled = true;
+
         UserService.update(false, image).then((r) => {
           this.$loader.hide();
           this.isDisabled = false;
@@ -126,10 +126,6 @@ export default {
             this.$emit('changeImage', image);
             this.$emit('close');
           }
-
-          this.showCropper = false;
-          this.$refs.file.value = null;
-          this.image.src = '';
         });
       }
     },
