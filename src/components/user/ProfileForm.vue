@@ -24,9 +24,9 @@
 
         <div class="user-image">
           <img v-if="!userImage" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
-            class="mb-3 mt-3">
-          <img v-if="userImage" :src="this.userImage" alt="Аватар пользователя" class="mb-3 mt-3">
-          <span v-if="userImage" class="user-image-delete" title="Удалить аватар" @click="deleteUserImage"></span>
+            class="mb-3 mt-3 cat-user-image">
+          <img v-if="userImage" :src="this.userImage" alt="Изображение пользователя" class="mb-3 mt-3">
+          <span v-if="userImage" class="user-image-delete" title="Удалить изображение" @click="deleteUserImage"></span>
         </div>
 
         <div class="mb-2">
@@ -80,7 +80,11 @@
     </div>
   </div>
 
-  <image-changing-modal v-if="showImageChangingModal" @change-image="changeUserImage" @close="showImageChangingModal = false"></image-changing-modal>
+  <image-changing-modal v-if="showImageChangingModal" @change-image="changeUserImage"
+    @close="showImageChangingModal = false"></image-changing-modal>
+
+  <password-changing-modal v-if="showPasswordChangingModal" @close="showPasswordChangingModal = false">
+  </password-changing-modal>
 
   <deletion-modal v-if="showDeletionUserModal" @close="showDeletionUserModal = false"></deletion-modal>
 </template>
@@ -91,6 +95,7 @@ import useValidate from '@vuelidate/core'
 import { password } from '../../helpers/validations'
 
 import ImageChangingModal from './ImageChangingModal.vue'
+import PasswordChangingModal from './PasswordChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
 
 export default {
@@ -108,6 +113,7 @@ export default {
 
 
       showImageChangingModal: false,
+      showPasswordChangingModal: false,
       showDeletionUserModal: false,
     }
   },
@@ -122,6 +128,7 @@ export default {
 
   components: {
     ImageChangingModal,
+    PasswordChangingModal,
     DeletionModal,
   },
 
@@ -225,6 +232,10 @@ export default {
 .user-image,
 .user-image img {
   border-radius: 50%;
+}
+
+.user-image .cat-user-image {
+  cursor: pointer
 }
 
 .user-image {

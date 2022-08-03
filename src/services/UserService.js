@@ -162,14 +162,13 @@ class UserService {
   }
 
   /**
-   * Get user data if user logged in, else - 401.
+   * Get user image if user logged in, else - 401.
    */
-  static async getUserData() {
-    return await fetch(api.user.user_data, {
+  static async getUserImage() {
+    return await fetch(api.user.image, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
     })
@@ -178,15 +177,20 @@ class UserService {
   }
 
   /**
-   * Get user image if user logged in, else - 401.
+   * Change user image if user logged in, else - 401.
+   * @param {String} image - image
    */
-  static async getUserImage() {
-    return await fetch(api.user.user_image, {
-      method: 'GET',
+  static async changeUserImage(image) {
+    return await fetch(api.user.image, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRFToken': csrf.getToken(),
       },
       credentials: 'include',
+      body: JSON.stringify({
+        image: image,
+      }),
     })
       .then((response) => response.json())
       .then((data) => data);
@@ -196,7 +200,7 @@ class UserService {
    * Delete user image if user logged in, else - 401.
    */
   static async deleteUserImage() {
-    return await fetch(api.user.delete_user_image, {
+    return await fetch(api.user.image, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -208,32 +212,33 @@ class UserService {
       .then((data) => data);
   }
 
+    /**
+   * Change user password if user logged in, else - 401.
+   * @param {String} oldPassword - current user password
+   * @param {String} newPassword - new password
+   */
+    static async changePassword(oldPassword, newPassword) {
+      return await fetch(api.user.password, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf.getToken(),
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          old_password: oldPassword,
+          password: newPassword,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => data);
+    }
+
   static async logout() {
     return await fetch(api.user.logout, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => data);
-  }
-
-  /**
-   *
-   * @param {String} password - for now we can change password only
-   */
-  static async update(password, image) {
-    return await fetch(api.user.update, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrf.getToken(),
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        password: password,
-        image: image,
-      }),
     })
       .then((response) => response.json())
       .then((data) => data);

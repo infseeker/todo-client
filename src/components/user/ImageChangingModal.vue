@@ -28,6 +28,7 @@
 <script>
 import Modal from '../common/Modal.vue'
 import UserService from '../../services/UserService'
+
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 
@@ -118,7 +119,7 @@ export default {
         this.$loader.show();
         this.isDisabled = true;
 
-        UserService.update(false, image).then((r) => {
+        UserService.changeUserImage(image).then((r) => {
           this.$loader.hide();
           this.isDisabled = false;
 

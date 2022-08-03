@@ -12,11 +12,9 @@ export const api = {
     restore: `${API_ROOT}/user/restore`,
     login: `${API_ROOT}/user/login`,
     session: `${API_ROOT}/user/session`,
-    user_data: `${API_ROOT}/user/user-data`,
-    user_image: `${API_ROOT}/user/user-image`,
-    delete_user_image: `${API_ROOT}/user/delete-user-image`,
+    image: `${API_ROOT}/user/image`,
+    password: `${API_ROOT}/user/password`,
     logout: `${API_ROOT}/user/logout`,
-    update: `${API_ROOT}/user/update`,
     delete: `${API_ROOT}/user/delete`,
   },
 
