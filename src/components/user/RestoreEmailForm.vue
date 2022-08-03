@@ -69,8 +69,6 @@ export default {
 
   methods: {
     async restoreEmail(email) {
-      console.log(email);
-
       this.v$.$validate();
 
       if (!this.v$.$error) {

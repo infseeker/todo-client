@@ -39,7 +39,21 @@
           <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
         </div>
 
-        <div class="mb-3 form-password-toggle">
+        <div class="mt-3">
+          <button @click="showImageChangingModal = true" type="button" class="btn btn-primary w-100">Изменить
+            изображение</button>
+        </div>
+
+        <div class="mt-3">
+          <button @click="showPasswordChangingModal = true" type="button" class="btn btn-primary w-100">Изменить
+            пароль</button>
+        </div>
+
+        <div class="mt-3">
+          <button @click="logout()" type="button" class="btn btn-primary w-100">Выход</button>
+        </div>
+
+        <!-- <div class="mb-3 mt-3 form-password-toggle">
           <div class="input-group input-group-merge">
             <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
             <input v-else type="password" placeholder="Введите новый пароль" v-model="password" class="form-control" />
@@ -52,35 +66,21 @@
             символов, мин. 1 лат. буква, мин. 1 цифра</div>
         </div>
 
-        <div class="">
-          <div class="input-group custom-file-button">
-            <label class="input-group-text" for="inputGroupFile">Выберите аватар</label>
-            <input type="file" class="form-control" id="inputGroupFile" @change="uploadImage($event)" accept="image/*"
-              ref="file" />
-          </div>
-          <div v-if="wrongImgFormat" class="invalid-feedback d-block mx-2">Изображение: jpeg, png, макс. размер - 5 Мб
-          </div>
-        </div>
-
-        <cropper v-show="showCropper" :stencil-component="$options.components.CircleStencil" ref="cropper"
-          class="cropper mt-3" :src="image.src" :canvas="{ height: 256, width: 256 }" />
-
         <div class="mt-4">
           <button @click="save()" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Сохранить</button>
-        </div>
+        </div> -->
       </div>
     </div>
 
-    <!-- User deletion -->
     <div class="card mt-4">
       <div class="card-body">
-        <h5 class="header mb-3">Удаление учётной записи</h5>
-
         <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">Удалить учётную
           запись</button>
       </div>
     </div>
   </div>
+
+  <image-changing-modal v-if="showImageChangingModal" @change-image="changeUserImage" @close="showImageChangingModal = false"></image-changing-modal>
 
   <deletion-modal v-if="showDeletionUserModal" @close="showDeletionUserModal = false"></deletion-modal>
 </template>
@@ -89,9 +89,8 @@
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { password } from '../../helpers/validations'
-import { Cropper, CircleStencil } from 'vue-advanced-cropper'
-import 'vue-advanced-cropper/dist/style.css'
 
+import ImageChangingModal from './ImageChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
 
 export default {
@@ -101,18 +100,14 @@ export default {
       password: '',
       showPassword: false,
       isDisabled: false,
-      showCropper: false,
-      wrongImgFormat: false,
       saved: false,
       errorOnSave: false,
       errorOnImageDelete: false,
       userImage: '',
       catImage: new URL(`../../assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`, import.meta.url),
-      image: {
-        src: '',
-        type: '',
-      },
 
+
+      showImageChangingModal: false,
       showDeletionUserModal: false,
     }
   },
@@ -126,8 +121,7 @@ export default {
   },
 
   components: {
-    Cropper,
-    CircleStencil,
+    ImageChangingModal,
     DeletionModal,
   },
 
@@ -143,14 +137,7 @@ export default {
         this.v$.password.$validate();
       }
 
-      if (this.image.src) {
-        if (this.image.type === 'image/jpeg' || this.image.type === 'image/png') {
-          const { canvas } = this.$refs.cropper.getResult();
-          if (canvas) {
-            image = canvas.toDataURL(this.image.type);
-          }
-        }
-      }
+
 
       if (password || image) {
         if (!this.v$.password.$error) {
@@ -176,10 +163,7 @@ export default {
             }
 
             this.isDisabled = false;
-            this.showCropper = false;
-            this.$refs.file.value = null;
             this.password = '';
-            this.image.src = '';
           });
         }
       } else {
@@ -187,35 +171,8 @@ export default {
       }
     },
 
-    uploadImage(event) {
-      const { files } = event.target;
-
-      if (files && files[0]) {
-        if (this.image.src) {
-          URL.revokeObjectURL(this.image.src)
-        }
-        const blob = URL.createObjectURL(files[0]);
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.image = {
-            src: blob,
-            type: this.getMimeType(e.target.result, files[0].type),
-          };
-
-          if (this.image.src && (this.image.type === 'image/jpeg' || this.image.type === 'image/png') && this.$refs.file.value && this.$refs.file.files[0].size < 5242880) {
-            this.wrongImgFormat = false;
-            this.isDisabled = false;
-            this.showCropper = true;
-          } else {
-            this.wrongImgFormat = true;
-            this.isDisabled = true;
-            this.showCropper = false;
-          }
-        };
-
-        reader.readAsArrayBuffer(files[0]);
-      }
+    changeUserImage(image) {
+      this.userImage = image;
     },
 
     deleteUserImage() {
@@ -233,30 +190,14 @@ export default {
       })
     },
 
-    getMimeType(file, fallback = null) {
-      const byteArray = (new Uint8Array(file)).subarray(0, 4);
-      let header = '';
-      for (let i = 0; i < byteArray.length; i++) {
-        header += byteArray[i].toString(16);
-      }
-      switch (header) {
-        case "89504e47":
-          return "image/png";
-        case "ffd8ffe0":
-        case "ffd8ffe1":
-        case "ffd8ffe2":
-        case "ffd8ffe3":
-        case "ffd8ffe8":
-          return "image/jpeg";
-        default:
-          return fallback;
-      }
-    },
-
     meow() {
       const catMeowSoundUrl = new URL(`../../assets/sounds/cat-meow-${Math.floor(Math.random() * 3) + 1}.mp3`, import.meta.url);
       const audio = new Audio(catMeowSoundUrl);
       audio.play();
+    },
+
+    logout() {
+
     }
   },
 
@@ -279,26 +220,6 @@ export default {
   width: 100%;
   max-width: 400px;
   position: relative;
-}
-
-.cropper {
-  max-width: 70vw;
-  min-width: 100%;
-  border-radius: 0.375rem;
-}
-
-.vue-advanced-cropper__foreground,
-.vue-advanced-cropper__background,
-.vue-advanced-cropper__image-wrapper,
-.vue-advanced-cropper__image-wrapper img {
-  border-radius: 0.375rem;
-}
-
-.vue-advanced-cropper__background {
-  background-image: linear-gradient(45deg, #e6e6e6 25%, transparent 25%), linear-gradient(-45deg, #e6e6e6 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e6e6e6 75%), linear-gradient(-45deg, transparent 75%, #e6e6e6 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  background-color: rgba(255, 255, 255);
 }
 
 .user-image,
