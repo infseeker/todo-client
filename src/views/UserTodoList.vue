@@ -2,7 +2,7 @@
   <div class="guest-todo-list">
     <todo-list v-if="list && list.items" :list="list" :listTitle="list.title" :listItems="list.items" @create="create"
       @check="check" @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem"
-      @save-list-title="saveListTitle" @delete-list="deleteList">
+      @save-list-title="saveListTitle">
     </todo-list>
   </div>
 </template>
@@ -35,10 +35,6 @@ export default {
           r.data.forEach(i => {
             this.$store.lists.push(new List(i));
           });
-        } else if (r.code === 404) {
-          console.log('Lists of current user not found');
-        } else {
-          console.log('Something went wrong');
         }
       });
     },
@@ -67,8 +63,6 @@ export default {
               list.loadItems(items);
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });
-            } else {
-              console.log('Something went wrong');
             }
           })
         } else {
@@ -110,14 +104,8 @@ export default {
         listItem.position = (items[newIndex - 1].position + items[newIndex + 1].position) / 2;
       }
 
-      console.clear();
-      this.list.items.forEach(i => {
-        console.log(i.position);
-      });
-
       ListService.updateListItem(listItem).then(r => {
         if(r.code === 200) {
-
         }
       })
     },
@@ -148,22 +136,6 @@ export default {
         }
       });
     },
-
-    deleteList(list) {
-      // Hack:
-      // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
-      // $nextTick function doesn't work in this case
-      setTimeout(() => {
-        this.$store.lists = this.$store.lists.filter(item => item !== list);
-      }, 0);
-
-      this.$router.push({ name: 'lists' });
-
-      ListService.deleteList(list).then(r => {
-        if (r.code === 200) {
-        }
-      });
-    }
   },
 
   mounted() {

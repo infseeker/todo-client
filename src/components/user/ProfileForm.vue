@@ -18,7 +18,6 @@
         </div>
 
         <div class="mb-3">
-
           <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
         </div>
 

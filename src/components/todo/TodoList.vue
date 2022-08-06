@@ -23,7 +23,7 @@
                   <i class="bx bx-edit-alt me-1"></i> Редактировать название
                 </li>
 
-                <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#listDeletionModal">
+                <li class="dropdown-item" @click="showTodoListDeletionModal = true">
                   <i class="bx bx-trash-alt me-1"></i> Удалить список
                 </li>
               </ul>
@@ -75,8 +75,8 @@
             <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
               v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
 
-              <i class='todo-list-item-check bx'
-                :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }" @click="checkListItem(item)"></i>
+              <i class='todo-list-item-check bx' :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }"
+                @click="checkListItem(item)"></i>
 
               <span :ref="`titleOfListItem-${listItems.indexOf(item)}`"
                 class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
@@ -114,7 +114,8 @@
           </template>
         </draggable>
 
-        <TodoListDeletionModal v-if="list" :list="this.list" @delete-list="deleteList"></TodoListDeletionModal>
+        <TodoListDeletionModal v-if="list && showTodoListDeletionModal" :list="this.list"
+          @close="showTodoListDeletionModal = false"></TodoListDeletionModal>
       </div>
     </div>
   </div>
@@ -136,6 +137,8 @@ export default {
       isEnterKey: false,
       listTitleEdit: false,
       tempListTitle: '',
+
+      showTodoListDeletionModal: false,
     }
   },
 
@@ -159,7 +162,7 @@ export default {
 
       this.listTitleEdit = false;
       const title = this.removeUselessSymbols($event.target.value.trim(), 'all');
-      
+
       this.$emit('saveListTitle', title);
     },
 
@@ -290,10 +293,6 @@ export default {
 
     deleteListItem(listItem) {
       this.$emit('delete', listItem);
-    },
-
-    deleteList(list) {
-      this.$emit('deleteList', list);
     }
   }
 }

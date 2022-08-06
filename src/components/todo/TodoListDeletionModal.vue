@@ -1,36 +1,50 @@
 <template>
-  <div class="list-deletion-modal">
-    <div ref="listDeletionModal" class="modal fade" id="listDeletionModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Удаление списка #{{ list.id }}</h5>
+  <modal>
+    <template v-slot:title>
+      Удаление списка
+    </template>
 
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col mb-3">
-                <span class="lh-2">
-                  Вы уверены, что хотите удалить список 
-                  <mark>{{ list.title }}</mark> 
-                  и всё его содержимое?</span>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
-            <button @click="$emit('deleteList', list)" type="button" class="btn btn-danger"
-              data-bs-dismiss="modal">Удалить</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <template v-slot:content>
+      <span class="lh-2">
+        Вы уверены, что хотите удалить список
+        <mark>{{ list.title }}</mark>
+        и всё его содержимое?</span>
+    </template>
+
+    <template v-slot:buttons>
+      <button @click="deleteList(list)" type="button" class="btn btn-danger"
+        data-bs-dismiss="modal">Удалить</button>
+    </template>
+  </modal>
 </template>
 
 <script>
+import Modal from '../common/Modal.vue'
+import ListService from '../../services/ListService';
+
 export default {
   props: ['list'],
+
+  components: {
+    Modal
+  },
+
+  methods: {
+    deleteList(list) {
+      // Hack:
+      // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
+      // $nextTick function doesn't work in this case
+      setTimeout(() => {
+        this.$store.lists = this.$store.lists.filter(item => item !== list);
+      }, 0);
+
+      this.$router.push({ name: 'lists' });
+
+      ListService.deleteList(list).then(r => {
+        if (r.code === 200) {
+        }
+      });
+    }
+  }
 }
 </script>
