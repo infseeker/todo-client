@@ -5,7 +5,7 @@
     </template>
 
     <template v-slot:content>
-      <input type="text" ref="editListTitleInput" v-model="list.title" @keypress.enter="save($event)" class="form-control"
+      <input type="text" ref="editListTitleInput" v-model="title" @keypress.enter="save($event)" class="form-control"
         placeholder="Введите название списка">
     </template>
 
@@ -25,7 +25,7 @@ export default {
 
   data() {
     return {
-      currentList: {},
+      title: '',
       isDisabled: false,
     }
   },
@@ -51,6 +51,10 @@ export default {
         }
       });
     }
+  },
+
+  mounted() {
+    this.title = this.list.title;
   }
 }
 </script>
