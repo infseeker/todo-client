@@ -52,23 +52,6 @@
         <div class="mt-3">
           <button @click="logout()" type="button" class="btn btn-primary w-100">Выход</button>
         </div>
-
-        <!-- <div class="mb-3 mt-3 form-password-toggle">
-          <div class="input-group input-group-merge">
-            <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
-            <input v-else type="password" placeholder="Введите новый пароль" v-model="password" class="form-control" />
-            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-              <i v-if="showPassword" class="bx bx-show"></i>
-              <i v-else class="bx bx-hide"></i>
-            </span>
-          </div>
-          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль: длина - 8-15
-            символов, мин. 1 лат. буква, мин. 1 цифра</div>
-        </div>
-
-        <div class="mt-4">
-          <button @click="save()" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Сохранить</button>
-        </div> -->
       </div>
     </div>
 
@@ -204,7 +187,16 @@ export default {
     },
 
     logout() {
+      this.$loader.show();
 
+      UserService.logout().then(r => {
+        this.$loader.hide();
+
+        this.$user.logout();
+        this.$store.lists = [];
+
+        this.$router.push('/');
+      });
     }
   },
 
