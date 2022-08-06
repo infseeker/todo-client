@@ -23,10 +23,10 @@
         </div>
 
         <div class="user-image">
-          <img v-if="!userImage" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
+          <img v-if="!this.$user.image" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
             class="mb-3 mt-3 cat-user-image">
-          <img v-if="userImage" :src="this.userImage" alt="Изображение пользователя" class="mb-3 mt-3">
-          <span v-if="userImage" class="user-image-delete" title="Удалить изображение" @click="deleteUserImage"></span>
+          <img v-if="this.$user.image" :src="this.$user.image" alt="Изображение пользователя" class="mb-3 mt-3">
+          <span v-if="this.$user.image" class="user-image-delete" title="Удалить изображение" @click="deleteUserImage"></span>
         </div>
 
         <div class="mb-2">
@@ -116,55 +116,6 @@ export default {
   },
 
   methods: {
-    save() {
-      this.saved = false;
-      this.errorOnSave = false;
-
-      const password = this.password;
-      let image = '';
-
-      if (password) {
-        this.v$.password.$validate();
-      }
-
-
-
-      if (password || image) {
-        if (!this.v$.password.$error) {
-          this.$loader.show();
-          this.isDisabled = true;
-
-          UserService.update(password, image).then((data) => {
-            this.$loader.hide();
-
-            if (data.code === 200) {
-              this.saved = true;
-
-              if (image) {
-                this.userImage = image;
-              }
-
-              if (password) {
-                this.$user.logout()
-                this.$router.push({ name: 'login' })
-              }
-            } else {
-              this.errorOnSave = true;
-            }
-
-            this.isDisabled = false;
-            this.password = '';
-          });
-        }
-      } else {
-        this.errorOnSave = true;
-      }
-    },
-
-    changeUserImage(image) {
-      this.userImage = image;
-    },
-
     deleteUserImage() {
       this.$loader.show();
       this.errorOnImageDelete = false;
@@ -173,7 +124,7 @@ export default {
         this.$loader.hide();
 
         if (data.code === 200) {
-          this.userImage = '';
+          this.$user.image = '';
         } else {
           this.errorOnImageDelete = true;
         }
@@ -198,14 +149,6 @@ export default {
         this.$router.push('/');
       });
     }
-  },
-
-  mounted() {
-    UserService.getUserImage().then(data => {
-      if (data.code === 200) {
-        this.userImage = data.image;
-      }
-    });
   }
 }
 </script>

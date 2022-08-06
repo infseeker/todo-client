@@ -1,12 +1,12 @@
 <template>
-<div>
-  <loading v-model:active="this.$loader.shown" loader="dots" :height="100" :width="100" color="#696cff"></loading>
+  <div>
+    <loading v-model:active="this.$loader.shown" loader="dots" :height="100" :width="100" color="#696cff"></loading>
 
-  <div class="container-sm bg-gray-50 dark bg-gray-900">
-    <user-navigation v-if="!this.$route.meta.hideNav"></user-navigation>
-    <router-view></router-view>
+    <div v-if="isLoaded" class="container-sm bg-gray-50 dark bg-gray-900">
+      <user-navigation v-if="!this.$route.meta.hideNav"></user-navigation>
+      <router-view></router-view>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -15,9 +15,9 @@ import UserService from './services/UserService';
 import UserNavigation from './components/user/NavBar.vue';
 
 export default {
-  computed: {
-    currentRoute() {
-      return this.$route
+  data() {
+    return {
+      isLoaded: false,
     }
   },
 
@@ -31,6 +31,14 @@ export default {
       // Load user auth data
       UserService.getSession().then((data) => {
         this.$user.login(data);
+        this.isLoaded = true;
+
+        // Load user image
+        UserService.getUserImage().then(r => {
+          if (r.code === 200) {
+            this.$user.image = r.image;
+          }
+        });
 
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
@@ -46,6 +54,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

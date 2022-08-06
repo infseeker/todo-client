@@ -5,6 +5,13 @@
   line-height: 1;
   background-size: contain;
   background-repeat: no-repeat;
+  filter: brightness(0) saturate(100%) invert(51%) sepia(12%) saturate(723%)
+    hue-rotate(171deg) brightness(90%) contrast(85%);
+}
+
+.bx-gray {
+  filter: brightness(0) saturate(100%) invert(51%) sepia(12%) saturate(723%)
+    hue-rotate(171deg) brightness(90%) contrast(85%);
 }
 
 .bx-check-circle {
@@ -65,6 +72,10 @@
 
 .bx-trash-alt {
   background-image: url('../img/icons/bx-trash-alt.svg');
+}
+
+.bx-user-circle {
+  background-image: url('../img/icons/bx-user-circle.svg');
 }
 
 .bx-user-plus {

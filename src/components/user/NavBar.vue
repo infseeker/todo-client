@@ -25,16 +25,15 @@
             <i class='bx bx-list-check'></i>
           </router-link>
         </li>
-        
-        <li v-if="this.$user.isAuth">
-          <router-link :to="{ name: 'profile' }" class="btn btn-primary ms-2" title="Профиль">
-            <i class='bx bx-user'></i>
-          </router-link>
-        </li>
 
         <li v-if="this.$user.isAuth">
-          <a href="/logout" onclick="event.preventDefault(); event.stopPropagation();" @click="logout"
-            style="cursor: pointer" class="btn btn-primary ms-2" title="Выход"><i class='bx bx-log-out'></i></a>
+
+
+          <router-link :to="{ name: 'profile' }" title="Профиль">
+            <img v-if="this.$user.image" :src="this.$user.image" class="user-image" alt="Изображение пользователя">
+            <img v-if="!this.$user.image" :src="this.emptyUserImageUrl" class="blank-user-image bx-gray"
+              alt="Изображение пользователя">
+          </router-link>
         </li>
       </ul>
     </div>
@@ -47,6 +46,7 @@ import UserService from '../../services/UserService';
 export default {
   data() {
     return {
+      emptyUserImageUrl: new URL(`../../assets/img/icons/bx-user-circle.svg`, import.meta.url),
     };
   },
 
@@ -54,7 +54,7 @@ export default {
     logout() {
       this.$loader.show();
 
-      UserService.logout().then((data) => {
+      UserService.logout().then(r => {
         this.$loader.hide();
 
         this.$user.logout();
@@ -70,5 +70,11 @@ export default {
 <style scoped>
 .btn {
   font-weight: 600;
+}
+
+.user-image, .blank-user-image {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
 }
 </style>

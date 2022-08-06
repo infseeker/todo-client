@@ -124,7 +124,7 @@ export default {
           this.isDisabled = false;
 
           if (r.code === 200) {
-            this.$emit('changeImage', image);
+            this.$user.image = image;
             this.$emit('close');
           }
         });

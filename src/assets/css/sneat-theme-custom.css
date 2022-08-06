@@ -181,6 +181,13 @@ h5 .bx {
   position: relative;
 }
 
+/* NavBar */
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .layout-navbar.navbar-detached {
+    padding: 0 1rem;
+  }
+}
+
 /* Lists view */
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .lists .card-body {
