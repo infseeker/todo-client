@@ -9,12 +9,6 @@
 
       <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li v-if="!this.$user.isAuth">
-          <router-link :to="{ name: 'registration' }" class="btn btn-primary" title="Регистрация">
-            <i class='bx bx-user-plus'></i>
-          </router-link>
-        </li>
-
-        <li v-if="!this.$user.isAuth">
           <router-link :to="{ name: 'login' }" class="btn btn-primary ms-2" title="Вход">
             <i class='bx bx-log-in'></i>
           </router-link>
@@ -28,8 +22,7 @@
 
         <li v-if="this.$user.isAuth">
 
-
-          <router-link :to="{ name: 'profile' }" title="Профиль">
+          <router-link :to="{ name: 'profile' }" title="Профиль пользователя">
             <img v-if="this.$user.image" :src="this.$user.image" class="user-image" alt="Изображение пользователя">
             <img v-if="!this.$user.image" :src="this.emptyUserImageUrl" class="blank-user-image bx-gray"
               alt="Изображение пользователя">

@@ -129,6 +129,12 @@ export default {
                 }
               }
 
+              UserService.getUserImage().then(r => {
+                if (r.code === 200) {
+                  this.$user.image = r.image;
+                }
+              });
+
               this.$user.isRestored = false;
               this.$user.isActivated = false;
             } else {
@@ -153,7 +159,7 @@ export default {
   mounted() {
     this.restored = this.$user.isRestored;
     this.activated = this.$user.isActivated;
-    
+
     const input = document.querySelector('input') || document.querySelector('textarea') || null;
     input.focus();
   }

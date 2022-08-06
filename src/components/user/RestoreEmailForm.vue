@@ -20,7 +20,7 @@
           </p>
 
           <div class="mb-3">
-            <input v-model="email" placeholder="Введите email" class="form-control" />
+            <input v-model="email" type="email" placeholder="Введите email" class="form-control" />
             <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email: некорректный формат
             </div>
           </div>

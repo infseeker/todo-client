@@ -3,9 +3,7 @@
     <div class="authentication-inner">
       <div class="card">
         <div class="card-body">
-          <h4 class="mb-4">ToDo by
-            <a href="https://github.com/infseeker">@infseeker</a> 👋
-          </h4>
+          <h4 class="mb-4">Удалённая учётная запись</h4>
           <p>
             Ваша учётная запись была удалена. Хотите восстановить доступ?
           </p>
@@ -29,6 +27,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>
