@@ -4,29 +4,12 @@
       <div class="card-body" v-on:keyup.enter="save(password)">
         <h5 class="header mb-0">Настройки профиля</h5>
 
-        <div v-if="saved" class="mt-3">
-          <div class="alert alert-success mb-0" role="alert">
-            Изменения сохранены.
-          </div>
-        </div>
-
-        <div v-if="errorOnImageDelete" class="mt-3">
-          <div class="alert alert-danger mb-0" role="alert">
-            При попытке удалить изображение возникла ошибка.
-          </div>
-        </div>
-
-        <div v-if="errorOnSave" class="mt-3">
-          <div class="alert alert-danger mb-0" role="alert">
-            Изменения не сохранены. Проверьте введённые данные.
-          </div>
-        </div>
-
         <div class="user-image">
           <img v-if="!this.$user.image" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
             class="mb-3 mt-3 cat-user-image">
           <img v-if="this.$user.image" :src="this.$user.image" alt="Изображение пользователя" class="mb-3 mt-3">
-          <span v-if="this.$user.image" class="user-image-delete" title="Удалить изображение" @click="deleteUserImage"></span>
+          <span v-if="this.$user.image" class="user-image-delete" title="Удалить изображение"
+            @click="deleteUserImage"></span>
         </div>
 
         <div class="mb-2">
@@ -63,8 +46,7 @@
     </div>
   </div>
 
-  <image-changing-modal v-if="showImageChangingModal" @change-image="changeUserImage"
-    @close="showImageChangingModal = false"></image-changing-modal>
+  <image-changing-modal v-if="showImageChangingModal" @close="showImageChangingModal = false"></image-changing-modal>
 
   <password-changing-modal v-if="showPasswordChangingModal" @close="showPasswordChangingModal = false">
   </password-changing-modal>
@@ -74,9 +56,6 @@
 
 <script>
 import UserService from '../../services/UserService'
-import useValidate from '@vuelidate/core'
-import { password } from '../../helpers/validations'
-
 import ImageChangingModal from './ImageChangingModal.vue'
 import PasswordChangingModal from './PasswordChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
@@ -84,28 +63,12 @@ import DeletionModal from './DeletionModal.vue'
 export default {
   data() {
     return {
-      v$: useValidate(),
-      password: '',
-      showPassword: false,
-      isDisabled: false,
-      saved: false,
-      errorOnSave: false,
-      errorOnImageDelete: false,
       userImage: '',
       catImage: new URL(`../../assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`, import.meta.url),
-
 
       showImageChangingModal: false,
       showPasswordChangingModal: false,
       showDeletionUserModal: false,
-    }
-  },
-
-  validations() {
-    return {
-      password: {
-        password
-      },
     }
   },
 
@@ -118,15 +81,12 @@ export default {
   methods: {
     deleteUserImage() {
       this.$loader.show();
-      this.errorOnImageDelete = false;
 
       UserService.deleteUserImage().then(data => {
         this.$loader.hide();
 
         if (data.code === 200) {
           this.$user.image = '';
-        } else {
-          this.errorOnImageDelete = true;
         }
       })
     },
