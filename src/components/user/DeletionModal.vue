@@ -52,7 +52,7 @@ export default {
   methods: {
     deleteUser(password) {
       if (!password) {
-        this.incorrectPassword = true;
+        this.$toast.error('Введите пароль')
         return;
       }
 
@@ -68,9 +68,11 @@ export default {
           UserService.logout().then(() => {
             this.$user.logout();
             this.$router.push('/');
+
+            this.$toast.success('Ваша учётная запись удалена')
           });
         } else {
-          this.incorrectPassword = true;
+          this.$toast.error('Неверный пароль')
         }
       });
     }

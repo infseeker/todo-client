@@ -22,6 +22,32 @@ mark {
   border-radius: 5px;
 }
 
+/* Vue Toastification styles */
+.Vue-Toastification__toast {
+  cursor: default;
+}
+
+.Vue-Toastification__toast--default {
+  background-color: rgba(105, 108, 255, .85);
+}
+
+.Vue-Toastification__toast--info {
+  background-color: rgba(3, 195, 236, .85);
+}
+
+.Vue-Toastification__toast--success {
+  background-color: rgba(113, 221, 55, .85);
+}
+
+.Vue-Toastification__toast--warning {
+  background-color: rgba(255, 171, 0, .85);
+}
+
+.Vue-Toastification__toast--error {
+  background-color: rgba(255, 62, 29, .85);
+}
+
+
 .btn {
   line-height: 1;
   padding-top: 0.7rem;

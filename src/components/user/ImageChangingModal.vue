@@ -122,11 +122,14 @@ export default {
         UserService.changeUserImage(image).then((r) => {
           this.$loader.hide();
           this.isDisabled = false;
-          console.log(r);
 
           if (r.code === 200) {
             this.$user.image = UserService.getUserImage(r.data);
             this.$emit('close');
+
+            this.$toast.success('Изображение сохранено');
+          } else {
+            this.$toast.error('Что-то пошло не так...');
           }
         });
       }

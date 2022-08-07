@@ -5,10 +5,6 @@
     </template>
 
     <template v-slot:content>
-      <div v-if="wrongOldPassword" class="alert alert-danger" role="alert">
-        Неверный текущий пароль
-      </div>
-
       <div @keypress.enter="changePassword(oldPassword, newPassword)">
         <div class="form-password-toggle">
           <div class="input-group input-group-merge">
@@ -70,7 +66,6 @@ export default {
       newPassword: '',
       showPassword: false,
       isDisabled: false,
-      wrongOldPassword: false,
     }
   },
 
@@ -106,8 +101,9 @@ export default {
 
           if (r.code === 200) {
             this.$emit('close');
+            this.$toast.success('Пароль изменён');
           } else {
-            this.wrongOldPassword = true;
+            this.$toast.error('Неверный текущий пароль');
           }
         });
       }

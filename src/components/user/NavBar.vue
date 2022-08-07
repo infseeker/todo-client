@@ -21,10 +21,9 @@
         </li>
 
         <li v-if="this.$user.isAuth">
-
           <router-link :to="{ name: 'profile' }" title="Профиль пользователя">
             <img v-if="this.$user.image" :src="this.$user.image" class="user-image" alt="Изображение пользователя">
-            <img v-if="!this.$user.image" :src="this.emptyUserImageUrl" class="blank-user-image bx-gray"
+            <img v-if="!this.$user.image" :src="this.blankUserImageUrl" class="blank-user-image bx-gray"
               alt="Изображение пользователя">
           </router-link>
         </li>
@@ -34,37 +33,16 @@
 </template>
 
 <script>
-import UserService from '../../services/UserService';
-
 export default {
   data() {
     return {
-      emptyUserImageUrl: new URL(`../../assets/img/icons/bx-user-circle.svg`, import.meta.url),
+      blankUserImageUrl: new URL(`../../assets/img/icons/bx-user-circle.svg`, import.meta.url),
     };
   },
-
-  methods: {
-    logout() {
-      this.$loader.show();
-
-      UserService.logout().then(r => {
-        this.$loader.hide();
-
-        this.$user.logout();
-        this.$store.lists = [];
-
-        this.$router.push('/');
-      });
-    },
-  }
 };
 </script>
 
 <style scoped>
-.btn {
-  font-weight: 600;
-}
-
 .user-image, .blank-user-image {
   width: 3rem;
   height: 3rem;

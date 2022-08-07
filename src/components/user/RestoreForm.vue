@@ -7,11 +7,7 @@
             <span>Восстановление доступа</span>
             <i class='bx bx-key'></i>
           </h5>
-          <div v-if="submitError" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Код восстановления неверен, либо уже истёк.
-            </div>
-          </div>
+
           <p v-if="!showEmailField">
             На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с
             кодом
@@ -80,8 +76,6 @@ export default {
       showEmailField: false,
       password: '',
       showPassword: false,
-      submitError: false,
-      storage: {},
       isDisabled: false,
     };
   },
@@ -108,10 +102,6 @@ export default {
   },
 
   methods: {
-    getUserEmailFromLocalStorage() {
-      return localStorage.getItem('email');
-    },
-
     checkCodeFormat(event) {
       if (event.type === 'paste') {
         if (!/^[0-9]{4}$/.test(event.clipboardData.getData('text'))) return event.preventDefault();
@@ -134,12 +124,14 @@ export default {
             this.$loader.hide();
 
             if (data.code === 200) {
-              this.$user.isRestored = true;
               this.$user.isDeleted = false;
               this.$router.push({ name: 'login' });
+
+              this.$toast.success('Ваша учётная запись восстановлена');
             } else {
-              this.submitError = true;
               this.isDisabled = false;
+
+              this.$toast.error('Код восстановления неверен, либо уже истёк');
             }
           });
         })

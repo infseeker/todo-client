@@ -16,6 +16,7 @@
     "vue-advanced-cropper": "^2.8.3",
     "vue-loading-overlay": "^5.0.3",
     "vue-router": "^4.0.15",
+    "vue-toastification": "^2.0.0-rc.5",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {

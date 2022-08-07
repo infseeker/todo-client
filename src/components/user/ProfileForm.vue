@@ -106,6 +106,8 @@ export default {
         this.$store.lists = [];
 
         this.$router.push('/');
+
+        this.$toast.success('Вы вышли из учётной записи');
       });
     }
   }

@@ -39,9 +39,13 @@ export default {
       });
 
       // Load and set csrf token
-      UserService.getCSRFToken().then(() => {
-        this.$loader.hide();
-        this.isLoaded = true;
+      UserService.getCSRFToken().then((r) => {
+        if (r.code === 200) {
+          this.$loader.hide();
+          this.isLoaded = true;
+        } else {
+          this.$toast.error('Не удалось загрузить CSRF-токен, перезагрузите страницу');
+        }
       });
     },
   },

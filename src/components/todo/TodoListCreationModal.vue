@@ -52,6 +52,7 @@ export default {
           this.$router.push({ name: 'list', params: { 'listId': r.data.id } });
 
           this.$emit('close');
+          this.$toast.success('Список создан');
         }
       });
     },

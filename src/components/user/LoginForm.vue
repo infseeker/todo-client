@@ -7,11 +7,7 @@
             <span>Авторизация</span>
             <i class="bx bx-log-in"></i>
           </h5>
-          <div v-if="submitError" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Неправильное имя пользователя или пароль.
-            </div>
-          </div>
+
           <div v-if="activated" class="mb-3">
             <div class="alert alert-success" role="alert">
               Ваша учётная запись была активирована. Теперь вы можете войти.
@@ -86,7 +82,6 @@ export default {
       username: '',
       password: '',
       showPassword: false,
-      submitError: false,
       restored: false,
       activated: false,
       isDisabled: false
@@ -107,7 +102,6 @@ export default {
 
   methods: {
     async login(username, password) {
-      this.submitError = false;
       this.v$.$validate();
 
       if (!this.v$.$error) {
@@ -129,12 +123,6 @@ export default {
                 }
               }
 
-              UserService.getUserImage().then(r => {
-                if (r.code === 200) {
-                  this.$user.image = r.image;
-                }
-              });
-
               this.$user.isRestored = false;
               this.$user.isActivated = false;
             } else {
@@ -145,9 +133,12 @@ export default {
                 this.$user.isNotActivated = true;
                 this.$user.email = r.email;
                 this.$router.push({ name: 'activation' })
+
+                this.$toast.warning('Ваша учётная запись ещё не активирована')
               } else {
-                this.submitError = true;
                 this.isDisabled = false;
+                
+                this.$toast.error('Неправильное имя пользователя или пароль')
               }
             }
           });

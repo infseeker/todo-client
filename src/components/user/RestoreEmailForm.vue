@@ -7,11 +7,7 @@
             <span>Почта восстановления</span>
             <i class='bx bx-envelope'></i>
           </h5>
-          <div v-if="submitError" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Пользователя с таким email не существует.
-            </div>
-          </div>
+          
           <p>
             Для восстановления доступа введите email, который был указан при регистрации.
           </p>
@@ -52,7 +48,6 @@ export default {
       v$: useValidate(),
       email: '',
       showPassword: false,
-      submitError: false,
       isDisabled: false,
     };
   },
@@ -74,7 +69,7 @@ export default {
       if (!this.v$.$error) {
         this.$loader.show();
         this.isDisabled = true;
-        
+
         recaptcha().then((token) => {
           UserService.sendRestorationEmail(email, token).then((data) => {
             this.$loader.hide();
@@ -82,9 +77,9 @@ export default {
             if (data.code === 200) {
               this.$user.email = email;
               this.$router.push({ name: 'restoration' });
-            } else {
-              this.submitError = true;
+            } else if (data.code === 404) {
               this.isDisabled = false;
+              this.$toast.error('Пользователя с таким Email не существует');
             }
           });
         })

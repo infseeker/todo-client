@@ -10,8 +10,9 @@ class UserService {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-    }).then((res) => {
-      csrf.setToken(res.headers.get(['X-CSRFToken']));
+    }).then((r) => {
+      csrf.setToken(r.headers.get(['X-CSRFToken']));
+      return r.json();
     });
   }
 

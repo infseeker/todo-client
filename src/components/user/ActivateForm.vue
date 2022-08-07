@@ -9,16 +9,6 @@
             <i class='bx bx-user-check'></i>
           </h5>
 
-          <div v-if="submitError" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Код активации неверен, либо уже истёк.
-            </div>
-          </div>
-          <div v-if="this.$user.isNotActivated" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Ваша учётная запись ещё не активирована.
-            </div>
-          </div>
           <p v-if="!showEmailField">
             На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с
             кодом
@@ -121,11 +111,13 @@ export default {
             this.$loader.hide();
 
             if (data.code === 200) {
-              this.$user.isActivated = true;
               this.$router.push({ name: 'login' });
+
+              this.$toast.success('Ваша учётная запись активирована');
             } else {
-              this.submitError = true;
               this.isDisabled = false;
+
+              this.$toast.error('Код активации неверен, либо уже истёк');
             }
           });
         })

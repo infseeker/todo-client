@@ -7,27 +7,21 @@
             <span>Регистрация</span>
             <i class="bx bx-user-plus"></i>
           </h5>
-          <div v-if="submitError" class="mb-3">
-            <div class="alert alert-danger" role="alert">
-              Проверьте корректность данных.
-            </div>
-          </div>
+
           <div class="mb-3">
             <input placeholder="Введите имя пользователя" v-model="username" class="form-control" />
             <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Имя (длина: от 3 до 15 символов,
               только латинские буквы)
             </div>
-            <div v-if="usernameExists" class="invalid-feedback d-block mx-2">Пользователь с таким именем уже существует
-            </div>
           </div>
+
           <div class="mb-3">
             <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
             <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
               корректный формат email)
             </div>
-            <div v-if="emailExists" class="invalid-feedback d-block mx-2">Пользователь с таким email уже существует
-            </div>
           </div>
+
           <div class="mb-3 form-password-toggle">
             <div class="input-group input-group-merge">
               <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
@@ -75,9 +69,6 @@ export default {
       email: '',
       password: '',
       showPassword: false,
-      submitError: false,
-      usernameExists: false,
-      emailExists: false,
       isDisabled: false
     };
   },
@@ -105,7 +96,6 @@ export default {
 
   methods: {
     async register(username, email, password) {
-      this.submitError = false;
       this.usernameExists = false;
       this.emailExists = false;
 
@@ -131,24 +121,22 @@ export default {
                     } else {
                       this.$loader.hide();
 
-                      this.submitError = true;
                       this.isDisabled = false;
+                      this.$toast.error('Проверьте корректность данных');
                     }
                   })
-                } else {
+                } else if(data.code === 409) {
                   this.$loader.hide();
 
-                  this.emailExists = true;
-                  this.submitError = true;
                   this.isDisabled = false;
+                  this.$toast.error('Пользователь с таким Email уже существует');
                 }
               })
             } else {
               this.$loader.hide();
 
-              this.usernameExists = true;
-              this.submitError = true;
               this.isDisabled = false;
+              this.$toast.error('Пользователь с таким именем уже существует');
             }
           })
         })

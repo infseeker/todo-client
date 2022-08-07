@@ -42,6 +42,7 @@ export default {
 
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
+          this.$toast.success('Список удалён');
         }
       });
     }
