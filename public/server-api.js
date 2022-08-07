@@ -16,6 +16,10 @@ export const api = {
     password: `${API_ROOT}/user/password`,
     logout: `${API_ROOT}/user/logout`,
     delete: `${API_ROOT}/user/delete`,
+
+    get_image: function(image) {
+      return `${API_ROOT}/user/image/${image}`
+    }
   },
 
   lists: {

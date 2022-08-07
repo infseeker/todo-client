@@ -163,17 +163,10 @@ class UserService {
 
   /**
    * Get user image if user logged in, else - 401.
+   * @param {String} image - image name
    */
-  static async getUserImage() {
-    return await fetch(api.user.image, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => data);
+  static getUserImage(image) {
+    return api.user.get_image(image)
   }
 
   /**

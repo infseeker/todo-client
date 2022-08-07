@@ -33,13 +33,6 @@ export default {
         this.$user.login(data);
         this.isLoaded = true;
 
-        // Load user image
-        UserService.getUserImage().then(r => {
-          if (r.code === 200) {
-            this.$user.image = r.image;
-          }
-        });
-
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
       });

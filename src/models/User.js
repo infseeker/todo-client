@@ -1,3 +1,5 @@
+import { api } from '/public/server-api.js'
+
 class User {
   constructor(data) {
     this.login(data);
@@ -9,6 +11,7 @@ class User {
     this.isDeleted = data.deleted || false;
     this.email = data.email || false;
     this.username = data.username || false;
+    this.image = data.image ? api.user.get_image(data.image) : false;
   }
 
   logout() {
@@ -17,6 +20,7 @@ class User {
     this.isDeleted = false;
     this.username = false;
     this.email = false;
+    this.image = false;
   }
 }
 

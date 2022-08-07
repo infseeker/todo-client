@@ -5,12 +5,12 @@
     </template>
 
     <template v-slot:content>
-      <input type="text" ref="editListTitleInput" v-model="title" @keypress.enter="save($event)" class="form-control"
+      <input type="text" ref="title" v-model="title" @keypress.enter="save($event)" class="form-control"
         placeholder="Введите название списка">
     </template>
 
     <template v-slot:buttons>
-      <button :disabled="isDisabled" ref="saveTitleButton" @click="save($event)" type="button"
+      <button :disabled="isDisabled" @click="save($event)" type="button"
         class="btn btn-primary">Сохранить</button>
     </template>
   </modal>
@@ -36,7 +36,7 @@ export default {
 
   methods: {
     save($event) {
-      const input = this.$refs['editListTitleInput'];
+      const input = this.$refs['title'];
       let title = $event.target.value.trim() || input.value.trim();
       title = title.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
 

@@ -83,10 +83,6 @@ export default {
 
   beforeUnmount() {
     this.close();
-  },
-
-  updated() {
-    console.log('update');
   }
 }
 </script>
