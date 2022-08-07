@@ -143,8 +143,8 @@ export default {
 }
 
 .user-image img {
-  width: 80%;
-  height: 80%;
+  width: 8rem;
+  height: 8rem;
   display: block;
   margin: auto;
 }
@@ -169,8 +169,8 @@ export default {
 .user-image-delete {
   display: none;
   position: absolute;
-  right: 5%;
-  top: 10%;
+  right: 2%;
+  top: 7%;
   width: 1.2rem;
   height: 1.2rem;
   opacity: 0.7;

@@ -28,17 +28,21 @@ export default {
 
   methods: {
     loadAuthData() {
+      this.$loader.show();
+
       // Load user auth data
       UserService.getSession().then((data) => {
         this.$user.login(data);
-        this.isLoaded = true;
 
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
       });
 
       // Load and set csrf token
-      UserService.getCSRFToken();
+      UserService.getCSRFToken().then(() => {
+        this.$loader.hide();
+        this.isLoaded = true;
+      });
     },
   },
 
