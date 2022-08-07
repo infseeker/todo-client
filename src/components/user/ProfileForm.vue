@@ -86,6 +86,7 @@ export default {
 
         if (data.code === 200) {
           this.$user.image = '';
+          this.$toast.success('Изображение удалено');
         }
       })
     },
