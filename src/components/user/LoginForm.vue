@@ -70,6 +70,7 @@
 
 <script>
 import UserService from '../../services/UserService'
+import { getDefaultLocale } from '../../helpers/i18n'
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { recaptcha } from '../../helpers/recaptcha'
@@ -115,6 +116,9 @@ export default {
             if (r.code === 200) {
               this.$user.login(r);
 
+              const locale = this.$user.locale;
+              this.$i18n.locale = locale && locale !== 'sy' ? locale : getDefaultLocale();
+
               if (this.$user.isAuth) {
                 if (this.$user.isAdmin) {
                   this.$router.push({ name: 'admin-users' });
@@ -137,7 +141,7 @@ export default {
                 this.$toast.warning('Ваша учётная запись ещё не активирована')
               } else {
                 this.isDisabled = false;
-                
+
                 this.$toast.error('Неправильное имя пользователя или пароль')
               }
             }

@@ -167,7 +167,7 @@ class UserService {
    * @param {String} image - image name
    */
   static getUserImage(image) {
-    return api.user.get_image(image)
+    return api.user.get_image(image);
   }
 
   /**
@@ -206,27 +206,48 @@ class UserService {
       .then((data) => data);
   }
 
-    /**
+  /**
    * Change user password if user logged in, else - 401.
    * @param {String} oldPassword - current user password
    * @param {String} newPassword - new password
    */
-    static async changePassword(oldPassword, newPassword) {
-      return await fetch(api.user.password, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrf.getToken(),
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          old_password: oldPassword,
-          password: newPassword,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => data);
-    }
+  static async changePassword(oldPassword, newPassword) {
+    return await fetch(api.user.password, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrf.getToken(),
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        old_password: oldPassword,
+        password: newPassword,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+  /**
+   * Change user password if user logged in, else - 401.
+   * @param {String} localeCode - user locale code
+   */
+  static async changeLocale(localeCode) {
+    return await fetch(api.user.locale, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrf.getToken(),
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        locale: localeCode,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
 
   static async logout() {
     return await fetch(api.user.logout, {

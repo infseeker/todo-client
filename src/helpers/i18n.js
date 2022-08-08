@@ -1,29 +1,18 @@
-export function getBrowserLocale(options = {}) {
-  if (localStorage.getItem('locale')) {
-    return localStorage.getItem('locale');
-  }
+import { locales } from '../locales/locales';
 
-  const defaultOptions = { countryCodeOnly: false };
+export function getFullLocales() {
+  return locales;
+}
 
-  const opt = { ...defaultOptions, ...options };
+export function getDefaultLocale() {
+  const defaultLocale = getFullLocales()[0].code;
 
-  const navigatorLocale =
+  const navigatorLang =
     navigator.languages !== undefined
       ? navigator.languages[0]
       : navigator.language;
-  if (!navigatorLocale) {
-    return undefined;
-  }
 
-  const trimmedLocale = opt.countryCodeOnly
-    ? navigatorLocale.trim().split(/-|_/)[0]
-    : navigatorLocale.trim();
+  const locale = navigatorLang ? navigatorLang.trim().split(/-|_/)[0] : undefined;
 
-  localStorage.setItem('locale', trimmedLocale);
-
-  return trimmedLocale;
-}
-
-export function setBrowserLocale(locale) {
-  localStorage.setItem('locale', locale);
+  return locale || defaultLocale;
 }

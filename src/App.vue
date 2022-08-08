@@ -11,6 +11,7 @@
 
 <script>
 import Loading from 'vue-loading-overlay';
+import { getDefaultLocale } from './helpers/i18n'
 import UserService from './services/UserService';
 import UserNavigation from './components/user/NavBar.vue';
 
@@ -34,6 +35,10 @@ export default {
       UserService.getSession().then((data) => {
         this.$user.login(data);
 
+        // Set user locale
+        const locale = this.$user.locale;
+        this.$i18n.locale = locale && locale !== 'sy' ? locale : getDefaultLocale();
+        
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
       });

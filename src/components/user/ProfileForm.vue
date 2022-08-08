@@ -21,13 +21,15 @@
           <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
         </div>
 
-        <div class="btn-group w-100">
-          <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown"
-            aria-expanded="false">{{ `Язык интерфейса: ${this.$user.locale === 'ru' ? 'Русский' : 'Английский'}` }}</button>
-          <ul class="dropdown-menu" style="">
-            <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('ru')">Русский</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('en')">Английский</a></li>
-          </ul>
+        <div class="locales">
+          <label for="defaultSelect" class="form-label">{{ this.$t('user.interfaceLang') }}: </label>
+
+          <select v-model="this.$user.locale" @change="changeLocale($event)" class="form-select">
+            <option value="sy">{{ this.$t(`user.system`) }}</option>
+            <option v-for="locale in locales" :value="locale.code" :key="locale.code" class="dropdown-item">
+              {{ this.$t(`user.${locale.language}`) }}
+            </option>
+          </select>
         </div>
 
         <div class="mt-3">
@@ -64,7 +66,7 @@
 
 <script>
 import UserService from '../../services/UserService'
-import { setBrowserLocale } from '../../helpers/i18n'
+import { getFullLocales, getDefaultLocale } from '../../helpers/i18n'
 import ImageChangingModal from './ImageChangingModal.vue'
 import PasswordChangingModal from './PasswordChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
@@ -74,6 +76,7 @@ export default {
     return {
       userImage: '',
       catImage: new URL(`../../assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`, import.meta.url),
+      locales: getFullLocales(),
 
       showImageChangingModal: false,
       showPasswordChangingModal: false,
@@ -101,10 +104,16 @@ export default {
       })
     },
 
-    setLocale(locale) {
-      this.$user.locale = locale;
-      this.$i18n.locale = locale;
-      setBrowserLocale(locale);
+    changeLocale($event) {
+      const locale = $event.target.value;
+
+      this.$i18n.locale = locale === 'sy' ? getDefaultLocale() : locale;
+
+      UserService.changeLocale(locale).then(r => {
+        if (r.code === 200) {
+          this.$toast.success('Язык изменён');
+        }
+      });
     },
 
     meow() {
@@ -128,10 +137,6 @@ export default {
       });
     }
   },
-
-  mounted() {
-    console.log(this.$user.locale);
-  }
 }
 </script>
 
@@ -144,6 +149,21 @@ export default {
   width: 100%;
   max-width: 400px;
   position: relative;
+}
+
+.locales {
+  display: flex;
+  align-items: center;
+}
+
+.locales label {
+  margin: 0;
+  margin-right: 0.7rem;
+}
+
+.locales select {
+  width: auto;
+  flex-grow: 1
 }
 
 .user-image,

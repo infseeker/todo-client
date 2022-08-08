@@ -1,10 +1,12 @@
 import { createApp, reactive } from 'vue';
+import { user } from './models/User';
+
 import { createI18n } from 'vue-i18n';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
-import { getBrowserLocale } from './helpers/i18n';
+import { getDefaultLocale } from './helpers/i18n';
+
 import Toast, { useToast, POSITION } from 'vue-toastification';
 import { loader } from './helpers/loader';
-import { user } from './models/User';
 
 import 'bootstrap';
 import 'vue-toastification/dist/index.css';
@@ -32,13 +34,9 @@ const toast = {
   transition: 'Vue-Toastification__fade',
 };
 
-const $user = app.config.globalProperties.$user;
-
-$user.locale = getBrowserLocale({ countryCodeOnly: true }) || 'en';
-
 const i18n = createI18n({
-  locale: $user.locale,
   messages,
+  fallbackLocale: getDefaultLocale(),
 });
 
 app.use(router).use(i18n).use(Toast, toast).mount('#app');

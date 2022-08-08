@@ -14,6 +14,7 @@ export const api = {
     session: `${API_ROOT}/user/session`,
     image: `${API_ROOT}/user/image`,
     password: `${API_ROOT}/user/password`,
+    locale: `${API_ROOT}/user/locale`,
     logout: `${API_ROOT}/user/logout`,
     delete: `${API_ROOT}/user/delete`,
 
