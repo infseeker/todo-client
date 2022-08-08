@@ -23,7 +23,7 @@
 
         <div class="btn-group w-100">
           <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown"
-            aria-expanded="false">{{ `Язык интерфейса: ${this.$user.locale == 'ru' ? 'Русский' : 'Английский'}` }}</button>
+            aria-expanded="false">{{ `Язык интерфейса: ${this.$user.locale === 'ru' ? 'Русский' : 'Английский'}` }}</button>
           <ul class="dropdown-menu" style="">
             <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('ru')">Русский</a></li>
             <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('en')">Английский</a></li>
@@ -102,6 +102,7 @@ export default {
     },
 
     setLocale(locale) {
+      this.$user.locale = locale;
       this.$i18n.locale = locale;
       setBrowserLocale(locale);
     },
@@ -126,6 +127,10 @@ export default {
         this.$toast.success('Вы вышли из учётной записи');
       });
     }
+  },
+
+  mounted() {
+    console.log(this.$user.locale);
   }
 }
 </script>

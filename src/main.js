@@ -34,7 +34,7 @@ const toast = {
 
 const $user = app.config.globalProperties.$user;
 
-app.config.globalProperties.locale = getBrowserLocale({ countryCodeOnly: true }) || 'en';
+$user.locale = getBrowserLocale({ countryCodeOnly: true }) || 'en';
 
 const i18n = createI18n({
   locale: $user.locale,
