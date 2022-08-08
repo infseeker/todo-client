@@ -1,3 +1,5 @@
 {
-  "message": "Hello"
+  "en": {
+    "message": "Hello"
+  }
 }

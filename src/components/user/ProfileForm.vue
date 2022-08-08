@@ -103,9 +103,6 @@ export default {
 
     setLocale(locale) {
       setBrowserLocale(locale);
-
-      console.log(this.$user.locale);
-      console.log(localStorage.getItem('locale'));
     },
 
     meow() {

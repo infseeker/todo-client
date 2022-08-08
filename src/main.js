@@ -33,7 +33,9 @@ $user.locale = getBrowserLocale({ countryCodeOnly: true }) || 'en';
 
 const i18n = createI18n({
   locale: $user.locale,
-  messages: await getLocaleMessages($user.locale),
+  messages: (async () => {
+    await getLocaleMessages($user.locale);
+  })(),
 });
 
 const toast = {

@@ -29,7 +29,7 @@ export default {
   methods: {
     loadAuthData() {
       this.$loader.show();
-
+      // this.$toast.success(this.$i18n.t());
       // Load user auth data
       UserService.getSession().then((data) => {
         this.$user.login(data);

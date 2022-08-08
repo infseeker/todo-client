@@ -31,5 +31,7 @@ export function setBrowserLocale(locale) {
 
 export async function getLocaleMessages(locale = 'en') {
   const url = new URL(`/locales/${locale}.json`, import.meta.url).href;
-  return url ? await fetch(url).then(r => r.json()).then(data => data) : undefined;
+  const messages = url ? await fetch(url).then(r => r.json()).then(data => data) : undefined;
+  console.log(messages);
+  return messages;
 }
