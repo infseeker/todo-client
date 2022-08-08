@@ -1,5 +1,5 @@
 export function getBrowserLocale(options = {}) {
-  if(localStorage.getItem('locale')) {
+  if (localStorage.getItem('locale')) {
     return localStorage.getItem('locale');
   }
 
@@ -26,12 +26,4 @@ export function getBrowserLocale(options = {}) {
 
 export function setBrowserLocale(locale) {
   localStorage.setItem('locale', locale);
-  location.reload();
-}
-
-export async function getLocaleMessages(locale = 'en') {
-  const url = new URL(`/locales/${locale}.json`, import.meta.url).href;
-  const messages = url ? await fetch(url).then(r => r.json()).then(data => data) : undefined;
-  console.log(messages);
-  return messages;
 }

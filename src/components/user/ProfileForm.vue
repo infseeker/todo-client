@@ -22,9 +22,9 @@
         </div>
 
         <div class="btn-group w-100">
-          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+          <button type="button" class="btn btn-primary dropdown-toggle w-100" data-bs-toggle="dropdown"
             aria-expanded="false">{{ `Язык интерфейса: ${this.$user.locale == 'ru' ? 'Русский' : 'Английский'}` }}</button>
-          <ul class="dropdown-menu dropdown-menu-end" style="">
+          <ul class="dropdown-menu" style="">
             <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('ru')">Русский</a></li>
             <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('en')">Английский</a></li>
           </ul>
@@ -102,6 +102,7 @@ export default {
     },
 
     setLocale(locale) {
+      this.$i18n.locale = locale;
       setBrowserLocale(locale);
     },
 
