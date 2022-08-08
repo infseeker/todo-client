@@ -1,5 +1,5 @@
 import { api } from '/public/server-api.js';
-import { getDefaultLocale } from '../helpers/i18n';
+import { isLocaleExists, getDefaultLocale } from '../helpers/i18n';
 
 class User {
   constructor(data) {
@@ -13,7 +13,7 @@ class User {
     this.email = data.email || undefined;
     this.username = data.username || undefined;
     this.image = data.image ? api.user.get_image(data.image) : null;
-    this.locale = data.locale || getDefaultLocale() || undefined;
+    this.locale = isLocaleExists(data.locale) ? data.locale : getDefaultLocale() || undefined;
   }
 
   logout() {

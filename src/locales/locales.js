@@ -1,4 +1,5 @@
 export const locales = [
-  { code: 'en', language: 'english' },
+  { code: 'sy', language: 'system' },
+  { code: 'en', language: 'english', default: true },
   { code: 'ru', language: 'russian' },
 ];

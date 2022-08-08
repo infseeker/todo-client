@@ -36,6 +36,7 @@ const toast = {
 
 const i18n = createI18n({
   messages,
+  locale: getDefaultLocale(),
   fallbackLocale: getDefaultLocale(),
 });
 
