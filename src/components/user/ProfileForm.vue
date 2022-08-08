@@ -21,6 +21,15 @@
           <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
         </div>
 
+        <div class="btn-group w-100">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">{{ `Язык интерфейса: ${this.$user.locale == 'ru' ? 'Русский' : 'Английский'}` }}</button>
+          <ul class="dropdown-menu dropdown-menu-end" style="">
+            <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('ru')">Русский</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" @click="setLocale('en')">Английский</a></li>
+          </ul>
+        </div>
+
         <div class="mt-3">
           <button @click="showImageChangingModal = true" type="button" class="btn btn-primary w-100">Изменить
             изображение</button>
@@ -55,6 +64,7 @@
 
 <script>
 import UserService from '../../services/UserService'
+import { setBrowserLocale } from '../../helpers/i18n'
 import ImageChangingModal from './ImageChangingModal.vue'
 import PasswordChangingModal from './PasswordChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
@@ -89,6 +99,13 @@ export default {
           this.$toast.success('Изображение удалено');
         }
       })
+    },
+
+    setLocale(locale) {
+      setBrowserLocale(locale);
+
+      console.log(this.$user.locale);
+      console.log(localStorage.getItem('locale'));
     },
 
     meow() {
