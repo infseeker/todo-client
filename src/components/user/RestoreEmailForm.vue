@@ -1,41 +1,37 @@
 <template>
-  <div class="login-form authentication-wrapper authentication-basic container-p-y">
-    <div class="authentication-inner">
-      <div class="card">
-        <div class="card-body" v-on:keyup.enter="restoreEmail(email)">
-          <h5 class="mb-4 d-flex justify-content-between">
-            <span>Почта восстановления</span>
-            <i class='bx bx-envelope'></i>
-          </h5>
-          
-          <p>
-            Для восстановления доступа введите email, который был указан при регистрации.
-          </p>
-          <p>
-            На email будет выслано письмо с кодом восстановления доступа.
-          </p>
+  <user-form>
+    <template v-slot:title>
+      <span>Почта восстановления</span>
+      <i class='bx bx-envelope'></i>
+    </template>
 
-          <div class="mb-3">
-            <input v-model="email" type="email" placeholder="Введите email" class="form-control" />
-            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email: некорректный формат
-            </div>
+    <template v-slot:content>
+      <div @keypress.enter="restoreEmail(email)">
+        <p>
+          Для восстановления доступа введите email, который был указан при регистрации.
+        </p>
+        <p>
+          На email будет выслано письмо с кодом восстановления доступа.
+        </p>
+
+        <div class="mb-3">
+          <input v-model="email" type="email" placeholder="Введите email" class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email: некорректный формат
           </div>
-
-          <div class="mb-3">
-            <button @click="restoreEmail(email)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Получить код восстаноления</button>
-          </div>
-
-          <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <template v-slot:button>
+      <button @click="restoreEmail(email)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Получить
+        код восстаноления</button>
+    </template>
+  </user-form>
 </template>
 
+
 <script>
+import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required, minLength } from '@vuelidate/validators'
@@ -62,6 +58,10 @@ export default {
     }
   },
 
+  components: {
+    UserForm,
+  },
+
   methods: {
     async restoreEmail(email) {
       this.v$.$validate();
@@ -85,14 +85,6 @@ export default {
         })
       }
     },
-  },
-
-  mounted() {
-    const input = document.querySelector('input') || document.querySelector('textarea') || null;
-    input.focus();
   }
 }
 </script>
-
-<style>
-</style>

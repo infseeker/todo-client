@@ -1,60 +1,59 @@
 <template>
-  <div class="login-form authentication-wrapper authentication-basic container-p-y">
-    <div class="authentication-inner">
-      <div class="card">
-        <div class="card-body" v-on:keyup.enter="register(username, email, password)">
-          <h5 class="mb-4 d-flex justify-content-between">
-            <span>Регистрация</span>
-            <i class="bx bx-user-plus"></i>
-          </h5>
+  <user-form>
+    <template v-slot:title>
+      <span>Регистрация</span>
+      <i class="bx bx-user-plus"></i>
+    </template>
 
-          <div class="mb-3">
-            <input placeholder="Введите имя пользователя" v-model="username" class="form-control" />
-            <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Имя (длина: от 3 до 15 символов,
-              только латинские буквы)
-            </div>
+    <template v-slot:content>
+      <div @keypress.enter="register(username, email, password)">
+        <div class="mb-3">
+          <input placeholder="Введите имя пользователя" v-model="username" class="form-control" />
+          <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Имя (длина: от 3 до 15 символов,
+            только латинские буквы)
           </div>
+        </div>
 
-          <div class="mb-3">
-            <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
-            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
-              корректный формат email)
-            </div>
+        <div class="mb-3">
+          <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
+            корректный формат email)
           </div>
+        </div>
 
-          <div class="mb-3 form-password-toggle">
-            <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
-              <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
-              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-                <i v-if="showPassword" class="bx bx-show"></i>
-                <i v-else class="bx bx-hide"></i>
-              </span>
-            </div>
-            <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Формат пароля (длина: 8-15
-              символов, латинские буквы, мин. 1 цифра)</div>
+        <div class="mb-3 form-password-toggle">
+          <div class="input-group input-group-merge">
+            <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
+            <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
+            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+              <i v-if="showPassword" class="bx bx-show"></i>
+              <i v-else class="bx bx-hide"></i>
+            </span>
           </div>
-          <div class="mb-3">
-            <button @click="register(username, email, password)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Зарегистрироваться</button>
-          </div>
-          <p class="text-center">
-            <span>Уже есть аккаунт? </span>
-            <router-link :to="{ name: 'login' }">
-              <span>Войти</span>
-            </router-link>
-          </p>
-
-          <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
+          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Формат пароля (длина: 8-15
+            символов, латинские буквы, мин. 1 цифра)</div>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <template v-slot:button>
+      <button @click="register(username, email, password)" :disabled="isDisabled" type="button"
+        class="btn btn-primary w-100">Зарегистрироваться</button>
+    </template>
+
+    <template v-slot:footer>
+      <p class="text-center">
+        <span>Уже есть аккаунт? </span>
+        <router-link :to="{ name: 'login' }">
+          <span>Войти</span>
+        </router-link>
+      </p>
+    </template>
+  </user-form>
 </template>
 
 <script>
+import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required, minLength, maxLength, alpha } from '@vuelidate/validators'
@@ -94,6 +93,10 @@ export default {
     }
   },
 
+  components: {
+    UserForm,
+  },
+
   methods: {
     async register(username, email, password) {
       this.usernameExists = false;
@@ -125,7 +128,7 @@ export default {
                       this.$toast.error('Проверьте корректность данных');
                     }
                   })
-                } else if(data.code === 409) {
+                } else if (data.code === 409) {
                   this.$loader.hide();
 
                   this.isDisabled = false;
@@ -143,11 +146,6 @@ export default {
       }
     },
   },
-
-  mounted() {
-    const input = document.querySelector('input') || document.querySelector('textarea') || null;
-    input.focus();
-  }
 }
 </script>
 

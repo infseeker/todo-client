@@ -1,63 +1,56 @@
 <template>
-  <div class="login-form authentication-wrapper authentication-basic container-p-y">
-    <div class="authentication-inner">
-      <div class="card">
-        <div class="card-body" v-on:keyup.enter="activate(email, code)">
+  <user-form>
+    <template v-slot:title>
+      <span>{{ this.$t('user.activation') }}</span>
+      <i class='bx bx-user-check'></i>
+    </template>
 
-          <h5 class="mb-4 d-flex justify-content-between">
-            <span>{{ this.$t('user.activation') }}</span>
-            <i class='bx bx-user-check'></i>
-          </h5>
+    <template v-slot:content>
+      <div @keypress.enter="activate(email, code)">
+        <p v-if="!showEmailField"
+          v-html="this.$t('user.activationCodeSent', [`<span class='badge bg-label-primary'>${this.email}</span>`])">
+        </p>
+        <p>
+          {{ this.$t('user.activationCodeValidFor', ['15']) }}
+        </p>
+        <p>
+          {{ this.$t('user.ifNotActivate') }}
+        </p>
 
-          <p v-if="!showEmailField"
-            v-html="this.$t('user.activationCodeSent', [`<span class='badge bg-label-primary'>${this.email}</span>`])">
-          </p>
-          <p>
-            {{ this.$t('user.activationCodeValidFor', ['15']) }}
-          </p>
-          <p>
-            {{ this.$t('user.ifNotActivate') }}
-          </p>
+        <div v-if="showEmailField" class="mb-3">
+          <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" type="email" class="form-control" />
 
-          <div v-if="showEmailField" class="mb-3">
-            <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" type="email" class="form-control" />
-
-            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">
-              {{ this.$t('validations.email') }}
-            </div>
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.email') }}
           </div>
+        </div>
 
-          <div class="mb-3">
-            <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-              :placeholder="this.$t('user.activationCodePlaceholder')" class="form-control" />
+        <div class="mb-3">
+          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
+            :placeholder="this.$t('user.activationCodePlaceholder')" class="form-control" />
 
-            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">
-              {{ this.$t('validations.accessCode', ['4']) }}
-            </div>
+          <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.accessCode', ['4']) }}
           </div>
-
-          <div class="mb-3">
-            <button @click="activate(email, code)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">{{
-                this.$t('user.activate')
-            }}</button>
-          </div>
-
-          <recaptcha></recaptcha>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <template v-slot:button>
+      <button @click="activate(email, code)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">
+        {{ this.$t('user.activate') }}
+      </button>
+    </template>
+  </user-form>
 </template>
 
 <script>
+import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
 import { email } from '../../helpers/validations'
 import { recaptcha } from '../../helpers/recaptcha'
-import Recaptcha from './Recaptcha.vue'
-
-
 
 export default {
   data() {
@@ -90,7 +83,7 @@ export default {
   },
 
   components: {
-    Recaptcha,
+    UserForm,
   },
 
   methods: {
@@ -139,9 +132,6 @@ export default {
     if (!this.$user.email) {
       this.showEmailField = true;
     }
-
-    const input = document.querySelector('input') || document.querySelector('textarea') || null;
-    input.focus();
   }
 }
 </script>

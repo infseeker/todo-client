@@ -1,74 +1,64 @@
 <template>
-  <div class="login-form authentication-wrapper authentication-basic container-p-y">
-    <div class="authentication-inner">
-      <div class="card">
-        <div class="card-body" v-on:keyup.enter="login(username, password)">
-          <h5 class="mb-4 d-flex justify-content-between">
-            <span>Авторизация</span>
-            <i class="bx bx-log-in"></i>
-          </h5>
+  <user-form>
+    <template v-slot:title>
+      <span>Авторизация</span>
+      <i class="bx bx-log-in"></i>
+    </template>
 
-          <div v-if="activated" class="mb-3">
-            <div class="alert alert-success" role="alert">
-              Ваша учётная запись была активирована. Теперь вы можете войти.
-            </div>
+    <template v-slot:content>
+      <div @keypress.enter="login(username, password)">
+        <div class="mb-3">
+          <input placeholder="Введите имя / email" v-model="username" class="form-control" />
+          <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Введите имя пользователя / email
           </div>
-          <div v-if="restored" class="mb-3">
-            <div class="alert alert-success" role="alert">
-              Ваша учётная запись была восстановлена. Теперь вы можете войти.
-            </div>
-          </div>
-          <div class="mb-3">
-            <input placeholder="Введите имя / email" v-model="username" class="form-control" />
-            <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Введите имя пользователя / email
-            </div>
-          </div>
-          <div class="mb-3 form-password-toggle">
-            <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
-              <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
-              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-                <i v-if="showPassword" class="bx bx-show"></i>
-                <i v-else class="bx bx-hide"></i>
-              </span>
-            </div>
-            <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Введите пароль</div>
-          </div>
-          <div class="mb-4">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="remember-me" checked>
-              <div class="d-flex justify-content-between">
-                <label class="form-check-label" for="remember-me">
-                  Запомнить меня
-                </label>
-                <router-link :to="{ name: 'restoration-email' }">
-                  <small>Забыли пароль?</small>
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <button @click="login(username, password)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Войти</button>
-          </div>
+        </div>
 
-          <p class="text-center">
-            <span>Ещё нет аккаунта? </span>
-            <router-link :to="{ name: 'registration' }">
-              <span>Зарегистрироваться</span>
-            </router-link>
-          </p>
-
-          <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
+        <div class="mb-3 form-password-toggle">
+          <div class="input-group input-group-merge">
+            <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
+            <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
+            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+              <i v-if="showPassword" class="bx bx-show"></i>
+              <i v-else class="bx bx-hide"></i>
+            </span>
+          </div>
+          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Введите пароль</div>
+        </div>
+        
+        <div class="mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="remember-me" checked>
+            <div class="d-flex justify-content-between">
+              <label class="form-check-label" for="remember-me">
+                Запомнить меня
+              </label>
+              <router-link :to="{ name: 'restoration-email' }">
+                <small>Забыли пароль?</small>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <template v-slot:button>
+      <button @click="login(username, password)" :disabled="isDisabled" type="button"
+        class="btn btn-primary w-100">Войти</button>
+    </template>
+
+    <template v-slot:footer>
+      <p class="text-center">
+        <span>Ещё нет аккаунта? </span>
+        <router-link :to="{ name: 'registration' }">
+          <span>Зарегистрироваться</span>
+        </router-link>
+      </p>
+    </template>
+  </user-form>
 </template>
 
 <script>
+import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import { i18nUtils } from '../../helpers/i18n';
 import useValidate from '@vuelidate/core'
@@ -83,8 +73,6 @@ export default {
       username: '',
       password: '',
       showPassword: false,
-      restored: false,
-      activated: false,
       isDisabled: false
     };
   },
@@ -101,8 +89,12 @@ export default {
     }
   },
 
+  components: {
+    UserForm,
+  },
+
   methods: {
-    async login(username, password) {
+    login(username, password) {
       this.v$.$validate();
 
       if (!this.v$.$error) {
@@ -124,9 +116,6 @@ export default {
                   this.$router.push({ name: 'lists' });
                 }
               }
-
-              this.$user.isRestored = false;
-              this.$user.isActivated = false;
             } else {
               if (r.deleted) {
                 this.$user.isDeleted = true;
@@ -148,16 +137,5 @@ export default {
       }
     },
   },
-
-  mounted() {
-    this.restored = this.$user.isRestored;
-    this.activated = this.$user.isActivated;
-
-    const input = document.querySelector('input') || document.querySelector('textarea') || null;
-    input.focus();
-  }
 }
 </script>
-
-<style>
-</style>

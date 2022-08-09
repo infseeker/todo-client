@@ -1,66 +1,60 @@
 <template>
-  <div class="login-form authentication-wrapper authentication-basic container-p-y">
-    <div class="authentication-inner">
-      <div class="card">
-        <div class="card-body" v-on:keyup.enter="restore(email, password, code)">
-          <h5 class="mb-4 d-flex justify-content-between">
-            <span>Восстановление доступа</span>
-            <i class='bx bx-key'></i>
-          </h5>
+  <user-form>
+    <template v-slot:title>
+      <span>Восстановление доступа</span>
+      <i class='bx bx-key'></i>
+    </template>
 
-          <p v-if="!showEmailField">
-            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с
-            кодом
-            восстановления.
-          </p>
-          <p>
-            Код восстановления действителен в течение 15 минут.
-          </p>
+    <template v-slot:content>
+      <div @keypress.enter="restore(email, password, code)">
+        <p v-if="!showEmailField">
+          На электронный адрес
+          <span class="badge bg-label-primary">{{ this.email }}</span>
+          было отправлено письмо с кодом восстановления.
+        </p>
+        <p>
+          Код восстановления действителен в течение 15 минут.
+        </p>
 
-          <div v-if="showEmailField" class="mb-3">
-            <input placeholder="Введите email" v-model="email" class="form-control" />
-            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
-              корректный формат email)
-            </div>
+        <div v-if="showEmailField" class="mb-3">
+          <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
+            корректный формат email)
           </div>
+        </div>
 
-          <div class="mb-3 form-password-toggle">
-            <div class="input-group input-group-merge">
-              <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
-              <input v-else type="password" placeholder="Введите новый пароль" v-model="password"
-                class="form-control" />
-              <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
-                <i v-if="showPassword" class="bx bx-show"></i>
-                <i v-else class="bx bx-hide"></i>
-              </span>
-            </div>
-            <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль (длина: 8-15
-              символов, латинские буквы, мин. 1 цифра)</div>
+        <div class="mb-3 form-password-toggle">
+          <div class="input-group input-group-merge">
+            <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
+            <input v-else type="password" placeholder="Введите новый пароль" v-model="password" class="form-control" />
+            <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
+              <i v-if="showPassword" class="bx bx-show"></i>
+              <i v-else class="bx bx-hide"></i>
+            </span>
           </div>
+          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль (длина: 8-15
+            символов, латинские буквы, мин. 1 цифра)</div>
+        </div>
 
-          <div class="mb-3">
-            <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-              placeholder="Введите код восстановления" class="form-control" />
-            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код восстановления (4 цифры)
-            </div>
+        <div class="mb-3">
+          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
+            placeholder="Введите код восстановления" class="form-control" />
+          <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код восстановления (4 цифры)
           </div>
-
-
-          <div class="mb-3">
-            <button @click="restore(email, password, code)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Восстановить доступ</button>
-          </div>
-
-          <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <template v-slot:button>
+      <button @click="restore(email, password, code)" :disabled="isDisabled" type="button"
+        class="btn btn-primary w-100">Восстановить доступ</button>
+    </template>
+  </user-form>
 </template>
 
+
 <script>
+import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
 import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
@@ -99,6 +93,10 @@ export default {
         minLength: minLength(4),
       },
     }
+  },
+
+  components: {
+    UserForm
   },
 
   methods: {
