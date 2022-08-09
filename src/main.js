@@ -3,7 +3,7 @@ import { user } from './models/User';
 
 import { createI18n } from 'vue-i18n';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
-import { getDefaultLocale } from './helpers/i18n';
+import { i18nUtils } from './helpers/i18n';
 
 import Toast, { useToast, POSITION } from 'vue-toastification';
 import { loader } from './helpers/loader';
@@ -36,8 +36,8 @@ const toast = {
 
 const i18n = createI18n({
   messages,
-  locale: getDefaultLocale(),
-  fallbackLocale: getDefaultLocale(),
+  locale: i18nUtils.getDefaultLocale(),
+  fallbackLocale: i18nUtils.defaultLocale,
 });
 
 app.use(router).use(i18n).use(Toast, toast).mount('#app');

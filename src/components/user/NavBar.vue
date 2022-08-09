@@ -9,7 +9,7 @@
 
       <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li v-if="!this.$user.isAuth">
-          <router-link :to="{ name: 'login' }" class="btn btn-primary ms-2" title="Вход">
+          <router-link :to="{ name: 'login' }" class="btn btn-primary ms-2" :title="this.$t('user.login')">
             <i class='bx bx-log-in'></i>
           </router-link>
         </li>

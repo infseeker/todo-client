@@ -11,7 +11,7 @@
 
 <script>
 import Loading from 'vue-loading-overlay';
-import { getDefaultLocale } from './helpers/i18n'
+import { i18nUtils } from './helpers/i18n';
 import UserService from './services/UserService';
 import UserNavigation from './components/user/NavBar.vue';
 
@@ -34,10 +34,10 @@ export default {
       // Load user auth data
       UserService.getSession().then((data) => {
         this.$user.login(data);
+        console.log(data);
 
-        // Set user locale
-        const locale = this.$user.locale;
-        this.$i18n.locale = locale && locale !== 'sy' ? locale : getDefaultLocale();
+        // Set app locale
+        i18nUtils.setLocale(this.$user.locale);
         
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
@@ -48,8 +48,6 @@ export default {
         if (r.code === 200) {
           this.$loader.hide();
           this.isLoaded = true;
-        } else {
-          this.$toast.error('Не удалось загрузить CSRF-токен, перезагрузите страницу');
         }
       });
     },

@@ -65,7 +65,7 @@
 
 <script>
 import UserService from '../../services/UserService'
-import { getFullLocales, getDefaultLocale } from '../../helpers/i18n'
+import { i18nUtils } from '../../helpers/i18n';
 import ImageChangingModal from './ImageChangingModal.vue'
 import PasswordChangingModal from './PasswordChangingModal.vue'
 import DeletionModal from './DeletionModal.vue'
@@ -75,7 +75,7 @@ export default {
     return {
       userImage: '',
       catImage: new URL(`../../assets/img/user-blank-${Math.floor(Math.random() * 3) + 1}.svg`, import.meta.url),
-      locales: getFullLocales(),
+      locales: i18nUtils.locales,
 
       showImageChangingModal: false,
       showPasswordChangingModal: false,
@@ -105,8 +105,7 @@ export default {
 
     changeLocale($event) {
       const locale = $event.target.value;
-
-      this.$i18n.locale = locale === 'sy' ? getDefaultLocale() : locale;
+      i18nUtils.setLocale(locale);
 
       UserService.changeLocale(locale).then(r => {
         if (r.code === 200) {
