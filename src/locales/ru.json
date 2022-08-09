@@ -13,13 +13,13 @@
     "english": "Английский",
     "russian": "Русский",
 
-    "emailPlaceholder": "Enter email",
+    "emailPlaceholder": "Введите email",
 
     "activation": "Активация",
     "activationCodeSent": "На электронный адрес {0} было отправлено письмо с кодом активации.",
     "activationCodeValidFor": "Код активации действителен в течение {0} минут.",
     "ifNotActivate": "Если учётная запись не будет активирована в течение указанного времени, она будет удалена.",
-    "activationCodePlaceholder": "Enter activation code",
+    "activationCodePlaceholder": "Введите код активации",
     "activate": "Активировать",
     "alreadyActivated": "Пользователь с таким email уже активирован",
     "activated": "Ваша учётная запись активирована",
