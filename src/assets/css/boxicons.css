@@ -74,6 +74,10 @@
   background-image: url('../img/icons/bx-trash-alt.svg');
 }
 
+.bx-user-check {
+  background-image: url('../img/icons/bx-user-check.svg');
+}
+
 .bx-user-circle {
   background-image: url('../img/icons/bx-user-circle.svg');
 }

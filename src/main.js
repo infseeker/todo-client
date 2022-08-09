@@ -31,6 +31,7 @@ const toast = {
   timeout: 8000,
   maxToasts: 5,
   newestOnTop: true,
+  hideProgressBar: true,
   transition: 'Vue-Toastification__fade',
 };
 

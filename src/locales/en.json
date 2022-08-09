@@ -13,7 +13,26 @@
     "english": "English",
     "russian": "Russian",
 
-    "login": "Log in"
+    "emailPlaceholder": "Enter email",
+
+    "activation": "Activation",
+    "activationCodeSent": "An email with an activation code has been sent to the {0}.",
+    "activationCodeValidFor": "The activation code is valid for {0} minutes.",
+    "ifNotActivate": "If the account is not activated within the specified time, it will be deleted.",
+    "activationCodePlaceholder": "Enter activation code",
+    "activate": "Activate",
+    "alreadyActivated": "User with this email is already activated",
+    "activated": "Your account has been activated",
+    "wrongActivationCode": "Activation code is incorrect or has expired",
+
+    "login": "Log in",
+
+    "notFoundByNameOrEmail": "User with this username or email was not found",
+    "notFoundByEmail": "User with this email was not found",
+
+    "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
+    "recaptchaPrivacy": "Privacy Policy",
+    "recaptchaService": "Terms of Service"
   },
 
   "list": {
@@ -39,6 +58,11 @@
       "favor": "Favor",
       "unfavor": "Unfavor"
     }
+  },
+
+  "validations": {
+    "email": "Incorrect Email",
+    "accessCode": "{0} digits"
   },
 
   "admin": {

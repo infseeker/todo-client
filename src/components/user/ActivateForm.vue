@@ -5,44 +5,42 @@
         <div class="card-body" v-on:keyup.enter="activate(email, code)">
 
           <h5 class="mb-4 d-flex justify-content-between">
-            <span>Активация</span>
+            <span>{{ this.$t('user.activation') }}</span>
             <i class='bx bx-user-check'></i>
           </h5>
 
-          <p v-if="!showEmailField">
-            На электронный адрес <span class="badge bg-label-primary">{{ this.email }}</span> было отправлено письмо с
-            кодом
-            активации.
+          <p v-if="!showEmailField"
+            v-html="this.$t('user.activationCodeSent', [`<span class='badge bg-label-primary'>${this.email}</span>`])">
           </p>
           <p>
-            Код активации действителен в течение 15 минут.
+            {{ this.$t('user.activationCodeValidFor', ['15']) }}
           </p>
           <p>
-            Если учётная запись не будет активирована в течение указанного времени, она будет удалена.
+            {{ this.$t('user.ifNotActivate') }}
           </p>
 
           <div v-if="showEmailField" class="mb-3">
-            <input placeholder="Введите email" v-model="email" class="form-control" />
-            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
-              корректный формат email)
+            <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" class="form-control" />
+            <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
             </div>
           </div>
 
           <div class="mb-3">
             <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-              placeholder="Введите код активации" class="form-control" />
-            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код активации (4 цифры)
+              :placeholder="this.$t('user.activationCodePlaceholder')" class="form-control" />
+            <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.accessCode',
+                ['4'])
+            }}
             </div>
           </div>
 
           <div class="mb-3">
-            <button @click="activate(email, code)" :disabled="isDisabled" type="button"
-              class="btn btn-primary w-100">Активировать</button>
+            <button @click="activate(email, code)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">{{
+                this.$t('user.activate')
+            }}</button>
           </div>
 
-          <small style="opacity: 0.5">This site is protected by reCAPTCHA and the Google
-            <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-            <a href="https://policies.google.com/terms">Terms of Service</a> apply.</small>
+          <recaptcha></recaptcha>
         </div>
       </div>
     </div>
@@ -55,6 +53,7 @@ import useValidate from '@vuelidate/core'
 import { required, numeric, maxLength, minLength } from '@vuelidate/validators'
 import { email } from '../../helpers/validations'
 import { recaptcha } from '../../helpers/recaptcha'
+import Recaptcha from './Recaptcha.vue'
 
 
 
@@ -88,6 +87,10 @@ export default {
     }
   },
 
+  components: {
+    Recaptcha,
+  },
+
   methods: {
     checkCodeFormat(event) {
       if (event.type === 'paste') {
@@ -109,15 +112,20 @@ export default {
         recaptcha().then((token) => {
           UserService.activate(email, code, token).then((data) => {
             this.$loader.hide();
+            this.isDisabled = false;
 
             if (data.code === 200) {
               this.$router.push({ name: 'login' });
+              this.$toast.success(this.$t('user.activated'));
 
-              this.$toast.success('Ваша учётная запись активирована');
-            } else {
-              this.isDisabled = false;
+            } else if (data.code === 400) {
+              this.$toast.error(this.$t('user.wrongActivationCode'));
 
-              this.$toast.error('Код активации неверен, либо уже истёк');
+            } else if (data.code === 404) {
+              this.$toast.error(this.$t('user.notFoundByEmail'));
+
+            } else if (data.code === 409) {
+              this.$toast.warning(this.$t('user.alreadyActivated'));
             }
           });
         })
@@ -129,7 +137,7 @@ export default {
     if (!this.$user.email) {
       this.showEmailField = true;
     }
-    
+
     const input = document.querySelector('input') || document.querySelector('textarea') || null;
     input.focus();
   }
