@@ -98,7 +98,6 @@ export default {
 
         if (data.code === 200) {
           this.$user.image = '';
-          this.$toast.success('Изображение удалено');
         }
       })
     },
@@ -108,9 +107,6 @@ export default {
       i18nUtils.setLocale(locale);
 
       UserService.changeLocale(locale).then(r => {
-        if (r.code === 200) {
-          this.$toast.success('Язык изменён');
-        }
       });
     },
 
@@ -130,8 +126,6 @@ export default {
         this.$store.lists = [];
 
         this.$router.push('/');
-
-        this.$toast.success('Вы вышли из учётной записи');
       });
     }
   },

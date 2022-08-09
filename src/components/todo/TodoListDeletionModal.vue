@@ -37,9 +37,6 @@ export default {
       this.$router.push({ name: 'lists' });
 
       ListService.deleteList(list).then(r => {
-        if (r.code === 200) {
-          this.$toast.success(this.$t('list.deleted'));
-        }
       });
     }
   }

@@ -126,8 +126,6 @@ export default {
           if (r.code === 200) {
             this.$user.image = UserService.getUserImage(r.data);
             this.$emit('close');
-
-            this.$toast.success('Изображение сохранено');
           } else {
             this.$toast.error('Что-то пошло не так...');
           }
