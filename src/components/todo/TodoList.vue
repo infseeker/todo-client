@@ -64,7 +64,7 @@
         <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
         (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
         (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
-          {{ this.$t('list.item.nothingHere') }}
+          {{ this.$t('list.item.nothing') }}
         </div>
 
         <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul"
@@ -98,7 +98,7 @@
 
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li class="dropdown-item" @click="editListItemTitle(item)">
-                    <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.item.edit') }}
+                    <i class="bx bx-edit-alt me-1"></i> {{ this.$t('common.edit') }}
                   </li>
 
                   <li class="dropdown-item" @click="toggleLikeListItem(item)">
@@ -107,7 +107,7 @@
                   </li>
 
                   <li class="dropdown-item" @click="deleteListItem(item)">
-                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> {{ this.$t('list.item.delete') }}
+                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> {{ this.$t('common.delete') }}
                   </li>
                 </ul>
               </div>

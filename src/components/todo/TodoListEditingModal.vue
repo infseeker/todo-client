@@ -1,17 +1,17 @@
 <template>
   <modal>
     <template v-slot:title>
-      Редактирование списка
+      {{ this.$t('list.editing') }}
     </template>
 
     <template v-slot:content>
       <input type="text" ref="title" v-model="title" @keypress.enter="save($event)" class="form-control"
-        placeholder="Введите название списка">
+        :placeholder="this.$t('list.placeholder')">
     </template>
 
     <template v-slot:buttons>
       <button :disabled="isDisabled" @click="save($event)" type="button"
-        class="btn btn-primary">Сохранить</button>
+        class="btn btn-primary">{{ this.$t('common.save') }}</button>
     </template>
   </modal>
 </template>

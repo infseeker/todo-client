@@ -1,17 +1,17 @@
 <template>
   <modal>
     <template v-slot:title>
-      Новый список
+      {{ this.$t('list.new') }}
     </template>
 
     <template v-slot:content>
       <input type="text" ref="createListTitleInput" @keypress.enter="create($event)" class="form-control"
-        placeholder="Введите название списка">
+        :placeholder="this.$t('list.placeholder')">
     </template>
 
     <template v-slot:buttons>
       <button :disabled="isDisabled" @click="create($event)" type="button"
-        class="btn btn-primary">Создать</button>
+        class="btn btn-primary">{{ this.$t('common.create') }}</button>
     </template>
   </modal>
 </template>
@@ -52,7 +52,7 @@ export default {
           this.$router.push({ name: 'list', params: { 'listId': r.data.id } });
 
           this.$emit('close');
-          this.$toast.success('Список создан');
+          this.$toast.success(this.$t('list.created'));
         }
       });
     },

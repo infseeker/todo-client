@@ -3,8 +3,8 @@
     <div class="card">
       <div class="card-body">
         <div class="lists-title-wrapper mb-3">
-          <h4 class="mb-0">Мои списки</h4>
-          <button @click="showTodoListCreationModal = true" type="button" class="new-list btn btn-primary" title="Новый список">
+          <h4 class="mb-0">{{ this.$t('list.heading') }}</h4>
+          <button @click="showTodoListCreationModal = true" type="button" class="new-list btn btn-primary" :title="this.$t('list.new')">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
@@ -21,17 +21,17 @@
 
               <ul class="dropdown-menu dropdown-menu-end">
                 <li class="dropdown-item" @click="currentList = list; showTodoListEditingModal = true">
-                  <i class="bx bx-edit-alt me-1"></i> Редактировать название
+                  <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
                 <li class="dropdown-item" @click="currentList = list; showTodoListDeletionModal = true">
-                  <i class='bx bx-trash-alt me-1'></i> Удалить список
+                  <i class='bx bx-trash-alt me-1'></i> {{ this.$t('list.delete') }}
                 </li>
               </ul>
             </div>
           </li>
         </ul>
-        <div v-else class="no-lists mb-3">Здесь ещё нет ни одного списка</div>
+        <div v-else class="no-lists mb-3">{{ this.$t('list.nothing') }}</div>
       </div>
     </div>
   </div>

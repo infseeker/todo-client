@@ -1,6 +1,10 @@
 {
   "common": {
-    "delete": "Delete"
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
 
   "user": {
@@ -13,22 +17,27 @@
   },
 
   "list": {
+    "heading": "My lists",
+    "nothing": "There is no list yet",
+    "new": "New list",
+    "placeholder": "Enter list title",
+    "created": "List created",
     "title": "List title",
     "edit": "Edit title",
+    "editing": "List editing",
     "delete": "Delete list",
     "deletion": "List deletion",
     "delete?": "Are you sure you want to delete the list {0} and all its contents?",
+    "deleted": "List deleted",
 
     "item": {
       "placeholder": "What do we do?",
       "all": "All",
       "favorites": "Favorites",
       "done": "Done",
-      "nothingHere": "There is nothing here yet",
-      "edit": "Edit",
+      "nothing": "There is nothing here yet",
       "favor": "Favor",
-      "unfavor": "Unfavor",
-      "delete": "Delete"
+      "unfavor": "Unfavor"
     }
   },
 

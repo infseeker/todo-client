@@ -1,7 +1,7 @@
 <template>
   <modal>
     <template v-slot:title>
-      Удаление списка
+      {{ this.$t('list.deletion') }}
     </template>
 
     <template v-slot:content>
@@ -9,7 +9,7 @@
     </template>
 
     <template v-slot:buttons>
-      <button @click="deleteList(list)" type="button" class="btn btn-danger" data-bs-dismiss="modal">Удалить</button>
+      <button @click="deleteList(list)" type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ this.$t('common.delete') }}</button>
     </template>
   </modal>
 </template>
@@ -38,7 +38,7 @@ export default {
 
       ListService.deleteList(list).then(r => {
         if (r.code === 200) {
-          this.$toast.success('Список удалён');
+          this.$toast.success(this.$t('list.deleted'));
         }
       });
     }

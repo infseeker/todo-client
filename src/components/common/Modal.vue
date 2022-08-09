@@ -18,7 +18,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" @click="close()" class="btn btn-outline-secondary">Отмена</button>
+            <button type="button" @click="close()" class="btn btn-outline-secondary">{{ this.$t('common.cancel') }}</button>
 
             <slot name="buttons"></slot>
           </div>
