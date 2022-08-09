@@ -30,9 +30,9 @@
     "notFoundByNameOrEmail": "Пользователь с таким именем или email не найден",
     "notFoundByEmail": "Пользователь с таким email не найден",
 
-    "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
-    "recaptchaPrivacy": "Privacy Policy",
-    "recaptchaService": "Terms of Service"
+    "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
+    "recaptchaPrivacy": "Политика конфиденциальности",
+    "recaptchaService": "Условия обслуживания"
   },
 
   "list": {
