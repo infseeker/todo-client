@@ -103,7 +103,7 @@
 
                   <li class="dropdown-item" @click="toggleLikeListItem(item)">
                     <i class="bx me-1" :class="{ 'bx-heart': !item.liked, 'bxs-heart': item.liked }"></i>
-                    {{ item.liked ? this.$t('list.item.unfavor') : this.$t('list.item.favor') }}
+                    {{ item.liked ? this.$t('list.item.unfavorite') : this.$t('list.item.favorite') }}
                   </li>
 
                   <li class="dropdown-item" @click="deleteListItem(item)">

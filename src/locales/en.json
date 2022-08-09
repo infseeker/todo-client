@@ -55,8 +55,8 @@
       "favorites": "Favorites",
       "done": "Done",
       "nothing": "There is nothing here yet",
-      "favor": "Favor",
-      "unfavor": "Unfavor"
+      "favorite": "Favorite",
+      "unfavorite": "Unfavorite"
     }
   },
 
