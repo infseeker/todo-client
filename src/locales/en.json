@@ -1,9 +1,38 @@
 {
+  "common": {
+    "delete": "Delete"
+  },
+
   "user": {
-    "interfaceLang": "Language",
+    "lang": "Language",
     "system": "System",
     "english": "English",
     "russian": "Russian",
+
     "login": "Log in"
+  },
+
+  "list": {
+    "title": "List title",
+    "edit": "Edit title",
+    "delete": "Delete list",
+    "deletion": "List deletion",
+    "delete?": "Are you sure you want to delete the list {0} and all its contents?",
+
+    "item": {
+      "placeholder": "What do we do?",
+      "all": "All",
+      "favorites": "Favorites",
+      "done": "Done",
+      "nothingHere": "There is nothing here yet",
+      "edit": "Edit",
+      "favor": "Favor",
+      "unfavor": "Unfavor",
+      "delete": "Delete"
+    }
+  },
+
+  "admin": {
+
   }
 }

@@ -5,15 +5,11 @@
     </template>
 
     <template v-slot:content>
-      <span class="lh-2">
-        Вы уверены, что хотите удалить список
-        <mark>{{ list.title }}</mark>
-        и всё его содержимое?</span>
+      <span v-html="this.$t('list.delete?', [`<mark>${list.title}</mark>`])" class="lh-2"></span>
     </template>
 
     <template v-slot:buttons>
-      <button @click="deleteList(list)" type="button" class="btn btn-danger"
-        data-bs-dismiss="modal">Удалить</button>
+      <button @click="deleteList(list)" type="button" class="btn btn-danger" data-bs-dismiss="modal">Удалить</button>
     </template>
   </modal>
 </template>

@@ -7,8 +7,9 @@
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
 
             <form v-if="listTitleEdit">
-              <input ref="listTitleInput" @keypress.enter.prevent="saveListTitle($event)"
-                @keyup.esc="discardListTitleEdit" @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
+              <input :placeholder="this.$t('list.title')" ref="listTitleInput"
+                @keypress.enter.prevent="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
+                @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
             </form>
 
@@ -20,11 +21,11 @@
 
               <ul class="dropdown-menu dropdown-menu-end">
                 <li @click="editListTitle(listTitle)" class="dropdown-item">
-                  <i class="bx bx-edit-alt me-1"></i> Редактировать название
+                  <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
                 <li class="dropdown-item" @click="showTodoListDeletionModal = true">
-                  <i class="bx bx-trash-alt me-1"></i> Удалить список
+                  <i class="bx bx-trash-alt me-1"></i> {{ this.$t('list.delete') }}
                 </li>
               </ul>
             </div>
@@ -34,17 +35,17 @@
         <div class="new-todo-list-item mb-4">
           <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
           <input v-model="newListItemTitle" @keypress.enter="createListItem($event, newListItemTitle)"
-            class="form-control" type="text" placeholder="Что будем делать?">
+            class="form-control" type="text" :placeholder="this.$t('list.item.placeholder')">
         </div>
 
         <ul class="todo-list-item-filters mb-2">
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }"
             @click="currentListItemFilter = 'all'">
-            Все</li>
+            {{ this.$t('list.item.all') }}</li>
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
-            @click="currentListItemFilter = 'liked'">Избранное</li>
+            @click="currentListItemFilter = 'liked'">{{ this.$t('list.item.favorites') }}</li>
           <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
-            @click="currentListItemFilter = 'done'">Готово</li>
+            @click="currentListItemFilter = 'done'">{{ this.$t('list.item.done') }}</li>
         </ul>
 
         <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
@@ -63,7 +64,7 @@
         <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
         (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
         (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
-          Здесь пока ничего нет
+          {{ this.$t('list.item.nothingHere') }}
         </div>
 
         <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul"
@@ -82,11 +83,12 @@
                 class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
                 @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{ item.title }}</span>
 
-              <textarea rows="1" class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle"
-                v-if="item.titleEdit" :ref="`editTitleOfListItem-${listItems.indexOf(item)}`"
-                @keypress.enter="saveEditedListItemTitle(item)" @input="inputListItemTitleText($event, item)"
-                @blur.prevent="discardEditedListItemTitle(item)" @keyup.esc="discardEditedListItemTitle(item)"
-                @keydown="keyPressOnListItemTitleText($event)" @paste="pasteListItemTitleText()"></textarea>
+              <textarea :placeholder="this.$t('list.item.placeholder')" rows="1" class="todo-list-item-edit form-control" type="text"
+                :value="currentListItemTitle" v-if="item.titleEdit"
+                :ref="`editTitleOfListItem-${listItems.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
+                @input="inputListItemTitleText($event, item)" @blur.prevent="discardEditedListItemTitle(item)"
+                @keyup.esc="discardEditedListItemTitle(item)" @keydown="keyPressOnListItemTitleText($event)"
+                @paste="pasteListItemTitleText()"></textarea>
 
               <div class="dropdown todo-list-item-menu">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -96,16 +98,16 @@
 
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li class="dropdown-item" @click="editListItemTitle(item)">
-                    <i class="bx bx-edit-alt me-1"></i> Редактировать
+                    <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.item.edit') }}
                   </li>
 
                   <li class="dropdown-item" @click="toggleLikeListItem(item)">
                     <i class="bx me-1" :class="{ 'bx-heart': !item.liked, 'bxs-heart': item.liked }"></i>
-                    {{ item.liked ? 'Из избранного' : 'В избранное' }}
+                    {{ item.liked ? this.$t('list.item.unfavor') : this.$t('list.item.favor') }}
                   </li>
 
                   <li class="dropdown-item" @click="deleteListItem(item)">
-                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> Удалить
+                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> {{ this.$t('list.item.delete') }}
                   </li>
                 </ul>
               </div>

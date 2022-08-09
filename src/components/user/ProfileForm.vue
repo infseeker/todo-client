@@ -22,7 +22,7 @@
         </div>
 
         <div class="locales">
-          <label for="defaultSelect" class="form-label">{{ this.$t('user.interfaceLang') }}: </label>
+          <label for="defaultSelect" class="form-label">{{ this.$t('user.lang') }}: </label>
 
           <select v-model="this.$user.locale" @change="changeLocale($event)" class="form-select">
             <option v-for="locale in locales" :value="locale.code" :key="locale.code" class="dropdown-item">
