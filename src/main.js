@@ -28,7 +28,6 @@ app.config.globalProperties.$toast = useToast();
 
 const toast = {
   position: POSITION.BOTTOM_RIGHT,
-  timeout: 8000,
   maxToasts: 5,
   newestOnTop: true,
   hideProgressBar: true,
