@@ -106,7 +106,7 @@ export default {
             this.$emit('close');
             this.$toast.success(this.$t('user.passwordChanged'));
           } else if(r.code === 400) {
-            this.$toast.error('Неверный текущий пароль');
+            this.$toast.error(this.$t('user.wrongCurrentPassword'));
           }
         });
       }
