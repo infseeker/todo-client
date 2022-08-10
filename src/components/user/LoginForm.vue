@@ -8,7 +8,7 @@
     <template v-slot:content>
       <div @keypress.enter="login(username, password)">
         <div class="mb-3">
-          <input :placeholder="this.$t('user.usernameEmailPlaceholder')" v-model="username" class="form-control" />
+          <input :placeholder="this.$t('user.usernameEmailPlaceholder')" type="email" v-model.trim="username" class="form-control" />
           <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">
             {{ this.$t('validations.required') }}
           </div>
@@ -16,8 +16,8 @@
 
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
-            <input v-else type="password" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
+            <input v-if="showPassword" :placeholder="this.$t('user.passwordPlaceholder')" v-model.trim="password" class="form-control" />
+            <input v-else type="password" :placeholder="this.$t('user.passwordPlaceholder')" v-model.trim="password" class="form-control" />
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
               <i v-else class="bx bx-hide"></i>

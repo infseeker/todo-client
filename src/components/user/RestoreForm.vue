@@ -17,7 +17,7 @@
         </p>
 
         <div v-if="showEmailField" class="mb-3">
-          <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
+          <input placeholder="Введите email" v-model.trim="email" type="email" class="form-control" />
           <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
             корректный формат email)
           </div>
@@ -38,7 +38,7 @@
 
         <div class="mb-3">
           <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-            placeholder="Введите код восстановления" class="form-control" />
+            placeholder="Введите код восстановления" inputmode="numeric" class="form-control" />
           <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код восстановления (4 цифры)
           </div>
         </div>

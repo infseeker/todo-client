@@ -18,7 +18,7 @@
         </p>
 
         <div v-if="showEmailField" class="mb-3">
-          <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" type="email" class="form-control" />
+          <input :placeholder="this.$t('user.emailPlaceholder')" v-model.trim="email" type="email" class="form-control" />
 
           <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">
             {{ this.$t('validations.email') }}
@@ -26,8 +26,8 @@
         </div>
 
         <div class="mb-3">
-          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-            :placeholder="this.$t('user.activationCodePlaceholder')" class="form-control" />
+          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model.trim="code"
+            :placeholder="this.$t('user.activationCodePlaceholder')" inputmode="numeric" class="form-control" />
 
           <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">
             {{ this.$t('validations.accessCode', ['4']) }}
