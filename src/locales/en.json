@@ -13,7 +13,19 @@
     "english": "English",
     "russian": "Russian",
 
+    "usernamePlaceholder": "Enter username",
     "emailPlaceholder": "Enter email",
+    "passwordPlaceholder": "Enter password",
+
+    "alreadyExistsByName": "User with this username already exists",
+    "alreadyExistsByEmail": "User with this email already exists",
+    "notFoundByEmail": "User with this email was not found",
+    "notFoundByNameOrEmail": "User with this username or email was not found",
+
+    "registration": "Registration",
+    "register": "Register",
+    "haveAccount?": "Already have an account?",
+    "dataNotValid": "Check your data validity",
 
     "activation": "Activation",
     "activationCodeSent": "An email with an activation code has been sent to the {0}.",
@@ -26,9 +38,6 @@
     "wrongActivationCode": "Activation code is incorrect or has expired",
 
     "login": "Log in",
-
-    "notFoundByNameOrEmail": "User with this username or email was not found",
-    "notFoundByEmail": "User with this email was not found",
 
     "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
     "recaptchaPrivacy": "Privacy Policy",
@@ -61,7 +70,9 @@
   },
 
   "validations": {
+    "username": "3-15 latin characters",
     "email": "Incorrect Email",
+    "password": "8-15 characters, only latins and digits",
     "accessCode": "{0} digits"
   },
 

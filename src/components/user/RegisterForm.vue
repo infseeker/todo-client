@@ -1,51 +1,48 @@
 <template>
   <user-form>
     <template v-slot:title>
-      <span>Регистрация</span>
+      <span>{{ this.$t('user.registration')}}</span>
       <i class="bx bx-user-plus"></i>
     </template>
 
     <template v-slot:content>
       <div @keypress.enter="register(username, email, password)">
         <div class="mb-3">
-          <input placeholder="Введите имя пользователя" v-model="username" class="form-control" />
-          <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">Имя (длина: от 3 до 15 символов,
-            только латинские буквы)
+          <input placeholder="{{ this.$t('user.usernamePlaceholder') }}" v-model="username" class="form-control" />
+          <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.username') }}
           </div>
         </div>
 
         <div class="mb-3">
-          <input placeholder="Введите email" v-model="email" type="email" class="form-control" />
-          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
-            корректный формат email)
+          <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" type="email" class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
           </div>
         </div>
 
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" placeholder="Введите пароль" v-model="password" class="form-control" />
-            <input v-else type="password" placeholder="Введите пароль" v-model="password" class="form-control" />
+            <input v-if="showPassword" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
+            <input v-else type="password" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
               <i v-else class="bx bx-hide"></i>
             </span>
           </div>
-          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Формат пароля (длина: 8-15
-            символов, латинские буквы, мин. 1 цифра)</div>
+          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.password') }}</div>
         </div>
       </div>
     </template>
 
     <template v-slot:button>
       <button @click="register(username, email, password)" :disabled="isDisabled" type="button"
-        class="btn btn-primary w-100">Зарегистрироваться</button>
+        class="btn btn-primary w-100">{{ this.$t('user.register') }}</button>
     </template>
 
     <template v-slot:footer>
       <p class="text-center">
-        <span>Уже есть аккаунт? </span>
+        <span>{{ this.$t('user.haveAccount?') }} </span>
         <router-link :to="{ name: 'login' }">
-          <span>Войти</span>
+          <span>{{ this.$t('user.login') }}</span>
         </router-link>
       </p>
     </template>
@@ -118,28 +115,24 @@ export default {
                   UserService.register(username, email, password, token).then((data) => {
                     if (data.code === 200) {
                       this.$loader.hide();
-
                       this.$user.email = email;
                       this.$router.push({ name: 'activation' });
                     } else {
                       this.$loader.hide();
-
                       this.isDisabled = false;
-                      this.$toast.error('Проверьте корректность данных');
+                      this.$toast.error(this.$t('user.dataNotValid'));
                     }
                   })
                 } else if (data.code === 409) {
                   this.$loader.hide();
-
                   this.isDisabled = false;
-                  this.$toast.error('Пользователь с таким Email уже существует');
+                  this.$toast.error(this.$t('user.alreadyExistsByEmail'));
                 }
               })
-            } else {
+            } else if (data.code === 409) {
               this.$loader.hide();
-
               this.isDisabled = false;
-              this.$toast.error('Пользователь с таким именем уже существует');
+              this.$toast.error(this.$t('user.alreadyExistsByName'));
             }
           })
         })

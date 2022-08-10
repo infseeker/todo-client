@@ -13,7 +13,19 @@
     "english": "Английский",
     "russian": "Русский",
 
+    "usernamePlaceholder": "Введите имя пользователя",
     "emailPlaceholder": "Введите email",
+    "passwordPlaceholder": "Введите пароль",
+
+    "alreadyExistsByName": "Пользователь с таким именем уже существует",
+    "alreadyExistsByEmail": "Пользователь с таким email уже существует",
+    "notFoundByNameOrEmail": "Пользователь с таким именем или email не найден",
+    "notFoundByEmail": "Пользователь с таким email не найден",
+
+    "registration": "Регистрация",
+    "register": "Зарегистрироваться",
+    "haveAccount?": "Уже есть аккаунт?",
+    "dataNotValid": "Проверьте корректность данных",
 
     "activation": "Активация",
     "activationCodeSent": "На электронный адрес {0} было отправлено письмо с кодом активации.",
@@ -26,9 +38,6 @@
     "wrongActivationCode": "Код активации неверен, либо уже истёк",
 
     "login": "Вход",
-
-    "notFoundByNameOrEmail": "Пользователь с таким именем или email не найден",
-    "notFoundByEmail": "Пользователь с таким email не найден",
 
     "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
     "recaptchaPrivacy": "Политика конфиденциальности",
@@ -61,7 +70,9 @@
   },
 
   "validations": {
+    "username": "3-15 латинских символов",
     "email": "Некорректный Email",
+    "password": "8-15 символов, только англ. буквы и цифры",
     "accessCode": "{0} цифры"
   },
 

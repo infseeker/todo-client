@@ -79,7 +79,10 @@ export default {
               this.$router.push({ name: 'restoration' });
             } else if (data.code === 404) {
               this.isDisabled = false;
-              this.$toast.error('Пользователя с таким Email не существует');
+              this.$toast.error('Пользователя с таким email не существует');
+            } else if (data.code === 403) {
+              this.isDisabled = false;
+              this.$toast.error('Пользователь с таким email ещё не активирован');
             }
           });
         })
