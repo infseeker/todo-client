@@ -15,6 +15,12 @@
 
     "cookies": "Our site uses cookies to improve site performance, efficiency and user-friendliness. By continuing to use our site, you agree to the use of cookies.",
 
+    "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
+    "recaptchaPrivacy": "Privacy Policy",
+    "recaptchaService": "Terms of Service",
+
+    "name": "Name",
+    "email": "Email",
     "usernamePlaceholder": "Enter username",
     "emailPlaceholder": "Enter email",
     "usernameEmailPlaceholder": "Enter username or email",
@@ -62,9 +68,14 @@
     "restored": "Your account has been restored",
     "wrongRestorationCode": "Restoration code is incorrect or has expired",
 
-    "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
-    "recaptchaPrivacy": "Privacy Policy",
-    "recaptchaService": "Terms of Service"
+    "profileSettings": "Profile settings",
+    "petCat": "Pet the cat",
+    "image": "User image",
+    "deleteImage": "Delete image",
+    "changeImage": "Change image",
+    "changePassword": "Change password",
+    "logout": "Log out",
+    "deleteAccount": "Delete account",
   },
 
   "list": {

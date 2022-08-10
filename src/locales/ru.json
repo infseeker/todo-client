@@ -15,6 +15,12 @@
 
     "cookies": "Наш сайт использует файлы cookie, чтобы улучшить работу сайта, повысить его эффективность и удобство. Продолжая использовать наш сайт, вы соглашаетесь на использование файлов cookie.",
 
+    "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
+    "recaptchaPrivacy": "Политика конфиденциальности",
+    "recaptchaService": "Условия обслуживания",
+
+    "name": "Имя",
+    "email": "Email",
     "usernamePlaceholder": "Введите имя пользователя",
     "emailPlaceholder": "Введите email",
     "usernameEmailPlaceholder": "Введите имя / email",
@@ -52,7 +58,7 @@
     "restorationEmail": "Почта восстановления",
     "enterRestorationEmail": "Для восстановления доступа введите email, который был указан при регистрации.",
     "restorationCodeWillSend": "На email будет выслано письмо с кодом восстановления доступа.",
-    "getRestorationCode": "Получить код восстаноления",
+    "getRestorationCode": "Получить код восстановления",
 
     "restoration": "Восстановление доступа",
     "restorationCodeSent": "На электронный адрес {0} было отправлено письмо с кодом восстановления.",
@@ -62,9 +68,14 @@
     "restored": "Ваша учётная запись восстановлена",
     "wrongRestorationCode": "Код восстановления неверен, либо уже истёк",
 
-    "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
-    "recaptchaPrivacy": "Политика конфиденциальности",
-    "recaptchaService": "Условия обслуживания"
+    "profileSettings": "Настройки профиля",
+    "petCat": "Погладь котика",
+    "image": "Изображение пользователя",
+    "deleteImage": "Удалить изображение",
+    "changeImage": "Изменить изображение",
+    "changePassword": "Изменить пароль",
+    "logout": "Выйти",
+    "deleteAccount": "Удалить учётную запись",
   },
 
   "list": {

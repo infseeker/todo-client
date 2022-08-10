@@ -2,27 +2,28 @@
   <div class="profile-form mt-4">
     <div class="card">
       <div class="card-body" v-on:keyup.enter="save(password)">
-        <h5 class="header mb-0">Настройки профиля</h5>
+        <h5 class="header mb-0">{{ this.$t('user.profileSettings') }}</h5>
 
         <div class="user-image">
-          <img v-if="!this.$user.image" @click="meow" :src="this.catImage" alt="Погладь котика" title="Погладь котика"
-            class="mb-3 mt-3 cat-user-image">
-          <img v-if="this.$user.image" :src="this.$user.image" alt="Изображение пользователя" class="mb-3 mt-3">
-          <span v-if="this.$user.image" class="user-image-delete" title="Удалить изображение"
+          <img v-if="!this.$user.image" @click="meow" :src="this.catImage" :alt="this.$t('user.petCat')"
+            :title="this.$t('user.petCat')" class="mb-3 mt-3 cat-user-image">
+          <img v-if="this.$user.image" :src="this.$user.image" :alt="this.$t('user.image')" class="mb-3 mt-3">
+          <span v-if="this.$user.image" class="user-image-delete" :title="this.$t('user.deleteImage')"
             @click="deleteUserImage"></span>
         </div>
 
         <div class="mb-2">
-          <span class="badge bg-label-primary"><span class="form-label mb-0">Имя: </span>{{ this.$user.username
-          }}</span>
+          <span class="name-label form-label mb-0">{{ this.$t('user.name') }} </span>
+          <span class="badge bg-label-primary ">{{ this.$user.username }}</span>
         </div>
 
         <div class="mb-3">
-          <span class="badge bg-label-primary"><span class="form-label mb-0">Email: </span>{{ this.$user.email }}</span>
+          <span class="email-label form-label mb-0">{{ this.$t('user.email') }} </span>
+          <span class="badge bg-label-primary ">{{ this.$user.email }}</span>
         </div>
 
         <div class="locales">
-          <label for="defaultSelect" class="form-label">{{ this.$t('user.lang') }}: </label>
+          <label for="defaultSelect" class="form-label">{{ this.$t('user.lang') }} </label>
 
           <select v-model="this.$user.locale" @change="changeLocale($event)" class="form-select">
             <option v-for="locale in locales" :value="locale.code" :key="locale.code" class="dropdown-item">
@@ -32,25 +33,28 @@
         </div>
 
         <div class="mt-3">
-          <button @click="showImageChangingModal = true" type="button" class="btn btn-primary w-100">Изменить
-            изображение</button>
+          <button @click="showImageChangingModal = true" type="button" class="btn btn-primary w-100">
+            {{ this.$t('user.changeImage') }}
+          </button>
         </div>
 
         <div class="mt-3">
-          <button @click="showPasswordChangingModal = true" type="button" class="btn btn-primary w-100">Изменить
-            пароль</button>
+          <button @click="showPasswordChangingModal = true" type="button" class="btn btn-primary w-100">
+            {{ this.$t('user.changePassword') }}
+          </button>
         </div>
 
         <div class="mt-3">
-          <button @click="logout()" type="button" class="btn btn-primary w-100">Выход</button>
+          <button @click="logout()" type="button" class="btn btn-primary w-100">{{ this.$t('user.logout') }}</button>
         </div>
       </div>
     </div>
 
     <div class="card mt-4">
       <div class="card-body">
-        <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">Удалить учётную
-          запись</button>
+        <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">
+          {{ this.$t('user.deleteAccount') }}
+        </button>
       </div>
     </div>
   </div>
@@ -141,6 +145,12 @@ export default {
   width: 100%;
   max-width: 400px;
   position: relative;
+}
+
+.name-label,
+.email-label {
+  display: inline-block;
+  min-width: 2.5rem;
 }
 
 .locales {
