@@ -8,21 +8,21 @@
     <template v-slot:content>
       <div @keypress.enter="register(username, email, password)">
         <div class="mb-3">
-          <input :placeholder="this.$t('user.usernamePlaceholder')" v-model="username" class="form-control" />
+          <input :placeholder="this.$t('user.usernamePlaceholder')" v-model.trim="username" class="form-control" />
           <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.username') }}
           </div>
         </div>
 
         <div class="mb-3">
-          <input :placeholder="this.$t('user.emailPlaceholder')" v-model="email" type="email" class="form-control" />
+          <input :placeholder="this.$t('user.emailPlaceholder')" v-model.trim="email" type="email" class="form-control" />
           <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
           </div>
         </div>
 
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
-            <input v-else type="password" :placeholder="this.$t('user.passwordPlaceholder')" v-model="password" class="form-control" />
+            <input v-if="showPassword" :placeholder="this.$t('user.passwordPlaceholder')" v-model.trim="password" class="form-control" />
+            <input v-else type="password" :placeholder="this.$t('user.passwordPlaceholder')" v-model.trim="password" class="form-control" />
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
               <i v-else class="bx bx-hide"></i>

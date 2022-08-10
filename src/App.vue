@@ -40,26 +40,26 @@ export default {
 
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
-      });
 
-      // Load and set csrf token
-      UserService.getCSRFToken().then((r) => {
-        if (r.code === 200) {
-          this.$loader.hide();
-          this.isLoaded = true;
+        // Load and set csrf token
+        UserService.getCSRFToken().then((r) => {
+          if (r.code === 200) {
+            this.$loader.hide();
+            this.isLoaded = true;
 
-          // Show using cookies message
-          const cookieShown = localStorage.getItem('cookieConfirm');
+            // Show using cookies message
+            const cookieConfirm = localStorage.getItem('cookieConfirm');
 
-          if (!cookieShown) {
-            this.$toast.info(this.$t('user.cookies'), {
-              timeout: false,
-              onClose: () => {
-                localStorage.setItem('cookieConfirm', true);
-              }
-            })
+            if (!cookieConfirm) {
+              this.$toast.info(this.$t('user.cookies'), {
+                timeout: false,
+                onClose: () => {
+                  localStorage.setItem('cookieConfirm', true);
+                }
+              })
+            }
           }
-        }
+        });
       });
     },
   },

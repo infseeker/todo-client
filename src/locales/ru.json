@@ -17,6 +17,7 @@
 
     "usernamePlaceholder": "Введите имя пользователя",
     "emailPlaceholder": "Введите email",
+    "usernameEmailPlaceholder": "Введите имя / email",
     "passwordPlaceholder": "Введите пароль",
 
     "alreadyExistsByName": "Пользователь с таким именем уже существует",
@@ -39,7 +40,13 @@
     "activated": "Ваша учётная запись активирована",
     "wrongActivationCode": "Код активации неверен, либо уже истёк",
 
-    "login": "Вход",
+    "auth": "Авторизация",
+    "login": "Войти",
+    "remember": "Запомнить меня",
+    "forgot?": "Забыли пароль?",
+    "noAccount?": "Ещё нет аккаунта?",
+    "wrongCredentials": "Неправильное имя пользователя или пароль",
+    "notActivated": "Ваша учётная запись ещё не активирована",
 
     "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
     "recaptchaPrivacy": "Политика конфиденциальности",
@@ -72,6 +79,7 @@
   },
 
   "validations": {
+    "required": "Обязательное поле",
     "username": "3-15 латинских символов",
     "email": "Некорректный Email",
     "password": "8-15 символов, только англ. буквы и цифры",
