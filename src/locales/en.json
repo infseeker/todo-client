@@ -19,6 +19,7 @@
     "emailPlaceholder": "Enter email",
     "usernameEmailPlaceholder": "Enter username or email",
     "passwordPlaceholder": "Enter password",
+    "newPasswordPlaceholder": "Enter new password",
 
     "alreadyExistsByName": "User with this username already exists",
     "alreadyExistsByEmail": "User with this email already exists",
@@ -50,8 +51,16 @@
     
     "restorationEmail": "Restoration email",
     "enterRestorationEmail": "To restore access, enter the email that was specified during registration.",
-    "restorationCodeSent": "An email with a restoration code will be sent to your email.",
+    "restorationCodeWillSend": "An email with a restoration code will be sent to your email.",
     "getRestorationCode": "Get restoration code",
+
+    "restoration": "Access restoration",
+    "restorationCodeSent": "An email with an restoration code has been sent to the {0}.",
+    "restorationCodeValidFor": "The restoration code is valid for {0} minutes.",
+    "restorationCodePlaceholder": "Enter restoration code",
+    "restore": "Restore access",
+    "restored": "Your account has been restored",
+    "wrongRestorationCode": "Restoration code is incorrect or has expired",
 
     "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
     "recaptchaPrivacy": "Privacy Policy",

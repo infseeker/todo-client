@@ -11,7 +11,7 @@
           {{ this.$t('user.enterRestorationEmail') }}
         </p>
         <p>
-          {{ this.$t('user.restorationCodeSent') }}
+          {{ this.$t('user.restorationCodeWillSend') }}
         </p>
         <div class="mb-3">
           <input v-model="email" type="email" :placeholder="this.$t('user.emailPlaceholder')" class="form-control" />
@@ -77,9 +77,11 @@ export default {
             if (data.code === 200) {
               this.$user.email = email;
               this.$router.push({ name: 'restoration' });
+
             } else if (data.code === 404) {
               this.isDisabled = false;
               this.$toast.error(this.$t('user.notFoundByEmail'));
+              
             } else if (data.code === 403) {
               this.isDisabled = false;
               this.$toast.error(this.$t('user.notActivated'));

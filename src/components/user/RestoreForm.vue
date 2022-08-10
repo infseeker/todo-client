@@ -1,45 +1,47 @@
 <template>
   <user-form>
     <template v-slot:title>
-      <span>Восстановление доступа</span>
+      <span>{{ this.$t('user.restoration') }}</span>
       <i class='bx bx-key'></i>
     </template>
 
     <template v-slot:content>
       <div @keypress.enter="restore(email, password, code)">
-        <p v-if="!showEmailField">
-          На электронный адрес
-          <span class="badge bg-label-primary">{{ this.email }}</span>
-          было отправлено письмо с кодом восстановления.
+        <p v-if="!showEmailField"
+          v-html="this.$t('user.restorationCodeSent', [`<span class='badge bg-label-primary'>${this.email}</span>`])">
         </p>
         <p>
-          Код восстановления действителен в течение 15 минут.
+          {{ this.$t('user.restorationCodeValidFor', ['15']) }}
         </p>
-
         <div v-if="showEmailField" class="mb-3">
-          <input placeholder="Введите email" v-model.trim="email" type="email" class="form-control" />
-          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email (длина: от 5 символов,
-            корректный формат email)
+          <input :placeholder="this.$t('user.emailPlaceholder')" v-model.trim="email" type="email"
+            class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.email') }}
           </div>
         </div>
 
         <div class="mb-3 form-password-toggle">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" placeholder="Введите новый пароль" v-model="password" class="form-control" />
-            <input v-else type="password" placeholder="Введите новый пароль" v-model="password" class="form-control" />
+            <input v-if="showPassword" :placeholder="this.$t('user.newPasswordPlaceholder')" v-model.trim="password"
+              class="form-control" />
+            <input v-else type="password" :placeholder="this.$t('user.newPasswordPlaceholder')" v-model.trim="password"
+              class="form-control" />
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
               <i v-else class="bx bx-hide"></i>
             </span>
           </div>
-          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">Пароль (длина: 8-15
-            символов, латинские буквы, мин. 1 цифра)</div>
+          <div v-if="this.v$.password.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.password') }}
+          </div>
         </div>
 
         <div class="mb-3">
-          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model="code"
-            placeholder="Введите код восстановления" inputmode="numeric" class="form-control" />
-          <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">Код восстановления (4 цифры)
+          <input @paste="checkCodeFormat" @keypress="checkCodeFormat" v-model.trim="code"
+            :placeholder="this.$t('user.restorationCodePlaceholder')" inputmode="numeric" class="form-control" />
+          <div v-if="this.v$.code.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.accessCode', ['4']) }}
           </div>
         </div>
       </div>
@@ -47,7 +49,9 @@
 
     <template v-slot:button>
       <button @click="restore(email, password, code)" :disabled="isDisabled" type="button"
-        class="btn btn-primary w-100">Восстановить доступ</button>
+        class="btn btn-primary w-100">
+        {{ this.$t('user.restore') }}
+      </button>
     </template>
   </user-form>
 </template>
@@ -125,11 +129,14 @@ export default {
               this.$user.isDeleted = false;
               this.$router.push({ name: 'login' });
 
-              this.$toast.success('Ваша учётная запись восстановлена');
-            } else {
+              this.$toast.success(this.$t('user.restored'));
+            } else if (data.code === 400) {
               this.isDisabled = false;
+              this.$toast.error(this.$t('user.wrongRestorationCode'));
 
-              this.$toast.error('Код восстановления неверен, либо уже истёк');
+            } else if (data.code === 403) {
+              this.isDisabled = false;
+              this.$toast.error(this.$t('user.notActivated'));
             }
           });
         })
@@ -141,9 +148,6 @@ export default {
     if (!this.$user.email) {
       this.showEmailField = true;
     }
-
-    const input = document.querySelector('input') || document.querySelector('textarea') || null;
-    input.focus();
   }
 }
 </script>
