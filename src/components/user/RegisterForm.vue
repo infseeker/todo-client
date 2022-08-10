@@ -8,7 +8,7 @@
     <template v-slot:content>
       <div @keypress.enter="register(username, email, password)">
         <div class="mb-3">
-          <input placeholder="{{ this.$t('user.usernamePlaceholder') }}" v-model="username" class="form-control" />
+          <input :placeholder="this.$t('user.usernamePlaceholder')" v-model="username" class="form-control" />
           <div v-if="this.v$.username.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.username') }}
           </div>
         </div>
