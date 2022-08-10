@@ -24,6 +24,7 @@
     "alreadyExistsByEmail": "User with this email already exists",
     "notFoundByEmail": "User with this email was not found",
     "notFoundByNameOrEmail": "User with this username or email was not found",
+    "notActivated": "Your account has not been activated yet",
 
     "registration": "Registration",
     "register": "Register",
@@ -46,7 +47,11 @@
     "forgot?": "Forgot password?",
     "noAccount?": "Don't have an account yet?",
     "wrongCredentials": "Username or password is incorrect",
-    "notActivated": "Your account has not been activated yet",
+    
+    "restorationEmail": "Restoration email",
+    "enterRestorationEmail": "To restore access, enter the email that was specified during registration.",
+    "restorationCodeSent": "An email with a restoration code will be sent to your email.",
+    "getRestorationCode": "Get restoration code",
 
     "recaptchaMessage": "This site is protected by reCAPTCHA and the Google {0} and {1} apply.",
     "recaptchaPrivacy": "Privacy Policy",
@@ -81,7 +86,7 @@
   "validations": {
     "required": "Required field",
     "username": "3-15 latin characters",
-    "email": "Incorrect Email",
+    "email": "Incorrect email",
     "password": "8-15 characters, only latins and digits",
     "accessCode": "{0} digits"
   },

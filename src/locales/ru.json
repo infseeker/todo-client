@@ -24,6 +24,7 @@
     "alreadyExistsByEmail": "Пользователь с таким email уже существует",
     "notFoundByNameOrEmail": "Пользователь с таким именем или email не найден",
     "notFoundByEmail": "Пользователь с таким email не найден",
+    "notActivated": "Ваша учётная запись ещё не активирована",
 
     "registration": "Регистрация",
     "register": "Зарегистрироваться",
@@ -46,7 +47,11 @@
     "forgot?": "Забыли пароль?",
     "noAccount?": "Ещё нет аккаунта?",
     "wrongCredentials": "Неправильное имя пользователя или пароль",
-    "notActivated": "Ваша учётная запись ещё не активирована",
+
+    "restorationEmail": "Почта восстановления",
+    "enterRestorationEmail": "Для восстановления доступа введите email, который был указан при регистрации.",
+    "restorationCodeSent": "На email будет выслано письмо с кодом восстановления доступа.",
+    "getRestorationCode": "Получить код восстаноления",
 
     "recaptchaMessage": "Этот сайт защищён reCAPTCHA, и к нему применяются {0} и {1} Google.",
     "recaptchaPrivacy": "Политика конфиденциальности",
@@ -81,7 +86,7 @@
   "validations": {
     "required": "Обязательное поле",
     "username": "3-15 латинских символов",
-    "email": "Некорректный Email",
+    "email": "Некорректный email",
     "password": "8-15 символов, только англ. буквы и цифры",
     "accessCode": "{0} цифры"
   },

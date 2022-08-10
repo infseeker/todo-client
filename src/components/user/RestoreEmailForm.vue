@@ -1,30 +1,31 @@
 <template>
   <user-form>
     <template v-slot:title>
-      <span>Почта восстановления</span>
+      <span>{{ this.$t('user.restorationEmail') }}</span>
       <i class='bx bx-envelope'></i>
     </template>
 
     <template v-slot:content>
       <div @keypress.enter="restoreEmail(email)">
         <p>
-          Для восстановления доступа введите email, который был указан при регистрации.
+          {{ this.$t('user.enterRestorationEmail') }}
         </p>
         <p>
-          На email будет выслано письмо с кодом восстановления доступа.
+          {{ this.$t('user.restorationCodeSent') }}
         </p>
-
         <div class="mb-3">
-          <input v-model="email" type="email" placeholder="Введите email" class="form-control" />
-          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">Email: некорректный формат
+          <input v-model="email" type="email" :placeholder="this.$t('user.emailPlaceholder')" class="form-control" />
+          <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.email') }}
           </div>
         </div>
       </div>
     </template>
 
     <template v-slot:button>
-      <button @click="restoreEmail(email)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">Получить
-        код восстаноления</button>
+      <button @click="restoreEmail(email)" :disabled="isDisabled" type="button" class="btn btn-primary w-100">
+      {{ this.$t('user.getRestorationCode') }}
+      </button>
     </template>
   </user-form>
 </template>
@@ -34,7 +35,7 @@
 import UserForm from './UserForm.vue'
 import UserService from '../../services/UserService'
 import useValidate from '@vuelidate/core'
-import { required, minLength } from '@vuelidate/validators'
+import { required } from '@vuelidate/validators'
 import { email } from '../../helpers/validations'
 import { recaptcha } from '../../helpers/recaptcha'
 
@@ -52,7 +53,6 @@ export default {
     return {
       email: {
         required,
-        minLength: minLength(5),
         email
       },
     }
@@ -79,10 +79,10 @@ export default {
               this.$router.push({ name: 'restoration' });
             } else if (data.code === 404) {
               this.isDisabled = false;
-              this.$toast.error('Пользователя с таким email не существует');
+              this.$toast.error(this.$t('user.notFoundByEmail'));
             } else if (data.code === 403) {
               this.isDisabled = false;
-              this.$toast.error('Пользователь с таким email ещё не активирован');
+              this.$toast.error(this.$t('user.notActivated'));
             }
           });
         })
