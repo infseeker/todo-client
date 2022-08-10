@@ -48,10 +48,8 @@
 
     <template v-slot:footer>
       <p class="text-center">
-        <span>Ещё нет аккаунта? </span>
-        <router-link :to="{ name: 'registration' }">
-          <span>Зарегистрироваться</span>
-        </router-link>
+        Ещё нет аккаунта?
+        <router-link :to="{ name: 'registration' }">Зарегистрироваться</router-link>
       </p>
     </template>
   </user-form>

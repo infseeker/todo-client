@@ -40,10 +40,8 @@
 
     <template v-slot:footer>
       <p class="text-center">
-        <span>{{ this.$t('user.haveAccount?') }} </span>
-        <router-link :to="{ name: 'login' }">
-          <span>{{ this.$t('user.login') }}</span>
-        </router-link>
+        {{ this.$t('user.haveAccount?') }}
+        <router-link :to="{ name: 'login' }">{{ this.$t('user.login') }}</router-link>
       </p>
     </template>
   </user-form>

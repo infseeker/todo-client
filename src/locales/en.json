@@ -13,6 +13,8 @@
     "english": "English",
     "russian": "Russian",
 
+    "cookies": "Our site uses cookies to improve site performance, efficiency and user-friendliness. By continuing to use our site, you agree to the use of cookies.",
+
     "usernamePlaceholder": "Enter username",
     "emailPlaceholder": "Enter email",
     "passwordPlaceholder": "Enter password",

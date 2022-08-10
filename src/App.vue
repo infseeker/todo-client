@@ -37,7 +37,7 @@ export default {
 
         // Set app locale
         i18nUtils.setLocale(this.$user.locale);
-        
+
         // Set first and other routes depend of user permissions
         this.$router.setInitialRouteByUserPermissions(this.$route, this.$user);
       });
@@ -47,6 +47,18 @@ export default {
         if (r.code === 200) {
           this.$loader.hide();
           this.isLoaded = true;
+
+          // Show using cookies message
+          const cookieShown = localStorage.getItem('cookieConfirm');
+
+          if (!cookieShown) {
+            this.$toast.info(this.$t('user.cookies'), {
+              timeout: false,
+              onClose: () => {
+                localStorage.setItem('cookieConfirm', true);
+              }
+            })
+          }
         }
       });
     },
