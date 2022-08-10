@@ -1,17 +1,16 @@
 <template>
   <user-form>
     <template v-slot:title>
-      Удалённая учётная запись
+      {{ this.$t('user.deletedAccount')}}
     </template>
 
     <template v-slot:content>
-      <p>
-        Ваша учётная запись была удалена. Хотите восстановить доступ?
-      </p>
+      <p>{{ this.$t('user.wantRestore?')}}</p>
     </template>
 
     <template v-slot:button>
-      <router-link :to="{ name: 'restoration-email' }" class="btn btn-primary w-100">Восстановить доступ
+      <router-link :to="{ name: 'restoration-email' }" class="btn btn-primary w-100">
+        {{ this.$t('user.restore') }}
       </router-link>
     </template>
   </user-form>

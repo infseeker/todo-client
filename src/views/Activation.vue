@@ -1,5 +1,5 @@
 <template>
-  <div class="restoration">
+  <div class="activation">
     <ActivateForm></ActivateForm>
   </div>
 </template>
