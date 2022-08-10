@@ -25,6 +25,7 @@
     "emailPlaceholder": "Enter email",
     "usernameEmailPlaceholder": "Enter username or email",
     "passwordPlaceholder": "Enter password",
+    "currentPasswordPlaceholder": "Enter current password",
     "newPasswordPlaceholder": "Enter new password",
 
     "alreadyExistsByName": "User with this username already exists",
@@ -32,6 +33,7 @@
     "notFoundByEmail": "User with this email was not found",
     "notFoundByNameOrEmail": "User with this username or email was not found",
     "notActivated": "Your account has not been activated yet",
+    "wrongPassword": "Password is incorrect",
 
     "registration": "Registration",
     "register": "Register",
@@ -76,6 +78,16 @@
     "changePassword": "Change password",
     "logout": "Log out",
     "deleteAccount": "Delete account",
+
+    "imageChanging": "Image changing",
+    "chooseImage": "Choose image",
+
+    "passwordChanging": "Password changing",
+    "passwordChanged": "Password has been changed",
+    "wrongCurrentPassword": "Current password is incorrect",
+
+    "accountDeleting": "Account deleting",
+    "accountDeleted": "Your account has been deleted"
   },
 
   "list": {
@@ -108,7 +120,8 @@
     "username": "3-15 latin characters",
     "email": "Incorrect email",
     "password": "8-15 characters, only latins and digits",
-    "accessCode": "{0} digits"
+    "accessCode": "{0} digits",
+    "image": "jpeg, png, max. size is 5 Mb"
   },
 
   "admin": {

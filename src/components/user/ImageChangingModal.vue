@@ -1,17 +1,18 @@
 <template>
   <modal>
     <template v-slot:title>
-      Изменение изображения
+      {{ this.$t('user.imageChanging') }}
     </template>
 
     <template v-slot:content>
       <div class="">
         <div class="input-group custom-file-button">
-          <label class="input-group-text" for="inputGroupFile">Выберите изображение</label>
+          <label class="input-group-text" for="inputGroupFile">{{ this.$t('user.chooseImage') }}</label>
           <input type="file" class="form-control" id="inputGroupFile" @change="uploadImage($event)" accept="image/*"
             ref="file" />
         </div>
-        <div v-if="wrongImgFormat" class="invalid-feedback d-block mx-2">Изображение: jpeg, png, макс. размер - 5 Мб
+        <div v-if="wrongImgFormat" class="invalid-feedback d-block mx-2">
+          {{ this.$t('validations.image') }}
         </div>
       </div>
 
@@ -20,7 +21,9 @@
     </template>
 
     <template v-slot:buttons>
-      <button :disabled="isDisabled" @click="saveImage()" type="button" class="btn btn-primary">Сохранить</button>
+      <button :disabled="isDisabled" @click="saveImage()" type="button" class="btn btn-primary">
+        {{ this.$t('common.save') }}
+      </button>
     </template>
   </modal>
 </template>

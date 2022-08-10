@@ -1,21 +1,17 @@
 <template>
   <modal>
     <template v-slot:title>
-      Удаление учётной записи
+      {{ this.$t('user.accountDeleting') }}
     </template>
 
     <template v-slot:content>
-      <div v-if="incorrectPassword" class="alert alert-danger" role="alert">
-        Неверный пароль.
-      </div>
-
       <div class="form-password-toggle">
         <div class="input-group input-group-merge">
           <input v-if="showPassword" @keypress.enter="deleteUser(password)" v-model.trim="password" type="text"
-            placeholder="Введите пароль" class="form-control" />
-            
+            :placeholder="this.$t('user.passwordPlaceholder')" class="form-control" />
+
           <input v-else @keypress.enter="deleteUser(password)" type="password" v-model.trim="password"
-            placeholder="Введите пароль" class="form-control" />
+            :placeholder="this.$t('user.passwordPlaceholder')" class="form-control" />
 
           <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
             <i v-if="showPassword" class="bx bx-show"></i>
@@ -26,7 +22,9 @@
     </template>
 
     <template v-slot:buttons>
-      <button :disabled="isDisabled" @click="deleteUser(password)" type="button" class="btn btn-danger">Удалить</button>
+      <button :disabled="isDisabled" @click="deleteUser(password)" type="button" class="btn btn-danger">
+        {{ this.$t('common.delete') }}
+      </button>
     </template>
   </modal>
 </template>
@@ -41,7 +39,6 @@ export default {
       password: '',
       showPassword: false,
       isDisabled: false,
-      incorrectPassword: false
     }
   },
 
@@ -52,13 +49,12 @@ export default {
   methods: {
     deleteUser(password) {
       if (!password) {
-        this.$toast.error('Введите пароль')
+        this.$toast.error(this.$t('user.passwordPlaceholder'));
         return;
       }
 
       this.$loader.show();
       this.isDisabled = true;
-      this.incorrectPassword = false;
 
       UserService.delete(password).then((r) => {
         this.$loader.hide();
@@ -69,10 +65,10 @@ export default {
             this.$user.logout();
             this.$router.push('/');
 
-            this.$toast.success('Ваша учётная запись удалена')
+            this.$toast.success(this.$t('user.accountDeleted'));
           });
-        } else {
-          this.$toast.error('Неверный пароль')
+        } else if (r.code === 400) {
+          this.$toast.error(this.$t('user.wrongPassword'));
         }
       });
     }

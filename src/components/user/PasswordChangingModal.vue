@@ -1,18 +1,18 @@
 <template>
   <modal>
     <template v-slot:title>
-      Изменение пароля
+      {{ this.$t('user.passwordChanging') }}
     </template>
 
     <template v-slot:content>
       <div @keypress.enter="changePassword(oldPassword, newPassword)">
         <div class="form-password-toggle">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" v-model.trim="oldPassword" type="text" placeholder="Введите текущий пароль"
-              class="form-control" />
+            <input v-if="showPassword" v-model.trim="oldPassword" type="text"
+              :placeholder="this.$t('user.currentPasswordPlaceholder')" class="form-control" />
 
-            <input v-else type="password" v-model.trim="oldPassword" placeholder="Введите текущий пароль"
-              class="form-control" />
+            <input v-else type="password" v-model.trim="oldPassword"
+              :placeholder="this.$t('user.currentPasswordPlaceholder')" class="form-control" />
 
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
@@ -20,16 +20,18 @@
             </span>
           </div>
 
-          <div v-if="this.v$.oldPassword.$error" class="invalid-feedback d-block mx-2">Текущий пароль обязателен</div>
+          <div v-if="this.v$.oldPassword.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.required') }}
+          </div>
         </div>
 
         <div class="form-password-toggle mt-3">
           <div class="input-group input-group-merge">
-            <input v-if="showPassword" v-model.trim="newPassword" type="text" placeholder="Введите новый пароль"
-              class="form-control" />
+            <input v-if="showPassword" v-model.trim="newPassword" type="text"
+              :placeholder="this.$t('user.newPasswordPlaceholder')" class="form-control" />
 
-            <input v-else type="password" v-model.trim="newPassword" placeholder="Введите новый пароль"
-              class="form-control" />
+            <input v-else type="password" v-model.trim="newPassword"
+              :placeholder="this.$t('user.newPasswordPlaceholder')" class="form-control" />
 
             <span @click="showPassword = !showPassword" class="input-group-text cursor-pointer">
               <i v-if="showPassword" class="bx bx-show"></i>
@@ -37,15 +39,16 @@
             </span>
           </div>
 
-          <div v-if="this.v$.newPassword.$error" class="invalid-feedback d-block mx-2">Формат пароля (длина: 8-15
-            символов, латинские буквы, мин. 1 цифра)</div>
+          <div v-if="this.v$.newPassword.$error" class="invalid-feedback d-block mx-2">
+            {{ this.$t('validations.password') }}
+          </div>
         </div>
       </div>
     </template>
 
     <template v-slot:buttons>
       <button :disabled="isDisabled" @click="changePassword(oldPassword, newPassword)" type="button"
-        class="btn btn-primary">Сохранить</button>
+        class="btn btn-primary">{{ this.$t('common.save') }}</button>
     </template>
   </modal>
 </template>
@@ -101,8 +104,8 @@ export default {
 
           if (r.code === 200) {
             this.$emit('close');
-            this.$toast.success('Пароль изменён');
-          } else {
+            this.$toast.success(this.$t('user.passwordChanged'));
+          } else if(r.code === 400) {
             this.$toast.error('Неверный текущий пароль');
           }
         });

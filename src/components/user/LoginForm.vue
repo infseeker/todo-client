@@ -121,6 +121,7 @@ export default {
               if (r.deleted) {
                 this.$user.isDeleted = true;
                 this.$router.push({ name: 'deleted-user' })
+                
               } else if (r.inactive) {
                 this.$user.isNotActivated = true;
                 this.$user.email = r.email;

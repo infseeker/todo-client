@@ -73,17 +73,16 @@ export default {
         recaptcha().then((token) => {
           UserService.sendRestorationEmail(email, token).then((data) => {
             this.$loader.hide();
+            this.isDisabled = false;
 
             if (data.code === 200) {
               this.$user.email = email;
               this.$router.push({ name: 'restoration' });
 
             } else if (data.code === 404) {
-              this.isDisabled = false;
               this.$toast.error(this.$t('user.notFoundByEmail'));
               
             } else if (data.code === 403) {
-              this.isDisabled = false;
               this.$toast.error(this.$t('user.notActivated'));
             }
           });

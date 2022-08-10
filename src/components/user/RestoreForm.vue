@@ -124,18 +124,18 @@ export default {
         recaptcha().then((token) => {
           UserService.restore(email, password, code, token).then((data) => {
             this.$loader.hide();
+            this.isDisabled = false;
 
             if (data.code === 200) {
               this.$user.isDeleted = false;
               this.$router.push({ name: 'login' });
 
               this.$toast.success(this.$t('user.restored'));
+              
             } else if (data.code === 400) {
-              this.isDisabled = false;
               this.$toast.error(this.$t('user.wrongRestorationCode'));
 
             } else if (data.code === 403) {
-              this.isDisabled = false;
               this.$toast.error(this.$t('user.notActivated'));
             }
           });

@@ -25,6 +25,7 @@
     "emailPlaceholder": "Введите email",
     "usernameEmailPlaceholder": "Введите имя / email",
     "passwordPlaceholder": "Введите пароль",
+    "currentPasswordPlaceholder": "Введите текущий пароль",
     "newPasswordPlaceholder": "Введите новый пароль",
 
     "alreadyExistsByName": "Пользователь с таким именем уже существует",
@@ -32,6 +33,7 @@
     "notFoundByNameOrEmail": "Пользователь с таким именем или email не найден",
     "notFoundByEmail": "Пользователь с таким email не найден",
     "notActivated": "Ваша учётная запись ещё не активирована",
+    "wrongPassword": "Неверный пароль",
 
     "registration": "Регистрация",
     "register": "Зарегистрироваться",
@@ -76,6 +78,16 @@
     "changePassword": "Изменить пароль",
     "logout": "Выйти",
     "deleteAccount": "Удалить учётную запись",
+
+    "imageChanging": "Изменение изображения",
+    "chooseImage": "Выберите изображение",
+
+    "passwordChanging": "Изменение пароля",
+    "passwordChanged": "Пароль изменён",
+    "wrongCurrentPassword": "Неверный текущий пароль",
+
+    "accountDeleting": "Удаление учётной записи",
+    "accountDeleted": "Ваша учётная запись удалена"
   },
 
   "list": {
@@ -108,7 +120,8 @@
     "username": "3-15 латинских символов",
     "email": "Некорректный email",
     "password": "8-15 символов, только англ. буквы и цифры",
-    "accessCode": "{0} цифры"
+    "accessCode": "{0} цифры",
+    "image": "jpeg, png, макс. размер - 5 Мб"
   },
 
   "admin": {
