@@ -1,3 +1,7 @@
+html {
+  margin-left: calc(100vw - 100%);
+}
+
 html,
 body,
 pre {
@@ -16,7 +20,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -38,25 +42,24 @@ mark {
 }
 
 .Vue-Toastification__toast--default {
-  background-color: rgba(105, 108, 255, .85);
+  background-color: rgba(105, 108, 255, 0.85);
 }
 
 .Vue-Toastification__toast--info {
-  background-color: rgba(3, 195, 236, .85);
+  background-color: rgba(3, 195, 236, 0.85);
 }
 
 .Vue-Toastification__toast--success {
-  background-color: rgba(113, 221, 55, .85);
+  background-color: rgba(113, 221, 55, 0.85);
 }
 
 .Vue-Toastification__toast--warning {
-  background-color: rgba(255, 171, 0, .85);
+  background-color: rgba(255, 171, 0, 0.85);
 }
 
 .Vue-Toastification__toast--error {
-  background-color: rgba(255, 62, 29, .85);
+  background-color: rgba(255, 62, 29, 0.85);
 }
-
 
 .btn {
   line-height: 1;
