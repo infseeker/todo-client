@@ -37,6 +37,8 @@ class I18nUtils {
   setLocale(code) {
     app.config.globalProperties.$i18n.locale =
       code === this.systemLocale.code ? i18nUtils.getDefaultLocale() : code;
+
+      document.title = app.config.globalProperties.$t('app.title');
   }
 }
 

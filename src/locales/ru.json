@@ -1,4 +1,8 @@
 {
+  "app": {
+    "title": "Infseeker ToDo - Создай список"
+  },
+
   "common": {
     "create": "Создать",
     "edit": "Редактировать",
