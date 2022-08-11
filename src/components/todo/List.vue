@@ -24,7 +24,7 @@
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
-                <li class="dropdown-item" @click="showTodoListDeletionModal = true">
+                <li class="dropdown-item" @click="showListDeletionModal = true">
                   <i class="bx bx-trash-alt me-1"></i> {{ this.$t('list.delete') }}
                 </li>
               </ul>
@@ -116,8 +116,8 @@
           </template>
         </draggable>
 
-        <TodoListDeletionModal v-if="list && showTodoListDeletionModal" :list="this.list"
-          @close="showTodoListDeletionModal = false"></TodoListDeletionModal>
+        <ListDeletionModal v-if="list && showListDeletionModal" :list="this.list"
+          @close="showListDeletionModal = false"></ListDeletionModal>
       </div>
     </div>
   </div>
@@ -125,7 +125,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import TodoListDeletionModal from './TodoListDeletionModal.vue';
+import ListDeletionModal from './ListDeletionModal.vue';
 
 export default {
   props: ['list', 'listItems', 'listTitle'],
@@ -143,13 +143,13 @@ export default {
       isEnterKey: false,
       discardedListItemTitleEdit: 'false',
 
-      showTodoListDeletionModal: false,
+      showListDeletionModal: false,
     }
   },
 
   components: {
     draggable,
-    TodoListDeletionModal
+    ListDeletionModal
   },
 
   methods: {
@@ -163,7 +163,6 @@ export default {
     },
 
     saveListTitle($event) {
-
       if (this.discardedListTitleEdit) {
         this.discardedListTitleEdit = false;
         return;
@@ -182,13 +181,13 @@ export default {
       this.listTitleEdit = false;
     },
 
-    removeUselessSymbols(todoListItemTitle, mode) {
+    removeUselessSymbols(listItemTitle, mode) {
       switch (mode) {
         case 'all':
-          return todoListItemTitle.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
+          return listItemTitle.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
 
         case 'breaks':
-          return todoListItemTitle.replace(/[\r\n]/g, ' ').replace(/ +(?= )/g, '');
+          return listItemTitle.replace(/[\r\n]/g, ' ').replace(/ +(?= )/g, '');
       }
     },
 

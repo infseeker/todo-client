@@ -4,7 +4,8 @@
       <div class="card-body">
         <div class="lists-title-wrapper mb-3">
           <h4 class="mb-0">{{ this.$t('list.heading') }}</h4>
-          <button @click="showTodoListCreationModal = true" type="button" class="new-list btn btn-primary" :title="this.$t('list.new')">
+          <button @click="showListCreationModal = true" type="button" class="new-list btn btn-primary"
+            :title="this.$t('list.new')">
             <i class='bx bx-list-plus'></i>
           </button>
         </div>
@@ -20,11 +21,11 @@
               </button>
 
               <ul class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item" @click="currentList = list; showTodoListEditingModal = true">
+                <li class="dropdown-item" @click="currentList = list; showListEditingModal = true">
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
-                <li class="dropdown-item" @click="currentList = list; showTodoListDeletionModal = true">
+                <li class="dropdown-item" @click="currentList = list; showListDeletionModal = true">
                   <i class='bx bx-trash-alt me-1'></i> {{ this.$t('list.delete') }}
                 </li>
               </ul>
@@ -36,38 +37,55 @@
     </div>
   </div>
 
-  <TodoListCreationModal v-if="showTodoListCreationModal" @close="showTodoListCreationModal = false"></TodoListCreationModal>
-  <TodoListEditingModal v-if="showTodoListEditingModal" :list="this.currentList" @close="showTodoListEditingModal = false"></TodoListEditingModal>
-  <TodoListDeletionModal v-if="showTodoListDeletionModal" :list="this.currentList" @close="showTodoListDeletionModal = false"></TodoListDeletionModal>
+  <UnsavedListSavingModal v-if="showUnsavedListSavingModal" @close="showUnsavedListSavingModal = false">
+  </UnsavedListSavingModal>
+  <ListCreationModal v-if="showListCreationModal" @close="showListCreationModal = false"></ListCreationModal>
+  <ListEditingModal v-if="showListEditingModal" :list="this.currentList" @close="showListEditingModal = false">
+  </ListEditingModal>
+  <ListDeletionModal v-if="showListDeletionModal" :list="this.currentList" @close="showListDeletionModal = false">
+  </ListDeletionModal>
 </template>
 
 <script>
 import List from '../models/List'
-import ListService from './../services/ListService';
+import ListService from '../services/ListService';
 
-import TodoListCreationModal from '../components/todo/TodoListCreationModal.vue'
-import TodoListEditingModal from '../components/todo/TodoListEditingModal.vue'
-import TodoListDeletionModal from '../components/todo/TodoListDeletionModal.vue'
+import UnsavedListSavingModal from '../components/todo/UnsavedListSavingModal.vue';
+import ListCreationModal from '../components/todo/ListCreationModal.vue'
+import ListEditingModal from '../components/todo/ListEditingModal.vue'
+import ListDeletionModal from '../components/todo/ListDeletionModal.vue'
 
 export default {
   data() {
     return {
       currentList: {},
 
-      showTodoListCreationModal: false,
-      showTodoListEditingModal: false,
-      showTodoListDeletionModal: false,
+      showUnsavedListSavingModal: false,
+      showListCreationModal: false,
+      showListEditingModal: false,
+      showListDeletionModal: false,
     }
   },
 
+  props: ['unsavedList'],
+
   components: {
-    TodoListCreationModal,
-    TodoListEditingModal,
-    TodoListDeletionModal,
+    UnsavedListSavingModal,
+    ListCreationModal,
+    ListEditingModal,
+    ListDeletionModal,
   },
 
   methods: {
     getLists() {
+      if (this.unsavedList) {
+        const hideUnsavedListModal = JSON.parse(localStorage.getItem('hideUnsavedListModal'));
+        
+        if (!hideUnsavedListModal) {
+          this.showUnsavedListSavingModal = true;
+        }
+      }
+
       if (!this.$store.lists.length) {
         this.$loader.show();
 

@@ -7,9 +7,8 @@ import Activation from '@/views/Activation.vue';
 import RestorationEmail from '@/views/RestorationEmail.vue';
 import Restoration from '@/views/Restoration.vue';
 import DeletedUser from '@/views/DeletedUser.vue';
-import GuestTodoList from '@/views/GuestTodoList.vue';
-import UserTodoLists from '@/views/UserTodoLists.vue';
-import UserTodoList from '@/views/UserTodoList.vue';
+import GuestList from '@/views/GuestList.vue';
+import UserLists from '@/views/UserLists.vue';
 import UserList from '@/views/UserList.vue';
 import UserProfilePreview from '@/views/UserProfilePreview.vue';
 import UserProfileEdit from '@/views/UserProfileEdit.vue';
@@ -19,7 +18,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: GuestTodoList,
+    component: GuestList,
     meta: {
       guestRequired: true,
     },
@@ -94,7 +93,8 @@ const routes = [
   {
     path: '/lists',
     name: 'lists',
-    component: UserTodoLists,
+    component: UserLists,
+    props: true,
     meta: {
       authRequired: true,
     },
@@ -102,7 +102,7 @@ const routes = [
   {
     path: '/lists/:listId',
     name: 'list',
-    component: UserTodoList,
+    component: UserList,
     meta: {
       authRequired: true,
     },
@@ -110,7 +110,7 @@ const routes = [
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: UserList,
+    // component: UserList,
     meta: {
       authRequired: true,
       adminRequired: true,
@@ -146,7 +146,7 @@ const routes = [
   {
     path: '/admin/users/:userId/lists',
     name: 'admin-user-lists',
-    component: UserTodoLists,
+    component: UserLists,
     meta: {
       authRequired: true,
       adminRequired: true,
@@ -155,7 +155,7 @@ const routes = [
   {
     path: '/admin/users/:userId/lists/:listId',
     name: 'admin-user-list',
-    component: UserTodoList,
+    component: UserList,
     meta: {
       authRequired: true,
       adminRequired: true,

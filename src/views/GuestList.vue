@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import TodoList from '../components/todo/TodoList.vue';
+import TodoList from '../components/todo/List.vue';
 import ListItem from '../models/ListItem'
 
 export default {

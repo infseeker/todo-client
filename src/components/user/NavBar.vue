@@ -21,10 +21,10 @@
         </li>
 
         <li v-if="this.$user.isAuth">
-          <router-link :to="{ name: 'profile' }" title="Профиль пользователя">
-            <img v-if="this.$user.image" :src="this.$user.image" class="user-image" alt="Изображение пользователя">
+          <router-link :to="{ name: 'profile' }" :title="this.$t('user.profile')">
+            <img v-if="this.$user.image" :src="this.$user.image" class="user-image" :alt="this.$t('user.image')">
             <img v-if="!this.$user.image" :src="this.blankUserImageUrl" class="blank-user-image bx-gray"
-              alt="Изображение пользователя">
+              :alt="this.$t('user.image')">
           </router-link>
         </li>
       </ul>

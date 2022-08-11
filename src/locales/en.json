@@ -73,6 +73,7 @@
     "deletedAccount": "Deleted account",
     "wantRestore?": "Your account has been deleted. Do you want to restore access?",
 
+    "profile": "User profile",
     "profileSettings": "Profile settings",
     "petCat": "Pet the cat",
     "image": "User image",
@@ -106,6 +107,13 @@
     "deletion": "List deletion",
     "delete?": "Are you sure you want to delete the list {0} and all its contents?",
     "deleted": "List deleted",
+
+    "saving": "Guest list saving",
+    "haveUnsaved": "You have an unsaved list, want to save it to your lists?",
+    "nothingToSave": "Nothing to save",
+    "saved": "List \"{0}\" saved",
+    "savingFailed": "List saving failed, please check your data",
+    "doNotAsk": "Don't ask again",
 
     "item": {
       "placeholder": "What do we do?",

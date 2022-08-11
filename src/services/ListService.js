@@ -15,7 +15,22 @@ class ListService {
       .then((data) => data);
   }
 
-  static async createList(title) {
+  static async createList(title, items) {
+    let listItems = Array.isArray(items) && items.length > 0 ? items : null;
+
+    if (listItems) {
+      listItems = listItems.map((i) => {
+        const item = {
+          title: i.title,
+          is_liked: i.liked,
+          is_done: i.done,
+          position: i.position,
+        };
+
+        return item;
+      });
+    }
+
     return await fetch(api.lists.create_list(), {
       method: 'POST',
       headers: {
@@ -25,6 +40,7 @@ class ListService {
       credentials: 'include',
       body: JSON.stringify({
         title: title,
+        items: listItems,
       }),
     })
       .then((response) => response.json())
@@ -111,14 +127,17 @@ class ListService {
   }
 
   static async deleteListItem(listItem) {
-    return await fetch(api.lists.delete_list_item(listItem.listId, listItem.id), {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrf.getToken(),
-      },
-      credentials: 'include',
-    })
+    return await fetch(
+      api.lists.delete_list_item(listItem.listId, listItem.id),
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf.getToken(),
+        },
+        credentials: 'include',
+      }
+    )
       .then((response) => response.json())
       .then((data) => data);
   }

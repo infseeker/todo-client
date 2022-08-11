@@ -65,7 +65,7 @@ export default {
             this.$user.logout();
             this.$router.push('/');
 
-            this.$toast.success(this.$t('user.accountDeleted'));
+            this.$toast.info(this.$t('user.accountDeleted'));
           });
         } else if (r.code === 400) {
           this.$toast.error(this.$t('user.wrongPassword'));
