@@ -9,7 +9,7 @@
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"
                 @keypress.enter.prevent="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
-                @blur="discardListTitleEdit" v-model="tempListTitle" type="text"
+                @blur="saveListTitle($event)" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
             </form>
 
@@ -83,10 +83,10 @@
                 class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
                 @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{ item.title }}</span>
 
-              <textarea :placeholder="this.$t('list.item.placeholder')" rows="1" class="todo-list-item-edit form-control" type="text"
-                :value="currentListItemTitle" v-if="item.titleEdit"
+              <textarea :placeholder="this.$t('list.item.placeholder')" rows="1"
+                class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle" v-if="item.titleEdit"
                 :ref="`editTitleOfListItem-${listItems.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
-                @input="inputListItemTitleText($event, item)" @blur.prevent="discardEditedListItemTitle(item)"
+                @input="inputListItemTitleText($event, item)" @blur.prevent="saveEditedListItemTitle(item)"
                 @keyup.esc="discardEditedListItemTitle(item)" @keydown="keyPressOnListItemTitleText($event)"
                 @paste="pasteListItemTitleText()"></textarea>
 
@@ -132,13 +132,16 @@ export default {
 
   data() {
     return {
+      listTitleEdit: false,
+      tempListTitle: '',
+      discardedListTitleEdit: false,
+
       newListItemTitle: '',
       currentListItemTitle: '',
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
-      listTitleEdit: false,
-      tempListTitle: '',
+      discardedListItemTitleEdit: 'false',
 
       showTodoListDeletionModal: false,
     }
@@ -160,6 +163,12 @@ export default {
     },
 
     saveListTitle($event) {
+
+      if (this.discardedListTitleEdit) {
+        this.discardedListTitleEdit = false;
+        return;
+      }
+
       if (!$event.target.value || $event.target.value.trim().length === 0) return;
 
       this.listTitleEdit = false;
@@ -169,6 +178,7 @@ export default {
     },
 
     discardListTitleEdit() {
+      this.discardedListTitleEdit = true;
       this.listTitleEdit = false;
     },
 
@@ -275,9 +285,14 @@ export default {
     },
 
     saveEditedListItemTitle(item) {
+      if(this.discardedListItemTitleEdit) {
+        this.discardedListItemTitleEdit = false;
+        return;
+      }
+
       item.titleEdit = false;
 
-      if (!this.currentListItemTitle.trim()) return
+      if (!this.currentListItemTitle.trim()) return;
 
       this.currentListItemTitle = this.removeUselessSymbols(this.currentListItemTitle, 'all').trim();
       this.$emit('saveTitle', item, this.currentListItemTitle);
@@ -285,6 +300,7 @@ export default {
     },
 
     discardEditedListItemTitle(item) {
+      this.discardedListItemTitleEdit = true;
       item.titleEdit = false;
       this.currentListItemTitle = '';
     },
