@@ -1,10 +1,14 @@
 <template>
   <modal>
     <template v-slot:title>
-      {{ this.$t('user.accountDeleting') }}
+      {{ this.$t('user.deleting') }}
     </template>
 
     <template v-slot:content>
+      <p>
+        {{ this.$t('user.delete?') }}
+      </p>
+
       <div class="form-password-toggle">
         <div class="input-group input-group-merge">
           <input v-if="showPassword" @keypress.enter="deleteUser(password)" v-model.trim="password" type="text"
@@ -65,7 +69,7 @@ export default {
             this.$user.logout();
             this.$router.push('/');
 
-            this.$toast.info(this.$t('user.accountDeleted'));
+            this.$toast.info(this.$t('user.deleted'));
           });
         } else if (r.code === 400) {
           this.$toast.error(this.$t('user.wrongPassword'));

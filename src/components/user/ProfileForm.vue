@@ -53,7 +53,7 @@
     <div class="card mt-4">
       <div class="card-body">
         <button @click="showDeletionUserModal = true" type="button" class="btn btn-danger w-100">
-          {{ this.$t('user.deleteAccount') }}
+          {{ this.$t('user.delete') }}
         </button>
       </div>
     </div>
