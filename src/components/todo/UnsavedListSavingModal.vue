@@ -6,22 +6,23 @@
 
     <template v-slot:content>
       <div class="mb-3">
-        <span class="lh-2">{{ this.$t('list.haveUnsaved') }}</span>
+        <span>{{ this.$t('list.haveUnsaved') }}</span>
       </div>
 
-      <div class="form-password-toggle mb-3">
+      <div class="form-password-toggle">
         <div class="input-group input-group-merge">
           <input @keypress.enter="save(title)" v-model.trim="title" type="text"
             :placeholder="this.$t('list.placeholder')" class="form-control" />
         </div>
       </div>
 
-      <div class="form-check">
+      <!-- If you need hide this modal on login, you can uncomment this sector -->
+      <!-- <div class="form-check">
         <input v-model="notAsk" @change="doNotAsk(notAsk)" class="form-check-input" type="checkbox" id="do-not-ask">
         <label class="form-check-label" for="do-not-ask">
           {{ this.$t('list.doNotAsk') }}
         </label>
-      </div>
+      </div> -->
     </template>
 
     <template v-slot:buttons>

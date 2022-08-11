@@ -112,6 +112,8 @@
     "delete?": "Are you sure you want to delete the list {0} and all its contents?",
     "deleted": "List deleted",
 
+    "unsavedMessage": "On this page you can create a list, however it will only be available in that browser locally. To create and save your lists and have access to them from any device, you need to {0} and {1}. Enjoy making lists!",
+    "unsaved": "Unsaved list",
     "saving": "Guest list saving",
     "haveUnsaved": "You have an unsaved list, want to save it to your lists?",
     "nothingToSave": "Nothing to save",

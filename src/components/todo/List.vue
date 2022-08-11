@@ -3,6 +3,19 @@
     <div class="card w-100">
       <div class="card-body">
         <div>
+          <div v-if="!listTitle && !isUnsavedListMessageHidden"
+            class="unsaved-list-message alert alert-primary alert-dismissible" role="alert">
+            <span
+              v-html="this.$t('list.unsavedMessage', [`<a href='/registration'>${this.$t('user.register')}</a>`, `<a href='/login'>${this.$t('user.login')}</a>`])"></span>
+
+            <button type="button" class="btn-close" @click="hideUnsavedListMessage" data-bs-dismiss="alert"
+              aria-label="Close">
+            </button>
+          </div>
+          <div v-if="!listTitle" class="todo-list-title-wrapper">
+            <h4 class="todo-list-title">{{ this.$t('list.unsaved') }}</h4>
+          </div>
+
           <div v-if="listTitle" class="todo-list-title-wrapper">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
 
@@ -132,6 +145,8 @@ export default {
 
   data() {
     return {
+      isUnsavedListMessageHidden: false,
+
       listTitleEdit: false,
       tempListTitle: '',
       discardedListTitleEdit: false,
@@ -153,6 +168,14 @@ export default {
   },
 
   methods: {
+    toggleUnsavedListMessage() {
+      this.isUnsavedListMessageHidden = JSON.parse(localStorage.getItem('hideUnsavedListMessage') || false);
+    },
+
+    hideUnsavedListMessage() {
+      localStorage.setItem('hideUnsavedListMessage', true);
+    },
+
     editListTitle(title) {
       this.listTitleEdit = true;
       this.tempListTitle = title;
@@ -284,7 +307,7 @@ export default {
     },
 
     saveEditedListItemTitle(item) {
-      if(this.discardedListItemTitleEdit) {
+      if (this.discardedListItemTitleEdit) {
         this.discardedListItemTitleEdit = false;
         return;
       }
@@ -311,6 +334,22 @@ export default {
     deleteListItem(listItem) {
       this.$emit('delete', listItem);
     }
+  },
+
+  mounted() {
+    this.toggleUnsavedListMessage();
   }
 }
 </script>
+
+<style>
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .unsaved-list-message {
+    margin: 0.7rem 1rem;
+  }
+}
+
+.unsaved-list-message a {
+  text-decoration: underline;
+}
+</style>

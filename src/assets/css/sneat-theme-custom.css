@@ -287,6 +287,7 @@ h5 .bx {
   justify-content: center;
   color: #697a8d73;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 .todo-list-item-hidden-title {
@@ -439,4 +440,5 @@ h5 .bx {
   justify-content: center;
   color: #697a8d73;
   font-size: 1.2rem;
+  text-align: center;
 }
