@@ -308,12 +308,12 @@ export default {
     },
 
     saveEditedListItemTitle(item) {
+      item.titleEdit = false;
+
       if (this.discardedListItemTitleEdit) {
         this.discardedListItemTitleEdit = false;
         return;
       }
-
-      item.titleEdit = false;
 
       if (!this.currentListItemTitle.trim()) return;
 
