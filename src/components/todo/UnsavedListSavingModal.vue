@@ -11,22 +11,22 @@
 
       <div class="form-password-toggle">
         <div class="input-group input-group-merge">
-          <input @keypress.enter="save(title)" v-model.trim="title" type="text"
-            :placeholder="this.$t('list.placeholder')" class="form-control" />
+          <input ref="title" @keypress.enter="save()" type="text" :placeholder="this.$t('list.placeholder')"
+            class="form-control" />
         </div>
       </div>
 
-      <!-- If you need hide this modal on login, you can uncomment this sector -->
-      <!-- <div class="form-check">
+      <div v-if="false" class="form-check mt-3">
+        <!-- If you need choosing to hide this modal on login, remove v-if above -->
         <input v-model="notAsk" @change="doNotAsk(notAsk)" class="form-check-input" type="checkbox" id="do-not-ask">
         <label class="form-check-label" for="do-not-ask">
           {{ this.$t('list.doNotAsk') }}
         </label>
-      </div> -->
+      </div>
     </template>
 
     <template v-slot:buttons>
-      <button :disabled="isDisabled" @click="save(title)" type="button" class="btn btn-danger">
+      <button :disabled="isDisabled" @click="save()" type="button" class="btn btn-danger">
         {{ this.$t('common.save') }}
       </button>
     </template>
@@ -41,7 +41,6 @@ import ListService from '../../services/ListService'
 export default {
   data() {
     return {
-      title: '',
       isDisabled: false,
       notAsk: false,
     }
@@ -56,7 +55,9 @@ export default {
       localStorage.setItem('hideUnsavedListModal', notAsk);
     },
 
-    save(title) {
+    save() {
+      const title = this.$refs.title.value;
+
       if (!title) {
         this.$toast.warning(this.$t('list.placeholder'));
         return;

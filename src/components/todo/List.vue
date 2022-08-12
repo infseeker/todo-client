@@ -169,11 +169,12 @@ export default {
 
   methods: {
     toggleUnsavedListMessage() {
-      this.isUnsavedListMessageHidden = JSON.parse(localStorage.getItem('hideUnsavedListMessage') || false);
+      const lsItem = localStorage.getItem('unsavedListMessageHide');
+      this.isUnsavedListMessageHidden = lsItem === 'true' ? true : false;
     },
 
     hideUnsavedListMessage() {
-      localStorage.setItem('hideUnsavedListMessage', true);
+      localStorage.setItem('unsavedListMessageHide', true);
     },
 
     editListTitle(title) {
