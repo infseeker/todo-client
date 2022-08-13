@@ -11,8 +11,8 @@
 
       <div class="form-password-toggle">
         <div class="input-group input-group-merge">
-          <input ref="title" @keypress.enter="save()" type="text" :placeholder="this.$t('list.placeholder')"
-            class="form-control" />
+          <input ref="title" @keypress.enter="save()" :disabled="isDisabled" type="text"
+            :placeholder="this.$t('list.placeholder')" class="form-control" />
         </div>
       </div>
 
@@ -71,6 +71,9 @@ export default {
       };
 
       listItems.forEach((el, i) => el.position = i + 1);
+
+      this.$loader.show();
+      this.isDisabled = true;
 
       ListService.createList(title, listItems).then((r) => {
         this.$loader.hide();

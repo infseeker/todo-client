@@ -48,7 +48,7 @@ export default {
             this.isLoaded = true;
 
             // Show using cookies message
-            const cookieConfirm = localStorage.getItem('cookieConfirm');
+            const cookieConfirm = localStorage.getItem('cookieConfirm') === 'true' ? true : false;
 
             if (!cookieConfirm) {
               this.$toast.info(this.$t('user.cookies'), {
