@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { api } from '../../public/server-api'
 
 import Settings from '@/views/Settings.vue';
 import Login from '@/views/Login.vue';
@@ -10,8 +11,7 @@ import DeletedUser from '@/views/DeletedUser.vue';
 import GuestList from '@/views/GuestList.vue';
 import UserLists from '@/views/UserLists.vue';
 import UserList from '@/views/UserList.vue';
-import UserProfilePreview from '@/views/UserProfilePreview.vue';
-import UserProfileEdit from '@/views/UserProfileEdit.vue';
+import UserProfile from '@/views/UserProfile.vue';
 import NotFoundPage from '@/views/common/NotFoundPage.vue';
 
 const routes = [
@@ -85,7 +85,7 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: UserProfileEdit,
+    component: UserProfile,
     meta: {
       authRequired: true,
     },
@@ -108,59 +108,63 @@ const routes = [
     },
   },
   {
-    path: '/admin/users',
-    name: 'admin-users',
-    // component: UserList,
+    path: '/admin',
+    name: 'admin',
+    beforeEnter() {
+      window.location.href = api.admin;
+    },
     meta: {
       authRequired: true,
       adminRequired: true,
     },
   },
-  {
-    path: '/admin/users/new',
-    name: 'admin-create-user',
-    component: Registration,
-    meta: {
-      authRequired: true,
-      adminRequired: true,
-    },
-  },
-  {
-    path: '/admin/users/:userId',
-    name: 'admin-user-profile-preview',
-    component: UserProfilePreview,
-    meta: {
-      authRequired: true,
-      adminRequired: true,
-    },
-  },
-  {
-    path: '/admin/users/:userId/edit',
-    name: 'admin-user-profile-edit',
-    component: UserProfileEdit,
-    meta: {
-      authRequired: true,
-      adminRequired: true,
-    },
-  },
-  {
-    path: '/admin/users/:userId/lists',
-    name: 'admin-user-lists',
-    component: UserLists,
-    meta: {
-      authRequired: true,
-      adminRequired: true,
-    },
-  },
-  {
-    path: '/admin/users/:userId/lists/:listId',
-    name: 'admin-user-list',
-    component: UserList,
-    meta: {
-      authRequired: true,
-      adminRequired: true,
-    },
-  },
+
+  // No longer needed because implemented Flask-Admin panel
+  // {
+  //   path: '/admin/users/new',
+  //   name: 'admin-create-user',
+  //   component: Registration,
+  //   meta: {
+  //     authRequired: true,
+  //     adminRequired: true,
+  //   },
+  // },
+  // {
+  //   path: '/admin/users/:userId',
+  //   name: 'admin-user-profile-preview',
+  //   component: UserProfilePreview,
+  //   meta: {
+  //     authRequired: true,
+  //     adminRequired: true,
+  //   },
+  // },
+  // {
+  //   path: '/admin/users/:userId/edit',
+  //   name: 'admin-user-profile-edit',
+  //   component: UserProfileEdit,
+  //   meta: {
+  //     authRequired: true,
+  //     adminRequired: true,
+  //   },
+  // },
+  // {
+  //   path: '/admin/users/:userId/lists',
+  //   name: 'admin-user-lists',
+  //   component: UserLists,
+  //   meta: {
+  //     authRequired: true,
+  //     adminRequired: true,
+  //   },
+  // },
+  // {
+  //   path: '/admin/users/:userId/lists/:listId',
+  //   name: 'admin-user-list',
+  //   component: UserList,
+  //   meta: {
+  //     authRequired: true,
+  //     adminRequired: true,
+  //   },
+  // },
 
   // Common
   {
@@ -194,7 +198,7 @@ router.setRouteByUserPermissions = function (route, user) {
 
   if (route.meta.guestRequired && user.isAuth) {
     if (user.isAdmin) {
-      router.push({ name: 'admin-users' });
+      router.push({ name: 'admin' });
     } else {
       router.push({ name: 'lists' });
     }

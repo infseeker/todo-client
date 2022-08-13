@@ -15,7 +15,7 @@
         </li>
         
         <li v-if="this.$user.isAuth && this.$user.isAdmin">
-          <router-link :to="{ name: 'lists' }" class="btn btn-primary ms-2" title="Мои списки">
+          <router-link :to="{ name: 'lists' }" class="btn btn-primary me-3" title="Мои списки">
             <i class='bx bx-list-check'></i>
           </router-link>
         </li>

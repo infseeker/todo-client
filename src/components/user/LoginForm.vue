@@ -117,7 +117,7 @@ export default {
 
               if (this.$user.isAuth) {
                 if (this.$user.isAdmin) {
-                  this.$router.push({ name: 'admin-users' });
+                  this.$router.push({ name: 'admin' });
                 } else {
                   const unsavedList = JSON.parse(localStorage.getItem('listItems'));
 
