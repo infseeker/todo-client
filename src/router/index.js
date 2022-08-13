@@ -119,53 +119,6 @@ const routes = [
     },
   },
 
-  // No longer needed because implemented Flask-Admin panel
-  // {
-  //   path: '/admin/users/new',
-  //   name: 'admin-create-user',
-  //   component: Registration,
-  //   meta: {
-  //     authRequired: true,
-  //     adminRequired: true,
-  //   },
-  // },
-  // {
-  //   path: '/admin/users/:userId',
-  //   name: 'admin-user-profile-preview',
-  //   component: UserProfilePreview,
-  //   meta: {
-  //     authRequired: true,
-  //     adminRequired: true,
-  //   },
-  // },
-  // {
-  //   path: '/admin/users/:userId/edit',
-  //   name: 'admin-user-profile-edit',
-  //   component: UserProfileEdit,
-  //   meta: {
-  //     authRequired: true,
-  //     adminRequired: true,
-  //   },
-  // },
-  // {
-  //   path: '/admin/users/:userId/lists',
-  //   name: 'admin-user-lists',
-  //   component: UserLists,
-  //   meta: {
-  //     authRequired: true,
-  //     adminRequired: true,
-  //   },
-  // },
-  // {
-  //   path: '/admin/users/:userId/lists/:listId',
-  //   name: 'admin-user-list',
-  //   component: UserList,
-  //   meta: {
-  //     authRequired: true,
-  //     adminRequired: true,
-  //   },
-  // },
-
   // Common
   {
     path: '/404',
