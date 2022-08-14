@@ -156,7 +156,7 @@ export default {
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
-      discardedListItemTitleEdit: 'false',
+      discardedListItemTitleEdit: false,
 
       showListDeletionModal: false,
     }
@@ -323,6 +323,7 @@ export default {
     },
 
     discardEditedListItemTitle(item) {
+      console.log('discard');
       this.discardedListItemTitleEdit = true;
       item.titleEdit = false;
       this.currentListItemTitle = '';
