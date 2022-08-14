@@ -13,9 +13,9 @@
             <i class='bx bx-log-in'></i>
           </router-link>
         </li>
-        
+
         <li v-if="this.$user.isAuth && this.$user.isAdmin">
-          <router-link :to="{ name: 'lists' }" class="btn btn-primary me-3" title="Мои списки">
+          <router-link :to="{ name: 'lists' }" class="admin-lists-link" title="Мои списки">
             <i class='bx bx-list-check'></i>
           </router-link>
         </li>
@@ -43,9 +43,18 @@ export default {
 </script>
 
 <style scoped>
-.user-image, .blank-user-image {
+.user-image,
+.blank-user-image {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+}
+
+.admin-lists-link .bx {
+  width: 3rem;
+  height: 3rem;
+  margin-top: 0.4rem;
+  margin-right: 0.5rem;
+  filter: brightness(0) saturate(100%) invert(51%) sepia(84%) saturate(4427%) hue-rotate(222deg) brightness(101%) contrast(102%);
 }
 </style>
