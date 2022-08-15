@@ -1,3 +1,25 @@
-# Vue 3 + Vite
+# Welcome to Infseeker ToDo pet project!
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is client side of my first fullstack project. <br />
+<br />
+Server side: [todo-server](https://github.com/infseeker/todo-server) <br />
+Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
+
+
+## Tech Stack
+
+ - **API:** Flask
+ - **Frontend:** Vue 3
+ - **Database:** PostgreSQL
+ - **Web-server:** Gunicort + Nginx
+
+## Frontend Features
+- **Builder:** Vite
+- **Routing:** Vue Router
+- **Spam Protection:** Google reCaptcha v3
+- **Form Validations:** Vuelidate
+- **Translations:** Vue i18n
+- **Toast Notifications:** Vue Toastification
+- **Drag'n'Drop:** Vue Draggable Next
+- **User Image Editor:** Vue Advanced Cropper
+- **CSS Framework:** Bootstrap 5
