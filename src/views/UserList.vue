@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { io } from 'socket.io-client'
+
 import TodoList from '../components/todo/List.vue';
 import List from '../models/List'
 import ListItem from '../models/ListItem'
@@ -17,6 +19,7 @@ export default {
   data() {
     return {
       list: {},
+      socket: io('http://192.168.0.2:3000', { path: '/todo/api/lists/shared' })
     }
   },
 
@@ -25,6 +28,22 @@ export default {
   },
 
   methods: {
+    connectWebSocket() {
+      this.socket.on('connect', () => {
+        console.log(this.socket.id);
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log(this.socket.id);
+      });
+
+      this.socket.emit('check', {'data': 'Server'})
+    },
+
+    disconnectWebSocket() {
+      this.socket.disconnect();
+    },
+
     async getLists() {
       this.$loader.show();
 
@@ -139,6 +158,8 @@ export default {
   },
 
   mounted() {
+    this.connectWebSocket();
+
     if (!this.$store.lists.length) {
       this.getLists().then(() => {
         this.getListItems();
@@ -146,6 +167,10 @@ export default {
     } else {
       this.getListItems();
     }
-  }
+  },
+
+  unmounted() {
+    this.disconnectWebSocket();
+  },
 };
 </script>
