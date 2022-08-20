@@ -47,6 +47,7 @@ export const api = {
     delete_list_item: function (list_id, list_item_id) {
       return `${this.get_lists}/${list_id}/${list_item_id}`;
     },
+    shared_list: `${API_ROOT}/lists/shared`,
   },
 
   admin: `${API_ROOT}/admin/user`,

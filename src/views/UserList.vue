@@ -10,6 +10,7 @@
 <script>
 import { io } from 'socket.io-client'
 
+import { api } from '../../public/server-api'
 import TodoList from '../components/todo/List.vue';
 import List from '../models/List'
 import ListItem from '../models/ListItem'
@@ -19,7 +20,7 @@ export default {
   data() {
     return {
       list: {},
-      socket: io('http://192.168.0.2:3000', { path: '/todo/api/lists/shared' })
+      socket: io({ path: api.lists.shared_list }),
     }
   },
 
@@ -29,6 +30,8 @@ export default {
 
   methods: {
     connectWebSocket() {
+      console.log(window.location.host, api.shared_list);
+
       this.socket.on('connect', () => {
         console.log(this.socket.id);
       });
@@ -37,7 +40,7 @@ export default {
         console.log(this.socket.id);
       });
 
-      this.socket.emit('check', {'data': 'Server'})
+      this.socket.emit('check', { 'data': 'Server' })
     },
 
     disconnectWebSocket() {
@@ -95,7 +98,7 @@ export default {
     create(title) {
       this.$loader.show(false);
       const lastListItem = this.list.items[this.list.items.length - 1];
-      const position =  lastListItem ? lastListItem.position + 1 : 1
+      const position = lastListItem ? lastListItem.position + 1 : 1
 
       ListService.createListItem(this.list, title, position).then(r => {
         this.$loader.hide();
@@ -124,7 +127,7 @@ export default {
       }
 
       ListService.updateListItem(listItem).then(r => {
-        if(r.code === 200) {
+        if (r.code === 200) {
         }
       })
     },
