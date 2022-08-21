@@ -4,6 +4,7 @@ export default class List {
     this.title = data.title || null;
     this.items = data.items || [];
     this.shared = data.shared || [];
+    this.owner = data.owner || null;
   }
 
   loadItems(items) {
