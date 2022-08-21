@@ -3,6 +3,7 @@ export default class List {
     this.id = data.id || null;
     this.title = data.title || null;
     this.items = data.items || [];
+    this.shared = data.shared || [];
   }
 
   loadItems(items) {

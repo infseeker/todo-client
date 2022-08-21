@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       list: {},
-      socket: io({ path: api.lists.shared_list }),
+      socket: null,
     }
   },
 
@@ -29,24 +29,6 @@ export default {
   },
 
   methods: {
-    connectWebSocket() {
-      console.log(window.location.host, api.shared_list);
-
-      this.socket.on('connect', () => {
-        console.log(this.socket.id);
-      });
-
-      this.socket.on('disconnect', () => {
-        console.log(this.socket.id);
-      });
-
-      this.socket.emit('check', { 'data': 'Server' })
-    },
-
-    disconnectWebSocket() {
-      this.socket.disconnect();
-    },
-
     async getLists() {
       this.$loader.show();
 
@@ -65,6 +47,10 @@ export default {
       const listId = parseInt(this.$route.params.listId);
       const list = this.$store.lists.find(i => i.id === listId);
       this.list = list;
+
+      if (this.list.shared.length > 0) {
+        this.connectWebSocket();
+      }
 
       if (list) {
         if (!list.items || !list.items.length) {
@@ -158,11 +144,27 @@ export default {
         }
       });
     },
+
+    connectWebSocket() {
+      this.socket = io({ path: api.lists.shared_list });
+
+      this.socket.on('connect', () => {
+        console.log('connect', this.socket.id);
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log('disconnect', this.socket.id);
+      });
+
+      this.socket.emit('check', { 'data': 'Server' })
+    },
+
+    disconnectWebSocket() {
+      if (this.socket) this.socket.disconnect();
+    },
   },
 
   mounted() {
-    this.connectWebSocket();
-
     if (!this.$store.lists.length) {
       this.getLists().then(() => {
         this.getListItems();

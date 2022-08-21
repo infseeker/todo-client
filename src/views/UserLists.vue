@@ -10,9 +10,22 @@
           </button>
         </div>
 
-        <ul v-if="this.$store.lists && this.$store.lists.length" class="user-lists list-group list-group-flush">
-          <li class="list list-group-item" v-for="list in this.$store.lists" v-bind:key="list.id">
-            <router-link :to="{ name: 'list', params: { listId: list.id } }">{{ list.title }}</router-link>
+        <ul v-if="sharedLists.length" class="list-filters mb-2">
+          <li :class="{ 'list-filter': listFilter === 'all' }" @click="listFilter = 'all'">
+            {{ this.$t('list.all') }} ({{ this.$store.lists.length }})
+          </li>
+          <li :class="{ 'list-filter': listFilter === 'shared' }" @click="listFilter = 'shared'">
+            {{ this.$t('list.shared') }} ({{ sharedLists.length }})
+          </li>
+        </ul>
+
+        <ul v-if="filteredLists && filteredLists.length" class="user-lists list-group list-group-flush">
+          <li class="list list-group-item" v-for="list in filteredLists" v-bind:key="list.id">
+
+            <router-link :to="{ name: 'list', params: { listId: list.id } }">
+              {{ list.title }}
+              <i v-if="list.shared.length > 0" class="bx bxs-group"></i>
+            </router-link>
 
             <div class="dropdown">
               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
@@ -25,6 +38,10 @@
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
+                <li class="dropdown-item">
+                  <i class='bx bxs-group me-1'></i> {{ this.$t('list.share') }}
+                </li>
+
                 <li class="dropdown-item" @click="currentList = list; showListDeletionModal = true">
                   <i class='bx bx-trash-alt me-1'></i> {{ this.$t('list.delete') }}
                 </li>
@@ -32,6 +49,7 @@
             </div>
           </li>
         </ul>
+
         <div v-else class="no-lists mb-3">{{ this.$t('list.nothing') }}</div>
       </div>
     </div>
@@ -59,6 +77,8 @@ export default {
   data() {
     return {
       currentList: {},
+      listFilter: 'all',
+      sharedLists: this.$store.lists.filter(l => l.shared.length > 0),
 
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
@@ -68,6 +88,16 @@ export default {
   },
 
   props: ['unsavedList'],
+
+  computed: {
+    filteredLists() {
+      if (this.listFilter === 'all') {
+        return this.$store.lists;
+      } else if (this.listFilter === 'shared') {
+        return this.$store.lists.filter(l => l.shared.length > 0);
+      }
+    }
+  },
 
   components: {
     UnsavedListSavingModal,
@@ -80,7 +110,7 @@ export default {
     getLists() {
       if (this.unsavedList) {
         const hideUnsavedListModal = JSON.parse(localStorage.getItem('hideUnsavedListModal'));
-        
+
         if (!hideUnsavedListModal) {
           this.showUnsavedListSavingModal = true;
         }
@@ -96,6 +126,8 @@ export default {
             r.data.forEach(i => {
               this.$store.lists.push(new List(i));
             });
+
+            this.sharedLists = this.$store.lists.filter(l => l.shared.length > 0);
           }
         });
       }
@@ -107,3 +139,31 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.list-filters {
+  display: flex;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0;
+  justify-content: center;
+  list-style: none;
+}
+
+.list-filters li {
+  margin: 0 0.3rem;
+  cursor: pointer;
+}
+
+.list-filter {
+  color: #696cff;
+}
+
+a .bxs-group {
+  width: 1.2rem;
+  height: 1.2rem;
+  position: relative;
+  margin-left: 0.2rem;
+  top: 0.3rem
+}
+</style>

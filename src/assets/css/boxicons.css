@@ -34,6 +34,10 @@
   background-image: url('../img/icons/bx-envelope.svg');
 }
 
+.bx-group {
+  background-image: url('../img/icons/bx-group.svg');
+}
+
 .bx-heart {
   background-image: url('../img/icons/bx-heart.svg');
 }
@@ -88,6 +92,10 @@
 
 .bx-user {
   background-image: url('../img/icons/bx-user.svg');
+}
+
+.bxs-group {
+  background-image: url('../img/icons/bxs-group.svg');
 }
 
 .bxs-heart {

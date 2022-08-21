@@ -17,7 +17,8 @@
           </div>
 
           <div v-if="listTitle" class="todo-list-title-wrapper">
-            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }}</h4>
+            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length > 0"
+                class="bx bxs-group"></i></h4>
 
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"
@@ -35,6 +36,10 @@
               <ul class="dropdown-menu dropdown-menu-end">
                 <li @click="editListTitle(listTitle)" class="dropdown-item">
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
+                </li>
+
+                <li class="dropdown-item">
+                  <i class="bx bxs-group me-1"></i> {{ this.$t('list.share') }}
                 </li>
 
                 <li class="dropdown-item" @click="showListDeletionModal = true">
@@ -344,7 +349,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .unsaved-list-message {
     margin: 0.7rem 1rem;
@@ -353,5 +358,13 @@ export default {
 
 .unsaved-list-message a {
   text-decoration: underline;
+}
+
+.todo-list-title .bxs-group {
+  width: 1.4rem;
+  height: 1.4rem;
+  position: relative;
+  margin-left: 0.1rem;
+  top: 0.25rem
 }
 </style>
