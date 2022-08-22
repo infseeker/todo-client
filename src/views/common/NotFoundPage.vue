@@ -1,6 +1,8 @@
 <template>
   <div class="not-found mt-5">
     <img :src="imageUrl" alt="Страница не найдена" @click="meow">
+    <h2>{{ this.$t('app.notFound') }}</h2>
+    <p><router-link :to="{ path: '/' }">{{ this.$t('app.backToMain') }}</router-link></p>
   </div>
 </template>
 
@@ -25,5 +27,19 @@ export default {
 img {
   width: 100%;
   max-height: 70vh;
+}
+
+h2,
+p {
+  text-align: center;
+}
+
+a {
+  font-size: 1.1rem;
+}
+
+h2 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 </style>

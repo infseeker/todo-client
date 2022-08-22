@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { api } from '../../public/server-api'
 
-import Settings from '@/views/Settings.vue';
 import Login from '@/views/Login.vue';
 import Registration from '@/views/Registration.vue';
 import Activation from '@/views/Activation.vue';
@@ -22,11 +21,6 @@ const routes = [
     meta: {
       guestRequired: true,
     },
-  },
-  {
-    path: '/settings',
-    name: 'settings',
-    component: Settings,
   },
   {
     path: '/login',
@@ -124,6 +118,9 @@ const routes = [
     path: '/404',
     name: 'not-found',
     component: NotFoundPage,
+    meta: {
+      hideNav: true,
+    }
   },
   {
     path: '/:catchAll(.*)',

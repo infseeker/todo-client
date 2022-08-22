@@ -1,6 +1,8 @@
 {
   "app": {
-    "title": "Infseeker ToDo - Create a list"
+    "title": "Infseeker ToDo - Create a list",
+    "notFound": "Page not found",
+    "backToMain": "Back to main page"
   },
 
   "common": {

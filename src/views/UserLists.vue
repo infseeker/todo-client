@@ -24,7 +24,7 @@
 
             <router-link :to="{ name: 'list', params: { listId: list.id } }">
               {{ list.title }}
-              <i v-if="list.shared.length > 0" class="bx bxs-group"></i>
+              <i v-if="list.shared.length" class="bx bxs-group"></i>
             </router-link>
 
             <div class="dropdown">
@@ -78,7 +78,7 @@ export default {
     return {
       currentList: {},
       listFilter: 'all',
-      sharedLists: this.$store.lists.filter(l => l.shared.length > 0),
+      sharedLists: this.$store.lists.filter(l => l.shared.length),
 
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
@@ -94,7 +94,7 @@ export default {
       if (this.listFilter === 'all') {
         return this.$store.lists;
       } else if (this.listFilter === 'shared') {
-        return this.$store.lists.filter(l => l.shared.length > 0);
+        return this.$store.lists.filter(l => l.shared.length);
       }
     }
   },
@@ -127,7 +127,7 @@ export default {
               this.$store.lists.push(new List(i));
             });
 
-            this.sharedLists = this.$store.lists.filter(l => l.shared.length > 0);
+            this.sharedLists = this.$store.lists.filter(l => l.shared.length);
           }
         });
       }

@@ -48,7 +48,7 @@ export default {
       const list = this.$store.lists.find(i => i.id === listId);
       this.list = list;
 
-      if (this.list && this.list.shared && this.list.shared.length > 0) {
+      if (this.list && this.list.shared && this.list.shared.length) {
         this.connectWebSocket();
       }
 
@@ -84,6 +84,7 @@ export default {
           })
         } else {
           this.listItems = list.items;
+          console.log(list);
         }
       } else {
         this.$router.push({ name: 'not-found' })

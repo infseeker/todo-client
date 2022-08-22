@@ -1,6 +1,8 @@
 {
   "app": {
-    "title": "Infseeker ToDo - Создай список"
+    "title": "Infseeker ToDo - Создай список",
+    "notFound": "Страница не найдена",
+    "backToMain": "Вернуться на главную"
   },
 
   "common": {
