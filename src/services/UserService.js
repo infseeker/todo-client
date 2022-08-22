@@ -167,7 +167,7 @@ class UserService {
    * @param {String} image - image name
    */
   static getUserImage(image) {
-    return api.user.get_image(image);
+    return image ? api.user.get_image(image) : null;
   }
 
   /**

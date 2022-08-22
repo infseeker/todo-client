@@ -17,8 +17,8 @@
           </div>
 
           <div v-if="listTitle" class="todo-list-title-wrapper">
-            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length > 0"
-                class="bx bxs-group"></i></h4>
+            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length"
+                class="bx" :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
 
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"
@@ -33,17 +33,23 @@
                 <i class="bx bx-dots-vertical-rounded"></i>
               </button>
 
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul v-if="list.owner.id === this.$user.id" class="dropdown-menu dropdown-menu-end">
                 <li @click="editListTitle(listTitle)" class="dropdown-item">
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
-                <li class="dropdown-item">
+                <li class="dropdown-item" @click="showListSharingModal = true">
                   <i class="bx bxs-group me-1"></i> {{ this.$t('list.share') }}
                 </li>
 
                 <li class="dropdown-item" @click="showListDeletionModal = true">
                   <i class="bx bx-trash-alt me-1"></i> {{ this.$t('list.delete') }}
+                </li>
+              </ul>
+
+              <ul v-else class="dropdown-menu dropdown-menu-end">
+                  <li class="dropdown-item">
+                  <i class="bx bx-group me-1"></i> Unsubscribe
                 </li>
               </ul>
             </div>
@@ -136,6 +142,9 @@
 
         <ListDeletionModal v-if="list && showListDeletionModal" :list="this.list"
           @close="showListDeletionModal = false"></ListDeletionModal>
+
+        <ListSharingModal v-if="list && showListSharingModal" :list="this.list" @close="showListSharingModal = false">
+        </ListSharingModal>
       </div>
     </div>
   </div>
@@ -143,6 +152,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import ListSharingModal from './ListSharingModal.vue';
 import ListDeletionModal from './ListDeletionModal.vue';
 
 export default {
@@ -163,12 +173,14 @@ export default {
       isEnterKey: false,
       discardedListItemTitleEdit: false,
 
+      showListSharingModal: false,
       showListDeletionModal: false,
     }
   },
 
   components: {
     draggable,
+    ListSharingModal,
     ListDeletionModal
   },
 
@@ -360,7 +372,7 @@ export default {
   text-decoration: underline;
 }
 
-.todo-list-title .bxs-group {
+.todo-list-title .bxs-group, .todo-list-title .bx-group {
   width: 1.4rem;
   height: 1.4rem;
   position: relative;

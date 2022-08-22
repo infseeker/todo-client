@@ -24,7 +24,7 @@
 
             <router-link :to="{ name: 'list', params: { listId: list.id } }">
               {{ list.title }}
-              <i v-if="list.shared.length" class="bx bxs-group"></i>
+              <i v-if="list.shared.length" class="bx" :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i>
             </router-link>
 
             <div class="dropdown">
@@ -33,17 +33,23 @@
                 <i class="bx bx-dots-vertical-rounded"></i>
               </button>
 
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul v-if="list.owner.id === this.$user.id" class="dropdown-menu dropdown-menu-end">
                 <li class="dropdown-item" @click="currentList = list; showListEditingModal = true">
                   <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
                 </li>
 
-                <li class="dropdown-item">
+                <li class="dropdown-item" @click="currentList = list; showListSharingModal = true">
                   <i class='bx bxs-group me-1'></i> {{ this.$t('list.share') }}
                 </li>
 
                 <li class="dropdown-item" @click="currentList = list; showListDeletionModal = true">
                   <i class='bx bx-trash-alt me-1'></i> {{ this.$t('list.delete') }}
+                </li>
+              </ul>
+
+              <ul v-else class="dropdown-menu dropdown-menu-end">
+                <li class="dropdown-item">
+                  <i class="bx bx-group me-1"></i> Unsubscribe
                 </li>
               </ul>
             </div>
@@ -62,6 +68,8 @@
   </ListEditingModal>
   <ListDeletionModal v-if="showListDeletionModal" :list="this.currentList" @close="showListDeletionModal = false">
   </ListDeletionModal>
+  <ListSharingModal v-if="showListSharingModal" :list="this.currentList" @close="showListSharingModal = false">
+  </ListSharingModal>
 </template>
 
 <script>
@@ -72,6 +80,7 @@ import UnsavedListSavingModal from '../components/todo/UnsavedListSavingModal.vu
 import ListCreationModal from '../components/todo/ListCreationModal.vue'
 import ListEditingModal from '../components/todo/ListEditingModal.vue'
 import ListDeletionModal from '../components/todo/ListDeletionModal.vue'
+import ListSharingModal from '../components/todo/ListSharingModal.vue'
 
 export default {
   data() {
@@ -84,6 +93,7 @@ export default {
       showListCreationModal: false,
       showListEditingModal: false,
       showListDeletionModal: false,
+      showListSharingModal: false,
     }
   },
 
@@ -104,6 +114,7 @@ export default {
     ListCreationModal,
     ListEditingModal,
     ListDeletionModal,
+    ListSharingModal,
   },
 
   methods: {
@@ -127,7 +138,10 @@ export default {
               this.$store.lists.push(new List(i));
             });
 
+            this.$store.lists.sort((a, b) => a.id - b.id);
+
             this.sharedLists = this.$store.lists.filter(l => l.shared.length);
+            console.log(this.$user, this.$store.lists)
           }
         });
       }
@@ -159,7 +173,7 @@ export default {
   color: #696cff;
 }
 
-a .bxs-group {
+a .bxs-group, a .bx-group {
   width: 1.2rem;
   height: 1.2rem;
   position: relative;

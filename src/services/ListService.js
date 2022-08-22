@@ -74,6 +74,41 @@ class ListService {
       .then((data) => data);
   }
 
+
+  static async shareList(list, user) {
+    return await fetch(api.lists.share_list(list.id), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrf.getToken(),
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        'user': user
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+
+  static async unshareList(list, user) {
+    return await fetch(api.lists.share_list(list.id), {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrf.getToken(),
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        'user': user
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+  }
+
+
   static async getListItems(listId) {
     return await fetch(api.lists.get_list_items(listId), {
       method: 'GET',

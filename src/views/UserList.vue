@@ -70,13 +70,6 @@ export default {
 
               list.loadItems(items);
 
-              if (r.owner) {
-                list.owner = r.owner;
-              }
-              if (r.shared) {
-                list.shared = r.shared;
-              }
-
               console.log(list);
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });

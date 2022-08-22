@@ -35,6 +35,12 @@ export const api = {
     delete_list: function (list_id) {
       return `${this.get_lists}/${list_id}`;
     },
+    share_list: function (list_id) {
+      return `${this.get_lists}/${list_id}/share`;
+    },
+    unshare_list: function (list_id) {
+      return `${this.get_lists}/${list_id}/share`;
+    },
     get_list_items: function (list_id) {
       return `${this.get_lists}/${list_id}`;
     },
