@@ -75,7 +75,7 @@ class ListService {
   }
 
 
-  static async shareList(list, user) {
+  static async shareList(list, email) {
     return await fetch(api.lists.share_list(list.id), {
       method: 'PUT',
       headers: {
@@ -84,7 +84,7 @@ class ListService {
       },
       credentials: 'include',
       body: JSON.stringify({
-        'user': user
+        'email': email
       }),
     })
       .then((response) => response.json())
@@ -92,7 +92,7 @@ class ListService {
   }
 
 
-  static async unshareList(list, user) {
+  static async unshareList(list, email) {
     return await fetch(api.lists.share_list(list.id), {
       method: 'DELETE',
       headers: {
@@ -101,7 +101,7 @@ class ListService {
       },
       credentials: 'include',
       body: JSON.stringify({
-        'user': user
+        'email': email
       }),
     })
       .then((response) => response.json())

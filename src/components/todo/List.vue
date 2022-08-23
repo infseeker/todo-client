@@ -49,7 +49,7 @@
 
               <ul v-else class="dropdown-menu dropdown-menu-end">
                   <li class="dropdown-item">
-                  <i class="bx bx-group me-1"></i> Unsubscribe
+                  <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
                 </li>
               </ul>
             </div>

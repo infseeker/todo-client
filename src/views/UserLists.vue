@@ -24,7 +24,8 @@
 
             <router-link :to="{ name: 'list', params: { listId: list.id } }">
               {{ list.title }}
-              <i v-if="list.shared.length" class="bx" :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i>
+              <i v-if="list.shared.length" class="bx"
+                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i>
             </router-link>
 
             <div class="dropdown">
@@ -49,7 +50,7 @@
 
               <ul v-else class="dropdown-menu dropdown-menu-end">
                 <li class="dropdown-item">
-                  <i class="bx bx-group me-1"></i> Unsubscribe
+                  <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
                 </li>
               </ul>
             </div>
@@ -87,7 +88,6 @@ export default {
     return {
       currentList: {},
       listFilter: 'all',
-      sharedLists: this.$store.lists.filter(l => l.shared.length),
 
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
@@ -100,6 +100,10 @@ export default {
   props: ['unsavedList'],
 
   computed: {
+    sharedLists() {
+      return this.$store.lists.filter(l => l.shared.length)
+    },
+
     filteredLists() {
       if (this.listFilter === 'all') {
         return this.$store.lists;
@@ -173,7 +177,8 @@ export default {
   color: #696cff;
 }
 
-a .bxs-group, a .bx-group {
+a .bxs-group,
+a .bx-group {
   width: 1.2rem;
   height: 1.2rem;
   position: relative;

@@ -1,17 +1,18 @@
 <template>
   <modal>
     <template v-slot:title>
-      List sharing
+      {{ this.$t('list.sharing') }}
     </template>
 
     <template v-slot:content>
-      <p>Choose users by email you want to share this list</p>
-      <input v-model="user" type="email" placeholder="Enter user's email" class="form-control">
+      <p>{{ this.$t('list.sharingWith') }}</p>
+      <input v-model.trim="email" @keypress.enter="share(list, email)" :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
+      <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
+      </div>
     </template>
 
     <template v-slot:buttons>
-      <button @click="share(list, user)" type="button" class="btn btn-primary">Share</button>
-      <button @click="unshare(list, user)" type="button" class="btn btn-primary">Unshare</button>
+      <button @click="share(list, email)" type="button" class="btn btn-primary">Share</button>
     </template>
   </modal>
 </template>
@@ -19,11 +20,15 @@
 <script>
 import Modal from '../common/Modal.vue'
 import ListService from '../../services/ListService';
+import useValidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import { email } from '../../helpers/validations'
 
 export default {
   data() {
     return {
-      user: '',
+      v$: useValidate(),
+      email: '',
     }
   },
 
@@ -33,17 +38,40 @@ export default {
     Modal
   },
 
+  validations() {
+    return {
+      email: {
+        required,
+        email,
+      },
+    }
+  },
+
   methods: {
-    share(list, user) {
-      console.log(list, user)
-      ListService.shareList(list, user).then(r => {
-        console.log(r)
-      })
+    share(list, email) {
+      console.log(list, email)
+
+      this.v$.$validate();
+
+      if (!this.v$.$error) {
+        ListService.shareList(list, email).then(r => {
+          if (r.code === 200) {
+            list.shared.push(r.data);
+            this.$toast.success(this.$t('list.sharedWith', [email]));
+          }
+          else if(r.code === 404)
+            this.$toast.error(this.$t('user.notFoundByEmail'));
+          else if(r.code === 409)
+            this.$toast.info(this.$t('list.alreadyShared', [email]));
+          else if(r.code === 400)
+            this.$toast.warning(this.$t('user.dataNotValid'));
+        })
+      }
     },
 
-    unshare(list, user) {
-      console.log(list, user)
-      ListService.unshareList(list, user).then(r => {
+    unshare(list, email) {
+      console.log(list, email)
+      ListService.unshareList(list, email).then(r => {
         console.log(r)
       })
     }
