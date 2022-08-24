@@ -152,19 +152,28 @@ export default {
       this.socket = io({ path: api.lists.shared_list });
 
       this.socket.on('connect', () => {
+        this.socket.emit('user_connect', { data: 'I\'m connected!' });
         console.log('connect', this.socket.id);
       });
 
-      this.socket.on('disconnect', () => {
-        console.log('disconnect', this.socket.id);
-      });
-
-      this.socket.emit('check', { 'data': 'Server' })
+      this.socket.on('my response', (data) => {
+        console.log(data)
+      })
     },
 
     disconnectWebSocket() {
-      if (this.socket) this.socket.disconnect();
+      if (this.socket) {
+        this.socket.emit('user_disconnect', { data: 'I\'m disconnected!' });
+        this.socket.disconnect();
+        console.log('disconnect', this.socket.id);
+      }
+
     },
+  },
+
+  created() {
+    console.log('created');
+    window.addEventListener('beforeunload', this.disconnectWebSocket);
   },
 
   mounted() {
