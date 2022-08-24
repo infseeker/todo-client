@@ -6,13 +6,21 @@
 
     <template v-slot:content>
       <p>{{ this.$t('list.sharingWith') }}</p>
-      <input v-model.trim="email" @keypress.enter="share(list, email)" :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
+      <input ref="input" v-model.trim="email" @keypress.enter="share(list, email)"
+        :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
       <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
       </div>
+      <ul class="email-badges list-group">
+        <li v-for="user in list.shared" v-bind:key="user.id" class="email-badge">
+          <span class="badge bg-label-dark">{{ user.email }} <span class="email-badge__delete">✕</span></span>
+        </li>
+      </ul>
     </template>
 
     <template v-slot:buttons>
-      <button @click="share(list, email)" type="button" class="btn btn-primary">Share</button>
+      <button @click="share(list, email)" :disabled="isDisabled" type="button" class="btn btn-primary">{{
+          this.$t('list.share')
+      }}</button>
     </template>
   </modal>
 </template>
@@ -28,11 +36,13 @@ export default {
   data() {
     return {
       v$: useValidate(),
+      list: this.$store.lists.find(l => l.id === this.listId),
       email: '',
+      isDisabled: false,
     }
   },
 
-  props: ['list'],
+  props: ['listId'],
 
   components: {
     Modal
@@ -54,16 +64,25 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
+        this.isDisabled = true;
+        this.$loader.show();
+
         ListService.shareList(list, email).then(r => {
+          this.isDisabled = false;
+          this.$loader.hide();
+          this.v$.$reset();
+          this.$refs.input.focus();
+
           if (r.code === 200) {
             list.shared.push(r.data);
+            this.email = '',
             this.$toast.success(this.$t('list.sharedWith', [email]));
           }
-          else if(r.code === 404)
+          else if (r.code === 404)
             this.$toast.error(this.$t('user.notFoundByEmail'));
-          else if(r.code === 409)
+          else if (r.code === 409)
             this.$toast.info(this.$t('list.alreadyShared', [email]));
-          else if(r.code === 400)
+          else if (r.code === 400)
             this.$toast.warning(this.$t('user.dataNotValid'));
         })
       }
@@ -78,3 +97,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.email-badges {
+  flex-flow: row wrap;
+  list-style: none;
+}
+
+.email-badge {
+  margin-top: 0.5rem;
+}
+
+.email-badge .badge {
+  margin-right: 0.2rem;
+}
+
+.email-badge__delete {
+  cursor: pointer;
+}
+</style>

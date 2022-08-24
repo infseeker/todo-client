@@ -69,7 +69,7 @@
   </ListEditingModal>
   <ListDeletionModal v-if="showListDeletionModal" :list="this.currentList" @close="showListDeletionModal = false">
   </ListDeletionModal>
-  <ListSharingModal v-if="showListSharingModal" :list="this.currentList" @close="showListSharingModal = false">
+  <ListSharingModal v-if="showListSharingModal" :listId="this.currentList.id" @close="showListSharingModal = false">
   </ListSharingModal>
 </template>
 
@@ -88,6 +88,7 @@ export default {
     return {
       currentList: {},
       listFilter: 'all',
+      _sharedLists: this.$store.lists.filter(l => l.shared.length),
 
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
@@ -100,8 +101,13 @@ export default {
   props: ['unsavedList'],
 
   computed: {
-    sharedLists() {
-      return this.$store.lists.filter(l => l.shared.length)
+    sharedLists: {
+      get() {
+        return this._sharedLists;
+      },
+      set(lists) {
+        this._sharedLists = lists;
+      }
     },
 
     filteredLists() {
