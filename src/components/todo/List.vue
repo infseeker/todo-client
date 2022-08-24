@@ -17,8 +17,8 @@
           </div>
 
           <div v-if="listTitle" class="todo-list-title-wrapper">
-            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length"
-                class="bx" :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
+            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length" class="bx"
+                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
 
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"
@@ -48,7 +48,7 @@
               </ul>
 
               <ul v-else class="dropdown-menu dropdown-menu-end">
-                  <li class="dropdown-item">
+                <li class="dropdown-item" @click="showListUnsubscribeModal = true">
                   <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
                 </li>
               </ul>
@@ -143,8 +143,12 @@
         <ListDeletionModal v-if="list && showListDeletionModal" :list="this.list"
           @close="showListDeletionModal = false"></ListDeletionModal>
 
-        <ListSharingModal v-if="list && showListSharingModal" :list="this.list" @close="showListSharingModal = false">
+        <ListSharingModal v-if="list && showListSharingModal" :listId="this.list.id" @close="showListSharingModal = false">
         </ListSharingModal>
+
+        <ListUnsubscribeModal v-if="list && showListUnsubscribeModal" :list="this.list"
+          @close="showListUnsubscribeModal = false">
+        </ListUnsubscribeModal>
       </div>
     </div>
   </div>
@@ -154,6 +158,7 @@
 import draggable from 'vuedraggable'
 import ListSharingModal from './ListSharingModal.vue';
 import ListDeletionModal from './ListDeletionModal.vue';
+import ListUnsubscribeModal from './ListUnsubscribeModal.vue';
 
 export default {
   props: ['list', 'listItems', 'listTitle'],
@@ -175,13 +180,15 @@ export default {
 
       showListSharingModal: false,
       showListDeletionModal: false,
+      showListUnsubscribeModal: false,
     }
   },
 
   components: {
     draggable,
     ListSharingModal,
-    ListDeletionModal
+    ListDeletionModal,
+    ListUnsubscribeModal
   },
 
   methods: {
@@ -372,7 +379,8 @@ export default {
   text-decoration: underline;
 }
 
-.todo-list-title .bxs-group, .todo-list-title .bx-group {
+.todo-list-title .bxs-group,
+.todo-list-title .bx-group {
   width: 1.4rem;
   height: 1.4rem;
   position: relative;

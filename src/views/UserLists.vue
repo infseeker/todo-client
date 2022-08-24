@@ -49,7 +49,7 @@
               </ul>
 
               <ul v-else class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item">
+                <li class="dropdown-item" @click="currentList = list; showListUnsubscribeModal = true">
                   <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
                 </li>
               </ul>
@@ -71,6 +71,8 @@
   </ListDeletionModal>
   <ListSharingModal v-if="showListSharingModal" :listId="this.currentList.id" @close="showListSharingModal = false">
   </ListSharingModal>
+  <ListUnsubscribeModal v-if="showListUnsubscribeModal" :list="this.currentList" @close="showListUnsubscribeModal = false">
+  </ListUnsubscribeModal>
 </template>
 
 <script>
@@ -82,6 +84,7 @@ import ListCreationModal from '../components/todo/ListCreationModal.vue'
 import ListEditingModal from '../components/todo/ListEditingModal.vue'
 import ListDeletionModal from '../components/todo/ListDeletionModal.vue'
 import ListSharingModal from '../components/todo/ListSharingModal.vue'
+import ListUnsubscribeModal from '../components/todo/ListUnsubscribeModal.vue'
 
 export default {
   data() {
@@ -95,6 +98,7 @@ export default {
       showListEditingModal: false,
       showListDeletionModal: false,
       showListSharingModal: false,
+      showListUnsubscribeModal: false,
     }
   },
 
@@ -125,6 +129,7 @@ export default {
     ListEditingModal,
     ListDeletionModal,
     ListSharingModal,
+    ListUnsubscribeModal,
   },
 
   methods: {
