@@ -5,14 +5,15 @@
     </template>
 
     <template v-slot:content>
-      <p>{{ this.$t('list.sharingWith') }}</p>
+      <p v-html="this.$t('list.sharingWith', [`<mark>${list.title}</mark>`])"></p>
       <input ref="input" v-model.trim="email" @keypress.enter="share(list, email)"
         :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
       <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
       </div>
       <ul class="email-badges list-group">
         <li v-for="user in list.shared" v-bind:key="user.id" class="email-badge">
-          <span class="badge bg-label-dark">{{ user.email }} <span class="email-badge__delete">✕</span></span>
+          <span class="badge bg-label-dark">{{ user.email }} <span @click="unshare(list, user.email)"
+              class="email-badge__delete">✕</span></span>
         </li>
       </ul>
     </template>
@@ -76,7 +77,7 @@ export default {
           if (r.code === 200) {
             list.shared.push(r.data);
             this.email = '',
-            this.$toast.success(this.$t('list.sharedWith', [email]));
+              this.$toast.success(this.$t('list.sharedWith', [email]));
           }
           else if (r.code === 404)
             this.$toast.error(this.$t('user.notFoundByEmail'));
@@ -89,23 +90,34 @@ export default {
     },
 
     unshare(list, email) {
-      console.log(list, email)
       ListService.unshareList(list, email).then(r => {
-        console.log(r)
+        if (r.code === 200) {
+          list.shared = list.shared.filter(u => u.email !== email);
+          this.$toast.success(this.$t('list.unshared', [email]));
+        }
+        else if (r.code === 404)
+          this.$toast.error(this.$t('user.notFoundByEmail'));
+        else if (r.code === 400)
+          this.$toast.warning(this.$t('user.dataNotValid'));
       })
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
+mark {
+  padding: 0.1rem 0.4rem;
+}
+
 .email-badges {
   flex-flow: row wrap;
+  margin-top: 0.5rem;
   list-style: none;
 }
 
 .email-badge {
-  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .email-badge .badge {
