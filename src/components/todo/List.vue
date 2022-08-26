@@ -147,7 +147,7 @@
           @close="showListSharingModal = false">
         </ListSharingModal>
 
-        <ListUnsubscribeModal v-if="list && showListUnsubscribeModal" :list="this.list"
+        <ListUnsubscribeModal v-if="list && showListUnsubscribeModal" :listId="this.list.id"
           @close="showListUnsubscribeModal = false">
         </ListUnsubscribeModal>
       </div>

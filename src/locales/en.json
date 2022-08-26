@@ -121,7 +121,7 @@
     "unsubscribe": "Unsubscribe",
     "unsubscribing": "List unsubscribing",
     "unsubscribe?": "Are you sure you want to unsubscribe from list {0}?",
-    "unsubscribed": "You have been unsubscribed from list {0}?",
+    "unsubscribed": "You have been unsubscribed from list {0}",
     "editing": "List editing",
     "delete": "Delete list",
     "deletion": "List deletion",

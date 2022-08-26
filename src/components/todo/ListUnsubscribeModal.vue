@@ -22,7 +22,13 @@ import Modal from '../common/Modal.vue'
 import ListService from '../../services/ListService';
 
 export default {
-  props: ['list'],
+  data() {
+    return {
+      list: this.$store.lists.find(l => l.id === this.listId),
+    }
+  },
+
+  props: ['listId'],
 
   components: {
     Modal
