@@ -1,9 +1,29 @@
 <template>
-  <div class="guest-todo-list">
-    <todo-list v-if="list && list.items" :list="list" :listTitle="list.title" :listItems="list.items" @create="create"
-      @check="check" @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem"
-      @save-list-title="saveListTitle">
-    </todo-list>
+  <div class="todo-list mt-4">
+    <div class="card w-100">
+      <div class="card-body">
+        <div class="guest-todo-list">
+          <div v-if="list.title" class="todo-list-title-wrapper">
+            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ list.title }} <i v-if="list.shared.length" class="bx"
+                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
+
+            <form v-if="listTitleEdit">
+              <input :placeholder="this.$t('list.title')" ref="listTitleInput"
+                @keypress.enter.prevent.stop="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
+                @blur="saveListTitle($event)" v-model="tempListTitle" type="text"
+                class="todo-list-title-edit form-control">
+            </form>
+
+            <list-menu :list="list" @edit="editListTitle"></list-menu>
+          </div>
+
+          <todo-list v-if="list && list.items" :list="list" :listItems="list.items" @create="create" @check="check"
+            @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem" @save-list-title="saveListTitle"
+            @update="update">
+          </todo-list>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,20 +32,26 @@ import { io } from 'socket.io-client'
 
 import { api } from '../../public/server-api'
 import TodoList from '../components/todo/List.vue';
+import ListMenu from '../components/todo/ListMenu.vue'
 import List from '../models/List'
 import ListItem from '../models/ListItem'
 import ListService from '../services/ListService';
+import { removeUselessSymbols } from '../helpers/string-utils'
 
 export default {
   data() {
     return {
       list: {},
       socket: null,
+      listTitleEdit: false,
+      tempListTitle: '',
+      discardedListTitleEdit: false,
     }
   },
 
   components: {
     TodoList,
+    ListMenu,
   },
 
   methods: {
@@ -86,6 +112,50 @@ export default {
       }
     },
 
+    editListTitle(list) {
+      console.log(list.title);
+      this.listTitleEdit = true;
+      this.tempListTitle = list.title;
+
+      this.$nextTick(() => {
+        this.$refs['listTitleInput'].focus();
+      })
+    },
+
+    saveListTitle($event) {
+      if (this.discardedListTitleEdit) {
+        this.discardedListTitleEdit = false;
+        return;
+      }
+
+      if (!$event.target.value || $event.target.value.trim().length === 0) return;
+
+      if ($event.type === 'keypress') this.isListItemEnterKey = true;
+      else if ($event.type === 'blur' && this.isListItemEnterKey) {
+        this.isListItemEnterKey = false;
+        return;
+      }
+
+      this.listTitleEdit = false;
+      const title = removeUselessSymbols($event.target.value.trim(), 'all');
+
+      this.list.saveTitle(title);
+
+      ListService.updateList({ id: this.list.id, title: title }).then(r => {
+        if (r.code === 200) {
+          if (this.socket) {
+            console.log('before renaming')
+            this.socket.emit('list_title_rename', { title: title, list_id: this.list.id });
+          }
+        }
+      });
+    },
+
+    discardListTitleEdit() {
+      this.discardedListTitleEdit = true;
+      this.listTitleEdit = false;
+    },
+
     create(title) {
       this.$loader.show(false);
       const lastListItem = this.list.items[this.list.items.length - 1];
@@ -141,44 +211,30 @@ export default {
       });
     },
 
-    saveListTitle(title) {
-      this.list.saveTitle(title);
-
-      ListService.updateList({ id: this.list.id, title: title }).then(r => {
-        if (r.code === 200) {
-          if (this.socket) {
-            console.log('before renaming')
-            this.socket.emit('list_title_rename', { title: title });
-          }
-        }
-      });
+    update() {
+      if (this.list.shared && this.list.shared.length && !this.socket)
+        this.connectWebSocket();
     },
 
     connectWebSocket() {
-      this.socket = io({ path: api.lists.shared_list });
+      this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
 
-      this.socket.on('connect', () => {
-        this.socket.emit('user_connect', { data: this.list });
-        console.log('connect', this.socket.id);
-
-      });
-
-      this.socket.on('my response', (data) => {
+      this.socket.on('connected', (data) => {
         console.log(data)
       });
 
-      this.socket.on('list_title_renaming', (r) => {
-        console.log(r);
-        console.log(r.data.title);
+      this.socket.on('list_title_renamed', (r) => {
         this.list.saveTitle(r.data.title);
+      });
+
+      this.socket.on('disconnected', () => {
+        this.socket.disconnect();
       })
     },
 
     disconnectWebSocket() {
       if (this.socket) {
-        this.socket.emit('user_disconnect', { data: 'I\'m disconnected!' });
-        this.socket.disconnect();
-        console.log('disconnect', this.socket.id);
+        this.socket.emit('user_disconnect', {});
       }
 
     },
@@ -204,3 +260,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.todo-list-title .bxs-group,
+.todo-list-title .bx-group {
+  width: 1.4rem;
+  height: 1.4rem;
+  position: relative;
+  margin-left: 0.1rem;
+  top: 0.25rem
+}
+</style>

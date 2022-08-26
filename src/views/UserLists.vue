@@ -28,32 +28,7 @@
                 :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i>
             </router-link>
 
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                aria-expanded="false" data-bs-offset="-10, 0">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
-
-              <ul v-if="list.owner.id === this.$user.id" class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item" @click="currentList = list; showListEditingModal = true">
-                  <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
-                </li>
-
-                <li class="dropdown-item" @click="currentList = list; showListSharingModal = true">
-                  <i class='bx bxs-group me-1'></i> {{ this.$t('list.share') }}
-                </li>
-
-                <li class="dropdown-item" @click="currentList = list; showListDeletionModal = true">
-                  <i class='bx bx-trash-alt me-1'></i> {{ this.$t('list.delete') }}
-                </li>
-              </ul>
-
-              <ul v-else class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item" @click="currentList = list; showListUnsubscribeModal = true">
-                  <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
-                </li>
-              </ul>
-            </div>
+            <list-menu :list="list" @edit="editListTitle"></list-menu>
           </li>
         </ul>
 
@@ -67,12 +42,6 @@
   <ListCreationModal v-if="showListCreationModal" @close="showListCreationModal = false"></ListCreationModal>
   <ListEditingModal v-if="showListEditingModal" :list="this.currentList" @close="showListEditingModal = false">
   </ListEditingModal>
-  <ListDeletionModal v-if="showListDeletionModal" :list="this.currentList" @close="showListDeletionModal = false">
-  </ListDeletionModal>
-  <ListSharingModal v-if="showListSharingModal" :listId="this.currentList.id" @close="showListSharingModal = false">
-  </ListSharingModal>
-  <ListUnsubscribeModal v-if="showListUnsubscribeModal" :listId="this.currentList.id" @close="showListUnsubscribeModal = false">
-  </ListUnsubscribeModal>
 </template>
 
 <script>
@@ -82,9 +51,7 @@ import ListService from '../services/ListService';
 import UnsavedListSavingModal from '../components/todo/UnsavedListSavingModal.vue';
 import ListCreationModal from '../components/todo/ListCreationModal.vue'
 import ListEditingModal from '../components/todo/ListEditingModal.vue'
-import ListDeletionModal from '../components/todo/ListDeletionModal.vue'
-import ListSharingModal from '../components/todo/ListSharingModal.vue'
-import ListUnsubscribeModal from '../components/todo/ListUnsubscribeModal.vue'
+import ListMenu from '../components/todo/ListMenu.vue'
 
 export default {
   data() {
@@ -96,9 +63,6 @@ export default {
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
       showListEditingModal: false,
-      showListDeletionModal: false,
-      showListSharingModal: false,
-      showListUnsubscribeModal: false,
     }
   },
 
@@ -110,8 +74,7 @@ export default {
         this._sharedLists = this.$store.lists.filter(l => l.shared.length);
         return this._sharedLists;
       },
-      set() {
-      }
+      set() {}
     },
 
     filteredLists() {
@@ -127,9 +90,7 @@ export default {
     UnsavedListSavingModal,
     ListCreationModal,
     ListEditingModal,
-    ListDeletionModal,
-    ListSharingModal,
-    ListUnsubscribeModal,
+    ListMenu,
   },
 
   methods: {
@@ -161,6 +122,11 @@ export default {
         });
       }
     },
+
+    editListTitle(list) {
+      this.showListEditingModal = true;
+      this.currentList = list;
+    }
   },
 
   mounted() {

@@ -55,6 +55,7 @@ export default {
 
   mounted() {
     this.title = this.list.title;
+    console.log(this.list);
   }
 }
 </script>

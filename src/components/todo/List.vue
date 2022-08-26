@@ -1,177 +1,99 @@
 <template>
-  <div class="todo-list mt-4">
-    <div class="card w-100">
-      <div class="card-body">
-        <div>
-          <div v-if="!listTitle && !isUnsavedListMessageHidden"
-            class="unsaved-list-message alert alert-primary alert-dismissible" role="alert">
-            <span
-              v-html="this.$t('list.unsavedMessage', [`<a href='/registration'>${this.$t('user.register')}</a>`, `<a href='/login'>${this.$t('user.login')}</a>`])"></span>
+  <div class="new-todo-list-item mb-4">
+    <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
+    <input v-model="newListItemTitle" @keypress.enter="createListItem($event, newListItemTitle)" class="form-control"
+      type="text" :placeholder="this.$t('list.item.placeholder')">
+  </div>
 
-            <button type="button" class="btn-close" @click="hideUnsavedListMessage" data-bs-dismiss="alert"
-              aria-label="Close">
-            </button>
-          </div>
-          <div v-if="!listTitle" class="todo-list-title-wrapper">
-            <h4 class="todo-list-title">{{ this.$t('list.unsaved') }}</h4>
-          </div>
+  <ul class="todo-list-item-filters mb-2">
+    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }" @click="currentListItemFilter = 'all'">
+      {{ this.$t('list.item.all') }}</li>
+    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
+      @click="currentListItemFilter = 'liked'">{{ this.$t('list.item.favorites') }}</li>
+    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
+      @click="currentListItemFilter = 'done'">{{ this.$t('list.item.done') }}</li>
+  </ul>
 
-          <div v-if="listTitle" class="todo-list-title-wrapper">
-            <h4 v-if="!listTitleEdit" class="todo-list-title">{{ listTitle }} <i v-if="list.shared.length" class="bx"
-                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
+  <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
+  <ul class="todo-list-item-hidden-title todo-list-items list-group list-group-flush">
+    <li class="todo-list-item">
+      <i class='todo-list-item-check bx bx-check-circle'></i>
+      <pre ref="hiddenTitleOfListItem" class="todo-list-item-title">{{ currentListItemTitle }}</pre>
+      <div class="dropdown todo-list-item-menu">
+        <button type="button" class="btn p-0 dropdown-toggle hide-arrow">
+          <i class="bx bx-dots-vertical-rounded"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
 
-            <form v-if="listTitleEdit">
-              <input :placeholder="this.$t('list.title')" ref="listTitleInput"
-                @keypress.enter.prevent.stop="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
-                @blur="saveListTitle($event)" v-model="tempListTitle" type="text"
-                class="todo-list-title-edit form-control">
-            </form>
+  <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
+  (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
+  (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
+    {{ this.$t('list.item.nothing') }}
+  </div>
 
-            <div class="todo-list-menu dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                aria-expanded="false" data-bs-offset="-10, 0">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
+  <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul" handle=".todo-list-item-handle"
+    item-key="id" :delay="200" :animation="300" easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true"
+    :force-autoscroll-fallback="true" :scroll-sensitivity="30" :scroll-speed="200"
+    class="todo-list-items list-group list-group-flush">
 
-              <ul v-if="list.owner.id === this.$user.id" class="dropdown-menu dropdown-menu-end">
-                <li @click="editListTitle(listTitle)" class="dropdown-item">
-                  <i class="bx bx-edit-alt me-1"></i> {{ this.$t('list.edit') }}
-                </li>
+    <template #item="{ element: item }">
+      <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
+        v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
 
-                <li class="dropdown-item" @click="showListSharingModal = true">
-                  <i class="bx bxs-group me-1"></i> {{ this.$t('list.share') }}
-                </li>
+        <i class='todo-list-item-check bx' :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }"
+          @click="checkListItem(item)"></i>
 
-                <li class="dropdown-item" @click="showListDeletionModal = true">
-                  <i class="bx bx-trash-alt me-1"></i> {{ this.$t('list.delete') }}
-                </li>
-              </ul>
+        <span :ref="`titleOfListItem-${listItems.indexOf(item)}`" class="todo-list-item-title todo-list-item-handle"
+          :class="{ 'todo-list-item-done': item.done }" @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{
+              item.title
+          }}</span>
 
-              <ul v-else class="dropdown-menu dropdown-menu-end">
-                <li class="dropdown-item" @click="showListUnsubscribeModal = true">
-                  <i class="bx bx-group me-1"></i> {{ this.$t('list.unsubscribe') }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <textarea :placeholder="this.$t('list.item.placeholder')" rows="1" class="todo-list-item-edit form-control"
+          type="text" :value="currentListItemTitle" v-if="item.titleEdit"
+          :ref="`editTitleOfListItem-${listItems.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
+          @input="inputListItemTitleText($event, item)" @blur.prevent="saveEditedListItemTitle(item)"
+          @keyup.esc="discardEditedListItemTitle(item)" @keydown="keyPressOnListItemTitleText($event)"
+          @paste="pasteListItemTitleText()"></textarea>
 
-        <div class="new-todo-list-item mb-4">
-          <i class='bx bxs-plus-circle' @click="createListItem($event, newListItemTitle)"></i>
-          <input v-model="newListItemTitle" @keypress.enter="createListItem($event, newListItemTitle)"
-            class="form-control" type="text" :placeholder="this.$t('list.item.placeholder')">
-        </div>
+        <div class="dropdown todo-list-item-menu">
+          <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </button>
 
-        <ul class="todo-list-item-filters mb-2">
-          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }"
-            @click="currentListItemFilter = 'all'">
-            {{ this.$t('list.item.all') }}</li>
-          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
-            @click="currentListItemFilter = 'liked'">{{ this.$t('list.item.favorites') }}</li>
-          <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
-            @click="currentListItemFilter = 'done'">{{ this.$t('list.item.done') }}</li>
-        </ul>
-
-        <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
-        <ul class="todo-list-item-hidden-title todo-list-items list-group list-group-flush">
-          <li class="todo-list-item">
-            <i class='todo-list-item-check bx bx-check-circle'></i>
-            <pre ref="hiddenTitleOfListItem" class="todo-list-item-title">{{ currentListItemTitle }}</pre>
-            <div class="dropdown todo-list-item-menu">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
-            </div>
-          </li>
-        </ul>
-
-        <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
-        (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
-        (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
-          {{ this.$t('list.item.nothing') }}
-        </div>
-
-        <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul"
-          handle=".todo-list-item-handle" item-key="id" :delay="200" :animation="300"
-          easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true" :force-autoscroll-fallback="true"
-          :scroll-sensitivity="30" :scroll-speed="200" class="todo-list-items list-group list-group-flush">
-
-          <template #item="{ element: item }">
-            <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
-              v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
-
-              <i class='todo-list-item-check bx' :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }"
-                @click="checkListItem(item)"></i>
-
-              <span :ref="`titleOfListItem-${listItems.indexOf(item)}`"
-                class="todo-list-item-title todo-list-item-handle" :class="{ 'todo-list-item-done': item.done }"
-                @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{ item.title }}</span>
-
-              <textarea :placeholder="this.$t('list.item.placeholder')" rows="1"
-                class="todo-list-item-edit form-control" type="text" :value="currentListItemTitle" v-if="item.titleEdit"
-                :ref="`editTitleOfListItem-${listItems.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
-                @input="inputListItemTitleText($event, item)" @blur.prevent="saveEditedListItemTitle(item)"
-                @keyup.esc="discardEditedListItemTitle(item)" @keydown="keyPressOnListItemTitleText($event)"
-                @paste="pasteListItemTitleText()"></textarea>
-
-              <div class="dropdown todo-list-item-menu">
-                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li class="dropdown-item" @click="editListItemTitle(item)">
-                    <i class="bx bx-edit-alt me-1"></i> {{ this.$t('common.edit') }}
-                  </li>
-
-                  <li class="dropdown-item" @click="toggleLikeListItem(item)">
-                    <i class="bx me-1" :class="{ 'bx-heart': !item.liked, 'bxs-heart': item.liked }"></i>
-                    {{ item.liked ? this.$t('list.item.unfavorite') : this.$t('list.item.favorite') }}
-                  </li>
-
-                  <li class="dropdown-item" @click="deleteListItem(item)">
-                    <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> {{ this.$t('common.delete') }}
-                  </li>
-                </ul>
-              </div>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-item" @click="editListItemTitle(item)">
+              <i class="bx bx-edit-alt me-1"></i> {{ this.$t('common.edit') }}
             </li>
 
-          </template>
-        </draggable>
+            <li class="dropdown-item" @click="toggleLikeListItem(item)">
+              <i class="bx me-1" :class="{ 'bx-heart': !item.liked, 'bxs-heart': item.liked }"></i>
+              {{ item.liked ? this.$t('list.item.unfavorite') : this.$t('list.item.favorite') }}
+            </li>
 
-        <ListDeletionModal v-if="list && showListDeletionModal" :list="this.list"
-          @close="showListDeletionModal = false"></ListDeletionModal>
+            <li class="dropdown-item" @click="deleteListItem(item)">
+              <i class='todo-list-item-delete bx bx-trash-alt me-1'></i> {{ this.$t('common.delete') }}
+            </li>
+          </ul>
+        </div>
+      </li>
 
-        <ListSharingModal v-if="list && showListSharingModal" :listId="this.list.id"
-          @close="showListSharingModal = false">
-        </ListSharingModal>
-
-        <ListUnsubscribeModal v-if="list && showListUnsubscribeModal" :listId="this.list.id"
-          @close="showListUnsubscribeModal = false">
-        </ListUnsubscribeModal>
-      </div>
-    </div>
-  </div>
+    </template>
+  </draggable>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
-import ListSharingModal from './ListSharingModal.vue';
-import ListDeletionModal from './ListDeletionModal.vue';
-import ListUnsubscribeModal from './ListUnsubscribeModal.vue';
+import { removeUselessSymbols } from '../../helpers/string-utils'
 
 export default {
+  emits: ['create', 'check', 'range', 'saveTitle', 'like', 'delete', 'saveListTitle', 'update'],
   props: ['list', 'listItems', 'listTitle'],
 
   data() {
     return {
-      isUnsavedListMessageHidden: false,
-
-      listTitleEdit: false,
-      tempListTitle: '',
-      discardedListTitleEdit: false,
-
       newListItemTitle: '',
       currentListItemTitle: '',
       currentListItemFilter: 'all',
@@ -179,79 +101,19 @@ export default {
       isEnterKey: false,
       isListItemEnterKey: false,
       discardedListItemTitleEdit: false,
-
-      showListSharingModal: false,
-      showListDeletionModal: false,
-      showListUnsubscribeModal: false,
     }
   },
 
   components: {
     draggable,
-    ListSharingModal,
-    ListDeletionModal,
-    ListUnsubscribeModal
   },
 
   methods: {
-    toggleUnsavedListMessage() {
-      const lsItem = localStorage.getItem('unsavedListMessageHide');
-      this.isUnsavedListMessageHidden = lsItem === 'true' ? true : false;
-    },
-
-    hideUnsavedListMessage() {
-      localStorage.setItem('unsavedListMessageHide', true);
-    },
-
-    editListTitle(title) {
-      this.listTitleEdit = true;
-      this.tempListTitle = title;
-
-      this.$nextTick(() => {
-        this.$refs['listTitleInput'].focus();
-      })
-    },
-
-    saveListTitle($event) {
-      if (this.discardedListTitleEdit) {
-        this.discardedListTitleEdit = false;
-        return;
-      }
-
-      if (!$event.target.value || $event.target.value.trim().length === 0) return;
-
-      if ($event.type === 'keypress') this.isListItemEnterKey = true;
-      else if ($event.type === 'blur' && this.isListItemEnterKey) {
-        this.isListItemEnterKey = false;
-        return;
-      }
-
-      this.listTitleEdit = false;
-      const title = this.removeUselessSymbols($event.target.value.trim(), 'all');
-
-      this.$emit('saveListTitle', title);
-    },
-
-    discardListTitleEdit() {
-      this.discardedListTitleEdit = true;
-      this.listTitleEdit = false;
-    },
-
-    removeUselessSymbols(listItemTitle, mode) {
-      switch (mode) {
-        case 'all':
-          return listItemTitle.replace(/([\r\n])|( +(?= ))|(^\s)/g, '');
-
-        case 'breaks':
-          return listItemTitle.replace(/[\r\n]/g, ' ').replace(/ +(?= )/g, '');
-      }
-    },
-
     createListItem($event, newListItemTitle) {
       let title = $event.target.value || newListItemTitle;
       if (!title.trim()) return;
 
-      title = this.removeUselessSymbols(title, 'all').trim();
+      title = removeUselessSymbols(title, 'all').trim();
 
       this.newListItemTitle = '';
       $event.target.value = '';
@@ -299,7 +161,7 @@ export default {
     inputListItemTitleText($event, item) {
       // Not using v-model is for fixing mobile chromium browser bug (not updates model every input event, only every word)
       if (this.isPastedText) {
-        $event.target.value = this.removeUselessSymbols($event.target.value, 'breaks');
+        $event.target.value = removeUselessSymbols($event.target.value, 'breaks');
       }
       this.isPastedText = false;
 
@@ -349,7 +211,7 @@ export default {
 
       if (!this.currentListItemTitle.trim()) return;
 
-      this.currentListItemTitle = this.removeUselessSymbols(this.currentListItemTitle, 'all').trim();
+      this.currentListItemTitle = removeUselessSymbols(this.currentListItemTitle, 'all').trim();
       this.$emit('saveTitle', item, this.currentListItemTitle);
       this.currentListItemTitle = '';
     },
@@ -370,29 +232,8 @@ export default {
     }
   },
 
-  mounted() {
-    this.toggleUnsavedListMessage();
+  updated() {
+    this.$emit('update');
   }
 }
 </script>
-
-<style scoped>
-@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-  .unsaved-list-message {
-    margin: 0.7rem 1rem;
-  }
-}
-
-.unsaved-list-message a {
-  text-decoration: underline;
-}
-
-.todo-list-title .bxs-group,
-.todo-list-title .bx-group {
-  width: 1.4rem;
-  height: 1.4rem;
-  position: relative;
-  margin-left: 0.1rem;
-  top: 0.25rem
-}
-</style>
