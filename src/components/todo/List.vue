@@ -22,7 +22,7 @@
 
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"
-                @keypress.enter.prevent="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
+                @keypress.enter.prevent.stop="saveListTitle($event)" @keyup.esc="discardListTitleEdit"
                 @blur="saveListTitle($event)" v-model="tempListTitle" type="text"
                 class="todo-list-title-edit form-control">
             </form>
@@ -143,7 +143,8 @@
         <ListDeletionModal v-if="list && showListDeletionModal" :list="this.list"
           @close="showListDeletionModal = false"></ListDeletionModal>
 
-        <ListSharingModal v-if="list && showListSharingModal" :listId="this.list.id" @close="showListSharingModal = false">
+        <ListSharingModal v-if="list && showListSharingModal" :listId="this.list.id"
+          @close="showListSharingModal = false">
         </ListSharingModal>
 
         <ListUnsubscribeModal v-if="list && showListUnsubscribeModal" :list="this.list"
@@ -176,6 +177,7 @@ export default {
       currentListItemFilter: 'all',
       isPastedText: false,
       isEnterKey: false,
+      isListItemEnterKey: false,
       discardedListItemTitleEdit: false,
 
       showListSharingModal: false,
@@ -217,6 +219,12 @@ export default {
       }
 
       if (!$event.target.value || $event.target.value.trim().length === 0) return;
+
+      if ($event.type === 'keypress') this.isListItemEnterKey = true;
+      else if ($event.type === 'blur' && this.isListItemEnterKey) {
+        this.isListItemEnterKey = false;
+        return;
+      }
 
       this.listTitleEdit = false;
       const title = this.removeUselessSymbols($event.target.value.trim(), 'all');

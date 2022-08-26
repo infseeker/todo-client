@@ -39,6 +39,8 @@ export default {
           r.data.forEach(i => {
             this.$store.lists.push(new List(i));
           });
+
+          this.$store.lists.sort((a, b) => a.id - b.id);
         }
       });
     },
@@ -144,6 +146,10 @@ export default {
 
       ListService.updateList({ id: this.list.id, title: title }).then(r => {
         if (r.code === 200) {
+          if (this.socket) {
+            console.log('before renaming')
+            this.socket.emit('list_title_rename', { title: title });
+          }
         }
       });
     },
@@ -152,12 +158,19 @@ export default {
       this.socket = io({ path: api.lists.shared_list });
 
       this.socket.on('connect', () => {
-        this.socket.emit('user_connect', { data: 'I\'m connected!' });
+        this.socket.emit('user_connect', { data: this.list });
         console.log('connect', this.socket.id);
+
       });
 
       this.socket.on('my response', (data) => {
         console.log(data)
+      });
+
+      this.socket.on('list_title_renaming', (r) => {
+        console.log(r);
+        console.log(r.data.title);
+        this.list.saveTitle(r.data.title);
       })
     },
 
