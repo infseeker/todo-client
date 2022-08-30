@@ -3,7 +3,7 @@
     <div class="card w-100">
       <div class="card-body">
         <div class="guest-todo-list">
-          <div v-if="list.title" class="todo-list-title-wrapper">
+          <div v-if="list" class="todo-list-title-wrapper">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ list.title }} <i v-if="list.shared.length" class="bx"
                 :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
 
@@ -15,6 +15,18 @@
             </form>
 
             <list-menu :list="list" @edit="editListTitle"></list-menu>
+          </div>
+
+          <div v-if="list" class="list-users">
+            <ul>
+              <li>
+                <img :src="list.owner.image" alt="List owner image" :title="list.owner.email"
+                  :class="{ online: list.owner.online }">
+              </li>
+              <li v-for="user in list.shared" v-bind:key="user.id">
+                <img :src="user.image" alt="User image" :title="user.email" :class="{ online: user.online }">
+              </li>
+            </ul>
           </div>
 
           <todo-list v-if="list && list.items" :list="list" :listItems="list.items" @create="create" @check="check"
@@ -41,7 +53,7 @@ import { removeUselessSymbols } from '../helpers/string-utils'
 export default {
   data() {
     return {
-      list: {},
+      list: null,
       socket: null,
       listTitleEdit: false,
       tempListTitle: '',
@@ -75,10 +87,6 @@ export default {
       const listId = parseInt(this.$route.params.listId);
       const list = this.$store.lists.find(i => i.id === listId);
       this.list = list;
-
-      if (this.list && this.list.shared && this.list.shared.length) {
-        this.connectWebSocket();
-      }
 
       if (list) {
         if (!list.items || !list.items.length) {
@@ -219,16 +227,33 @@ export default {
     connectWebSocket() {
       this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
 
-      this.socket.on('connected', (data) => {
-        console.log(data)
+      this.socket.on('connected', (r) => {
+        console.log('connect', r);
+
+        if (r) {
+          if (this.list.owner.id === r.data.id) {
+            this.list.owner.online = true;
+          } else {
+            this.list.shared.find(u => u.id === r.data.id).online = true;
+          }
+        }
       });
 
       this.socket.on('list_title_renamed', (r) => {
         this.list.saveTitle(r.data.title);
       });
 
-      this.socket.on('disconnected', () => {
-        this.socket.disconnect();
+      this.socket.on('disconnected', (r) => {
+        console.log(r);
+
+        if (r) {
+          if (this.list.owner.id === r.data.id) {
+            this.list.owner.online = false;
+          } else {
+            const user = this.list.shared.find(u => u.id === r.data.id);
+            if (user) user.online = false;
+          }
+        }
       })
     },
 
@@ -249,9 +274,17 @@ export default {
     if (!this.$store.lists.length) {
       this.getLists().then(() => {
         this.getListItems();
+
+        if (this.list && this.list.shared && this.list.shared.length) {
+          this.connectWebSocket();
+        }
       })
     } else {
       this.getListItems();
+
+      if (this.list && this.list.shared && this.list.shared.length) {
+        this.connectWebSocket();
+      }
     }
   },
 
@@ -268,6 +301,23 @@ export default {
   height: 1.4rem;
   position: relative;
   margin-left: 0.1rem;
-  top: 0.25rem
+  top: 0.25rem;
+}
+
+.list-users ul {
+  display: flex;
+  gap: 0.1rem;
+  list-style: none;
+}
+
+.list-users img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0);
+}
+
+.list-users .online {
+  border: 3px solid #68d333;
 }
 </style>

@@ -113,7 +113,6 @@ const routes = [
     },
   },
 
-  // Common
   {
     path: '/404',
     name: 'not-found',

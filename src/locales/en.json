@@ -155,9 +155,5 @@
     "password": "8-15 characters, only latins and digits",
     "accessCode": "{0} digits",
     "image": "jpeg, png, max. size is 5 Mb"
-  },
-
-  "admin": {
-
   }
 }
