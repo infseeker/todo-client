@@ -32,6 +32,7 @@ import ListService from '../../services/ListService';
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { email } from '../../helpers/validations'
+import { api } from '/public/server-api';
 
 export default {
   data() {
@@ -75,9 +76,10 @@ export default {
           this.$refs.input.focus();
 
           if (r.code === 200) {
+            if(r.data.image) r.data.image = api.user.get_image(r.data.image);
             list.shared.push(r.data);
-            this.email = '',
-              this.$toast.success(this.$t('list.sharedWith', [email]));
+            this.email = '';
+            this.$toast.success(this.$t('list.sharedWith', [email]));
           }
           else if (r.code === 404)
             this.$toast.error(this.$t('user.notFoundByEmail'));
