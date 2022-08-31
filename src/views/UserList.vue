@@ -115,7 +115,7 @@ export default {
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });
             }
-          })
+          });
         } else {
           this.listItems = list.items;
           console.log(list);
@@ -173,7 +173,6 @@ export default {
       const lastListItem = this.list.items[this.list.items.length - 1];
       const position = lastListItem ? lastListItem.position + 1 : 1
 
-
       ListService.createListItem(this.list, title, position).then(r => {
         this.$loader.hide();
 
@@ -185,6 +184,8 @@ export default {
           }
         }
       });
+
+      this.checkInternetConnection();
     },
 
     check(listItem) {
@@ -192,6 +193,8 @@ export default {
       ListService.updateListItem(listItem).then(r => {
         if (r.code === 200 && this.socket) this.socket.emit('check_list_item', { ...r.data })
       });
+
+      this.checkInternetConnection();
     },
 
     range(listItem, newIndex) {
@@ -207,7 +210,9 @@ export default {
 
       ListService.updateListItem(listItem).then(r => {
         if (r.code === 200 && this.socket) this.socket.emit('range_list_item', { ...r.data });
-      })
+      });
+
+      this.checkInternetConnection();
     },
 
     saveTitle(listItem, title) {
@@ -215,6 +220,8 @@ export default {
       ListService.updateListItem(listItem).then(r => {
         if (r.code === 200 && this.socket) this.socket.emit('edit_list_item_title', { ...r.data });
       });
+
+      this.checkInternetConnection();
     },
 
     like(listItem) {
@@ -222,6 +229,8 @@ export default {
       ListService.updateListItem(listItem).then(r => {
         if (r.code === 200 && this.socket) this.socket.emit('like_list_item', { ...r.data });
       });
+
+      this.checkInternetConnection();
     },
 
     deleteItem(listItem) {
@@ -229,11 +238,15 @@ export default {
       ListService.deleteListItem(listItem).then(r => {
         if (r.code === 200 && this.socket) this.socket.emit('delete_list_item', { ...r.data });
       });
+
+      this.checkInternetConnection();
     },
 
     update() {
       if (this.list.shared && this.list.shared.length && !this.socket)
         this.connectWebSocket();
+
+      this.checkInternetConnection();
     },
 
     connectWebSocket() {
@@ -349,6 +362,16 @@ export default {
         this.socket.emit('user_disconnect', {});
       }
     },
+
+    checkInternetConnection() {
+      if (!window.navigator.onLine) {
+        this.$toast.error(this.$t('app.noInternet', ['5']));
+
+        setTimeout(() => {
+          location.reload();
+        }, 5000);
+      }
+    }
   },
 
   created() {
@@ -366,9 +389,8 @@ export default {
   },
 
   updated() {
-    if (this.list.shared.length && !this.socket) {
+    if (this.list.shared && this.list.shared.length && !this.socket)
       this.connectWebSocket();
-    }
   },
 
   unmounted() {

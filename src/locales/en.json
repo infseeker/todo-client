@@ -2,7 +2,8 @@
   "app": {
     "title": "Infseeker ToDo - Create a list",
     "notFound": "Page not found",
-    "backToMain": "Back to main page"
+    "backToMain": "Back to main page",
+    "noInternet": "There is no Internet connection. This page will be reload in {0} seconds."
   },
 
   "common": {
