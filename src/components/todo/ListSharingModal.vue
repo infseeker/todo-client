@@ -32,7 +32,8 @@ import ListService from '../../services/ListService';
 import useValidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { email } from '../../helpers/validations'
-import { api } from '/public/server-api';
+import { io } from 'socket.io-client'
+import { api } from '/public/server-api'
 
 export default {
   data() {
@@ -41,6 +42,7 @@ export default {
       list: this.$store.lists.find(l => l.id === this.listId),
       email: '',
       isDisabled: false,
+      socket: null,
     }
   },
 
@@ -61,8 +63,6 @@ export default {
 
   methods: {
     share(list, email) {
-      console.log(list, email)
-
       this.v$.$validate();
 
       if (!this.v$.$error) {
@@ -76,10 +76,12 @@ export default {
           this.$refs.input.focus();
 
           if (r.code === 200) {
-            if(r.data.image) r.data.image = api.user.get_image(r.data.image);
+            if (r.data.image) r.data.image = api.user.get_image(r.data.image);
             list.shared.push(r.data);
             this.email = '';
             this.$toast.success(this.$t('list.sharedWith', [email]));
+
+            this.socket.emit('share_list', { list_id: this.list.id, data: r.data });
           }
           else if (r.code === 404)
             this.$toast.error(this.$t('user.notFoundByEmail'));
@@ -96,6 +98,8 @@ export default {
         if (r.code === 200) {
           list.shared = list.shared.filter(u => u.email !== email);
           this.$toast.success(this.$t('list.unshared', [email]));
+
+          this.socket.emit('unshare_list', { list_id: this.list.id, data: r.data });
         }
         else if (r.code === 404)
           this.$toast.error(this.$t('user.notFoundByEmail'));
@@ -103,6 +107,10 @@ export default {
           this.$toast.warning(this.$t('user.dataNotValid'));
       })
     }
+  },
+
+  mounted() {
+    this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
   }
 }
 </script>

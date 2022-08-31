@@ -3,7 +3,7 @@
     <div class="card w-100">
       <div class="card-body">
         <div class="guest-todo-list">
-          <div v-if="list" class="todo-list-title-wrapper">
+          <div v-if="list" :class="{ 'mb-4': !list.shared.length }" class="todo-list-title-wrapper mb-1">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ list.title }} <i v-if="list.shared.length" class="bx"
                 :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
 
@@ -20,11 +20,12 @@
           <div v-if="list && list.shared.length" class="list-users">
             <ul>
               <li>
-                <img :src="list.owner.image ? list.owner.image : blankUserImageUrl" alt="List owner image" :title="list.owner.email"
-                  :class="{ online: list.owner.online }">
+                <img :src="list.owner.image ? list.owner.image : blankUserImageUrl" alt="List owner image"
+                  :title="list.owner.email" :class="{ online: list.owner.online }">
               </li>
               <li v-for="user in list.shared" v-bind:key="user.id">
-                <img :src="user.image ? user.image : blankUserImageUrl" alt="User image" :title="user.email" :class="{ online: user.online }">
+                <img :src="user.image ? user.image : blankUserImageUrl" alt="User image" :title="user.email"
+                  :class="{ online: user.online }">
               </li>
             </ul>
           </div>
@@ -41,7 +42,6 @@
 
 <script>
 import { io } from 'socket.io-client'
-
 import { api } from '../../public/server-api'
 import TodoList from '../components/todo/List.vue';
 import ListMenu from '../components/todo/ListMenu.vue'
@@ -240,7 +240,6 @@ export default {
       this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
 
       this.socket.on('connected', (r) => {
-        console.log(r);
         setUserOnline(this.list, r.data);
       });
 
@@ -300,6 +299,40 @@ export default {
         if (listItem && this.$user.id !== r.user.id) this.list.items = this.list.items.filter(item => item !== listItem);
       });
 
+      this.socket.on('list_shared', (r) => {
+        if (this.$user.id !== r.user.id) {
+          setUserOnline(this.list, r.user);
+          this.list.shared.push(r.data);
+        }
+      });
+
+      this.socket.on('list_unshared', (r) => {
+        if (this.$user.id !== r.user.id) {
+          setUserOnline(this.list, r.user);
+          if (this.$user.id === r.data.id) {
+            setTimeout(() => {
+              this.$store.lists = this.$store.lists.filter(l => l !== this.list);
+            }, 0);
+
+            this.$router.push({ name: 'lists' });
+            this.$toast.info(this.$t('list.unsubscribed', [this.list.title]));
+          } else {
+            this.list.shared = this.list.shared.filter(u => u.id !== r.data.id);
+          }
+        }
+      });
+
+      this.socket.on('list_deleted', (r) => {
+        setUserOnline(this.list, r.user);
+
+        setTimeout(() => {
+          this.$store.lists = this.$store.lists.filter(l => l !== this.list);
+        }, 0);
+
+        this.$router.push({ name: 'lists' });
+        this.$toast.info(this.$t('list.deleted', [this.list.title]));
+      });
+
       function setUserOnline(currentList, userData) {
         if (userData) {
           if (currentList.owner.id === userData.id) {
@@ -315,7 +348,6 @@ export default {
       if (this.socket) {
         this.socket.emit('user_disconnect', {});
       }
-
     },
   },
 
@@ -351,7 +383,9 @@ export default {
 
 .list-users ul {
   display: flex;
+  justify-content: center;
   gap: 0.1rem;
+  padding: 0;
   list-style: none;
 }
 
@@ -363,6 +397,7 @@ export default {
 }
 
 .list-users .online {
-  border: 3px solid #68d333;
+  border: 3px solid rgb(113, 221, 55);
+  /* border: 3px solid rgb(3, 195, 236); */
 }
 </style>

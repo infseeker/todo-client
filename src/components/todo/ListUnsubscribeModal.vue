@@ -20,11 +20,14 @@
 <script>
 import Modal from '../common/Modal.vue'
 import ListService from '../../services/ListService';
+import { io } from 'socket.io-client'
+import { api } from '/public/server-api'
 
 export default {
   data() {
     return {
       list: this.$store.lists.find(l => l.id === this.listId),
+      socket: null,
     }
   },
 
@@ -36,22 +39,25 @@ export default {
 
   methods: {
     unsubscribe(list, email) {
-      // Hack:
-      // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
-      // $nextTick function doesn't work in this case
-      setTimeout(() => {
-        this.$store.lists = this.$store.lists.filter(item => item !== list);
-      }, 0);
-
-      this.$router.push({ name: 'lists' });
-
       ListService.unshareList(list, email).then(r => {
-        if (r.code === 200)
-          this.$toast.success(this.$t('list.unsubscribed', [list.title]));
-        else
+        if (r.code === 200) {
+          this.$toast.info(this.$t('list.unsubscribed', [list.title]));
+          this.socket.emit('unshare_list', { list_id: this.list.id, data: r.data });
+
+          setTimeout(() => {
+            this.$store.lists = this.$store.lists.filter(item => item !== list);
+          }, 0);
+
+          this.$router.push({ name: 'lists' });
+        } else {
           this.$toast.warning(this.$t('user.dataNotValid'));
+        }
       });
     }
+  },
+
+  mounted() {
+    this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
   }
 }
 </script>
