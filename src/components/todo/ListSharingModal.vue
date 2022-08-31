@@ -5,11 +5,14 @@
     </template>
 
     <template v-slot:content>
-      <p v-html="this.$t('list.sharingWith', [`<mark>${list.title}</mark>`])"></p>
-      <input ref="input" v-model.trim="email" @keypress.enter="share(list, email)"
-        :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
-      <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
-      </div>
+      <form>
+        <p v-html="this.$t('list.sharingWith', [`<mark>${list.title}</mark>`])"></p>
+        <input ref="input" v-model.trim="email" @keypress.enter.prevent="share(list, email)"
+          :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />
+        <div v-if="this.v$.email.$error" class="invalid-feedback d-block mx-2">{{ this.$t('validations.email') }}
+        </div>
+      </form>
+      
       <ul class="email-badges list-group">
         <li v-for="user in list.shared" v-bind:key="user.id" class="email-badge">
           <span class="badge bg-label-dark">{{ user.email }} <span @click="unshare(list, user.email)"
@@ -81,6 +84,7 @@ export default {
             this.email = '';
             this.$toast.success(this.$t('list.sharedWith', [email]));
 
+            list.owner.online = true;
             this.socket.emit('share_list', { list_id: this.list.id, data: r.data });
           }
           else if (r.code === 404)

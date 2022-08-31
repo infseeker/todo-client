@@ -365,6 +365,12 @@ export default {
     }
   },
 
+  updated() {
+    if (this.list.shared.length && !this.socket) {
+      this.connectWebSocket();
+    }
+  },
+
   unmounted() {
     this.disconnectWebSocket();
   },
