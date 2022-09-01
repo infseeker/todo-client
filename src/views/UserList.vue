@@ -111,14 +111,12 @@ export default {
 
               list.loadItems(items);
 
-              console.log(list);
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });
             }
           });
         } else {
           this.listItems = list.items;
-          console.log(list);
         }
       } else {
         this.$router.push({ name: 'not-found' })
@@ -126,7 +124,6 @@ export default {
     },
 
     editListTitle(list) {
-      console.log(list.title);
       this.listTitleEdit = true;
       this.tempListTitle = list.title;
 
@@ -206,6 +203,7 @@ export default {
           listItem.position = r.data.position;
 
           if (this.socket) {
+            this.list.items.sort((a, b) => a.position - b.position);
             this.socket.emit('range_list_item', r.data);
           }
         }
@@ -244,8 +242,6 @@ export default {
     update() {
       if (this.list.shared && this.list.shared.length && !this.socket)
         this.connectWebSocket();
-
-      this.checkInternetConnection();
     },
 
     connectWebSocket() {
@@ -256,8 +252,6 @@ export default {
       });
 
       this.socket.on('disconnected', (r) => {
-        console.log(r);
-
         if (r) {
           if (this.list.owner.id === r.data.id) {
             this.list.owner.online = false;

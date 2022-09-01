@@ -118,7 +118,6 @@ export default {
             this.$store.lists.sort((a, b) => a.id - b.id);
 
             this.sharedLists = this.$store.lists.filter(l => l.shared.length);
-            console.log(this.$user, this.$store.lists)
           }
         });
       }

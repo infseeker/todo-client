@@ -217,7 +217,6 @@ export default {
     },
 
     discardEditedListItemTitle(item) {
-      console.log('discard');
       this.discardedListItemTitleEdit = true;
       item.titleEdit = false;
       this.currentListItemTitle = '';
