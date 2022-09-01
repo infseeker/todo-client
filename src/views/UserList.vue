@@ -199,17 +199,16 @@ export default {
 
     range(listItem, newIndex) {
       const items = this.list.items;
+      const previousListItemId = newIndex === 0 ? 0 : items[newIndex - 1].id;
 
-      if (newIndex === 0) {
-        listItem.position = items[1].position / 2;
-      } else if (newIndex === items.length - 1) {
-        listItem.position = items[newIndex - 1].position + 1;
-      } else {
-        listItem.position = (items[newIndex - 1].position + items[newIndex + 1].position) / 2;
-      }
+      ListService.updateListItem(listItem, previousListItemId).then(r => {
+        if (r.code === 200) {
+          listItem.position = r.data.position;
 
-      ListService.updateListItem(listItem).then(r => {
-        if (r.code === 200 && this.socket) this.socket.emit('range_list_item', { ...r.data });
+          if (this.socket) {
+            this.socket.emit('range_list_item', r.data);
+          }
+        }
       });
 
       this.checkInternetConnection();

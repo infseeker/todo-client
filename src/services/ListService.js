@@ -139,7 +139,7 @@ class ListService {
       .then((data) => data);
   }
 
-  static async updateListItem(listItem) {
+  static async updateListItem(listItem, previousListItemId = null) {
     return await fetch(
       api.lists.update_list_item(listItem.listId, listItem.id),
       {
@@ -154,6 +154,7 @@ class ListService {
           is_done: listItem.done,
           is_liked: listItem.liked,
           position: listItem.position,
+          previous_list_item_id: previousListItemId,
         }),
       }
     )
