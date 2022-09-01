@@ -364,11 +364,7 @@ export default {
 
     checkInternetConnection() {
       if (!window.navigator.onLine) {
-        this.$toast.error(this.$t('app.noInternet', ['5']));
-
-        setTimeout(() => {
-          location.reload();
-        }, 5000);
+        this.$toast.error(this.$t('app.noInternet'));
       }
     }
   },
