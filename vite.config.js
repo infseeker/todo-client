@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import path, { resolve } from 'path';
+import { API_ROOT } from './public/server-api';
 
 import vue from '@vitejs/plugin-vue';
 import ViteI18n from '@intlify/vite-plugin-vue-i18n';
@@ -18,7 +19,7 @@ export default ({ command, mode }) => {
     server: {
       host: '0.0.0.0',
       proxy: {
-        '/todo/api': {
+        [API_ROOT]: {
           target: process.env.VITE_API_SERVER,
         },
       },

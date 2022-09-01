@@ -31,7 +31,7 @@ class ListService {
       });
     }
 
-    return await fetch(api.lists.create_list(), {
+    return await fetch(api.lists.create_list, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

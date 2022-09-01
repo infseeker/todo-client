@@ -137,12 +137,10 @@ router.setRouteByUserPermissions = function (route, user) {
   
   if (route.meta.authRequired && !user.isAuth) {
     router.push({ name: 'login' });
-    console.log({ message: 'Router: You are not authenticated' });
   }
 
   if (route.meta.adminRequired && !user.isAdmin) {
     router.push({ name: 'login' });
-    console.log({ message: 'Router: You do not have enough permissions' });
   }
 
   if (route.meta.guestRequired && user.isAuth) {
@@ -151,7 +149,6 @@ router.setRouteByUserPermissions = function (route, user) {
     } else {
       router.push({ name: 'lists' });
     }
-    console.log({ message: 'Router: You are already logged in' });
   }
 };
 
