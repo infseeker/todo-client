@@ -13,7 +13,7 @@
         </div>
 
         <div class="todo-list-title-wrapper">
-          <h4 class="todo-list-title">{{ this.$t('list.unsaved') }}</h4>
+          <h4 class="todo-list-title mb-4">{{ this.$t('list.unsaved') }}</h4>
         </div>
 
         <div class="guest-todo-list">

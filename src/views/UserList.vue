@@ -5,7 +5,7 @@
         <div class="guest-todo-list">
           <div v-if="list" :class="{ 'mb-4': !list.shared.length }" class="todo-list-title-wrapper mb-1">
             <h4 v-if="!listTitleEdit" class="todo-list-title">{{ list.title }} <i v-if="list.shared.length" class="bx"
-                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i></h4>
+                :class="[list.owner.id === this.$user.id ? 'bxs-group' : 'bx-group']"></i></h4>
 
             <form v-if="listTitleEdit">
               <input :placeholder="this.$t('list.title')" ref="listTitleInput"

@@ -24,9 +24,10 @@
 
             <router-link :to="{ name: 'list', params: { listId: list.id } }">
               {{ list.title }}
-              <i v-if="list.shared.length" class="bx"
-                :class="[list.owner.id === this.$user.id ? 'bx-group' : 'bxs-group']"></i>
+              
             </router-link>
+            <i v-if="list.shared.length" class="shared-icon bx"
+                :class="[list.owner.id === this.$user.id ? 'bxs-group' : 'bx-group']"></i>
 
             <list-menu :list="list" @edit="editListTitle"></list-menu>
           </li>
