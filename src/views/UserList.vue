@@ -100,6 +100,18 @@ export default {
             this.$loader.hide();
 
             if (r.code === 200) {
+              if (this.socket) {
+                list.title = r.list.title;
+
+                list.owner.image = api.user.get_image(r.list.owner.image);
+
+                const sharedUsers = r.list.shared;
+                if (sharedUsers && sharedUsers.length)
+                  sharedUsers.forEach(u => u.image = api.user.get_image(u.image));
+
+                list.shared = sharedUsers;
+              }
+
               const items = [];
 
               r.data.forEach(i => {
@@ -348,6 +360,7 @@ export default {
     disconnectWebSocket() {
       if (this.socket) {
         this.socket.emit('user_disconnect', {});
+        this.socket = null;
       }
     },
 
@@ -373,8 +386,17 @@ export default {
   },
 
   updated() {
-    if (this.list && this.list.shared && this.list.shared.length && !this.socket)
-      this.connectWebSocket();
+    if (this.list) {
+      if (this.list.shared && this.list.shared.length && !this.socket) {
+        this.connectWebSocket();
+      }
+
+      if (!this.list.shared || !this.list.shared.length) {
+        if (this.socket) {
+          this.disconnectWebSocket();
+        }
+      }
+    }
   },
 
   unmounted() {

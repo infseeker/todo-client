@@ -23,6 +23,12 @@ import { io } from 'socket.io-client'
 import { api } from '/public/server-api'
 
 export default {
+  data() {
+    return {
+      socket: null,
+    }
+  },
+
   props: ['list'],
 
   components: {
@@ -47,16 +53,29 @@ export default {
           }
         });
       } else {
-        const socket = await io({ path: api.lists.shared_list, auth: { list_id: list.id } });
-
-        socket.on('connected', () => {
-          ListService.deleteList(list).then(r => {
-            if (r.code === 200) {
-              socket.emit('delete_list', { list_id: list.id });
+        ListService.deleteList(list).then(r => {
+          if (r.code === 200) {
+            if (this.socket) {
+              this.socket.emit('delete_list', { list_id: list.id });
+              this.socket.emit('user_disconnect', {});
             }
-          });
+          }
         });
       }
+    }
+  },
+
+  mounted() {
+    if (this.list.shared.length) {
+      this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
+    }
+  },
+
+  unmounted() {
+    if (this.socket) {
+      setTimeout(() => {
+        this.socket.emit('user_disconnect', {});
+      }, 5000);
     }
   }
 }

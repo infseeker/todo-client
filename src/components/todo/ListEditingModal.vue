@@ -30,6 +30,7 @@ export default {
     return {
       title: '',
       isDisabled: false,
+      socket: null,
     }
   },
 
@@ -49,14 +50,11 @@ export default {
 
       this.$emit('close');
 
-      ListService.updateList(this.list).then(async r => {
+      ListService.updateList(this.list).then(r => {
         if (r.code === 200) {
-          if (this.list.shared.length) {
-            const socket = await io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
-
-            socket.on('connected', () => {
-              socket.emit('list_title_rename', { title: title, list_id: this.list.id });
-            });
+          if (this.socket) {
+            this.socket.emit('list_title_rename', { title: title, list_id: this.list.id });
+            this.socket.emit('user_disconnect', {});
           }
         }
       });
@@ -65,6 +63,18 @@ export default {
 
   mounted() {
     this.title = this.list.title;
+    
+    if (this.list.shared.length) {
+      this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
+    }
+  },
+
+  unmounted() {
+    if (this.socket) {
+      setTimeout(() => {
+        this.socket.emit('user_disconnect', {});
+      }, 5000);
+    }
   }
 }
 </script>

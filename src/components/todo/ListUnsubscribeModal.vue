@@ -42,13 +42,17 @@ export default {
       ListService.unshareList(list, email).then(r => {
         if (r.code === 200) {
           this.$toast.info(this.$t('list.unsubscribed', [list.title]));
-          this.socket.emit('unshare_list', { list_id: this.list.id, data: r.data });
 
           setTimeout(() => {
             this.$store.lists = this.$store.lists.filter(item => item !== list);
           }, 0);
 
           this.$router.push({ name: 'lists' });
+
+          if (this.socket) {
+            this.socket.emit('unshare_list', { list_id: this.list.id, data: r.data });
+            this.socket.emit('user_disconnect', {});
+          }
         } else {
           this.$toast.warning(this.$t('user.dataNotValid'));
         }
@@ -58,6 +62,14 @@ export default {
 
   mounted() {
     this.socket = io({ path: api.lists.shared_list, auth: { list_id: this.list.id } });
+  },
+
+  unmounted() {
+    if (this.socket) {
+      setTimeout(() => {
+        this.socket.emit('user_disconnect', {});
+      }, 5000);
+    }
   }
 }
 </script>
