@@ -20,11 +20,11 @@
           <div v-if="list && list.shared.length" class="list-users">
             <ul>
               <li>
-                <img :src="list.owner.image ? list.owner.image : blankUserImageUrl" alt="List owner image"
+                <img :src="list.owner.image ? list.owner.image : blankUserImageUrl" :alt="this.$t('user.image')"
                   :title="list.owner.email" :class="{ online: list.owner.online }">
               </li>
               <li v-for="user in list.shared" v-bind:key="user.id">
-                <img :src="user.image ? user.image : blankUserImageUrl" alt="User image" :title="user.email"
+                <img :src="user.image ? user.image : blankUserImageUrl" :alt="this.$t('user.image')" :title="user.email"
                   :class="{ online: user.online }">
               </li>
             </ul>
