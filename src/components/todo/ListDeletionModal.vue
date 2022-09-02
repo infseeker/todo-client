@@ -31,16 +31,16 @@ export default {
 
   methods: {
     async deleteList(list) {
+      // Hack:
+      // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
+      // $nextTick function doesn't work in this case
+      setTimeout(() => {
+        this.$store.lists = this.$store.lists.filter(item => item !== list);
+      }, 0);
+
+      this.$router.push({ name: 'lists' });
+
       if (!list.shared.length) {
-        // Hack:
-        // It is not known why the interface is not rerender after the removal of the last element of this.$store.lists
-        // $nextTick function doesn't work in this case
-        setTimeout(() => {
-          this.$store.lists = this.$store.lists.filter(item => item !== list);
-        }, 0);
-
-        this.$router.push({ name: 'lists' });
-
         ListService.deleteList(list).then(r => {
           if (r.code === 200) {
             this.$toast.info(this.$t('list.deleted', [list.title]));

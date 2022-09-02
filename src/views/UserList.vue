@@ -30,9 +30,8 @@
             </ul>
           </div>
 
-          <todo-list v-if="list && list.items" :list="list" @create="create" @check="check"
-            @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem" @save-list-title="saveListTitle"
-            @update="update">
+          <todo-list v-if="list && list.items" :list="list" @create="create" @check="check" @range="range"
+            @save-title="saveTitle" @like="like" @delete="deleteItem" @save-list-title="saveListTitle" @update="update">
           </todo-list>
         </div>
       </div>
@@ -113,6 +112,7 @@ export default {
 
             } else if (r.code === 404) {
               this.$router.push({ name: 'not-found' });
+              this.$store.lists = this.$store.lists.filter(l => l !== list);
             }
           });
         }
@@ -324,14 +324,14 @@ export default {
       });
 
       this.socket.on('list_deleted', (r) => {
-        setUserOnline(this.list, r.user);
+        if (this.$user.id !== r.user.id) {
+          setUserOnline(this.list, r.user);
 
-        setTimeout(() => {
           this.$store.lists = this.$store.lists.filter(l => l !== this.list);
-        }, 0);
 
-        this.$router.push({ name: 'lists' });
-        this.$toast.info(this.$t('list.deleted', [this.list.title]));
+          this.$router.push({ name: 'lists' });
+          this.$toast.info(this.$t('list.deleted', [this.list.title]));
+        }
       });
 
       function setUserOnline(currentList, userData) {
