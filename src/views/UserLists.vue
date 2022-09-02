@@ -10,12 +10,12 @@
           </button>
         </div>
 
-        <ul v-if="sharedLists.length" class="list-filters mb-2">
-          <li :class="{ 'list-filter': listFilter === 'all' }" @click="listFilter = 'all'">
-            {{ this.$t('list.all') }} ({{ this.$store.lists.length }})
+        <ul v-if="filters.shared.length" class="list-filters mb-2">
+          <li :class="{ 'list-filter': currentListFilter === 'my' }" @click="currentListFilter = 'my'">
+            {{ this.$t('list.my') }} ({{ filters.my.length }})
           </li>
-          <li :class="{ 'list-filter': listFilter === 'shared' }" @click="listFilter = 'shared'">
-            {{ this.$t('list.shared') }} ({{ sharedLists.length }})
+          <li :class="{ 'list-filter': currentListFilter === 'shared' }" @click="currentListFilter = 'shared'">
+            {{ this.$t('list.shared') }} ({{ filters.shared.length }})
           </li>
         </ul>
 
@@ -24,10 +24,10 @@
 
             <router-link :to="{ name: 'list', params: { listId: list.id } }">
               {{ list.title }}
-              
+
             </router-link>
             <i v-if="list.shared.length" class="shared-icon bx"
-                :class="[list.owner.id === this.$user.id ? 'bxs-group' : 'bx-group']"></i>
+              :class="[list.owner.id === this.$user.id ? 'bxs-group' : 'bx-group']"></i>
 
             <list-menu :list="list" @edit="editListTitle"></list-menu>
           </li>
@@ -58,8 +58,7 @@ export default {
   data() {
     return {
       currentList: {},
-      listFilter: 'all',
-      _sharedLists: [],
+      currentListFilter: 'my',
 
       showUnsavedListSavingModal: false,
       showListCreationModal: false,
@@ -70,19 +69,23 @@ export default {
   props: ['unsavedList'],
 
   computed: {
-    sharedLists: {
-      get() {
-        this._sharedLists = this.$store.lists.filter(l => l.shared.length);
-        return this._sharedLists;
-      },
-      set() {}
+    filters() {
+      return {
+        my: this.$store.lists.filter(l => l.owner.id === this.$user.id),
+        shared: this.$store.lists.filter(l => l.shared.length).filter(l => l.owner.id !== this.$user.id),
+      }
     },
 
     filteredLists() {
-      if (this.listFilter === 'all') {
-        return this.$store.lists;
-      } else if (this.listFilter === 'shared') {
-        return this.$store.lists.filter(l => l.shared.length);
+      if (!this.filters.shared.length) {
+        this.currentListFilter = 'my';
+      }
+      
+      if (this.currentListFilter === 'my') {
+        return this.filters.my;
+
+      } else if (this.currentListFilter === 'shared') {
+        return this.filters.shared;
       }
     }
   },
