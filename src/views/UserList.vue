@@ -102,14 +102,8 @@ export default {
             if (r.code === 200) {
               if (this.socket) {
                 list.title = r.list.title;
-
-                list.owner.image = api.user.get_image(r.list.owner.image);
-
-                const sharedUsers = r.list.shared;
-                if (sharedUsers && sharedUsers.length)
-                  sharedUsers.forEach(u => u.image = api.user.get_image(u.image));
-
-                list.shared = sharedUsers;
+                list.owner.image = r.list.owner.image;
+                list.shared = r.list.shared;
               }
 
               const items = [];

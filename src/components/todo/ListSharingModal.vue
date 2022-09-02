@@ -80,7 +80,6 @@ export default {
           this.$refs.input.focus();
 
           if (r.code === 200) {
-            if (r.data.image) r.data.image = api.user.get_image(r.data.image);
             list.shared.push(r.data);
             this.email = '';
             this.$toast.success(this.$t('list.sharedWith', [email]));

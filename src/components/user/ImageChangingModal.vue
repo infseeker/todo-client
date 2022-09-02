@@ -127,7 +127,7 @@ export default {
           this.isDisabled = false;
 
           if (r.code === 200) {
-            this.$user.image = UserService.getUserImage(r.data);
+            this.$user.image = r.data;
             this.$emit('close');
           } else {
             this.$toast.error('Что-то пошло не так...');

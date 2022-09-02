@@ -21,10 +21,6 @@ export const api = {
     locale: `${user_api}/locale`,
     logout: `${user_api}/logout`,
     delete: `${user_api}/delete`,
-
-    get_image: function (image) {
-      return `${user_api}/image/${image}`;
-    },
   },
 
   lists: {

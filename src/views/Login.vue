@@ -112,7 +112,7 @@ export default {
             this.$loader.hide();
 
             if (r.code === 200) {
-              this.$user.login(r);
+              this.$user.login(r.data);
               i18nUtils.setLocale(this.$user.locale);
 
               if (this.$user.isAuth) {
@@ -130,12 +130,12 @@ export default {
                 }
               }
             } else {
-              if (r.deleted) {
+              if (r.data.deleted) {
                 this.$user.isDeleted = true;
                 this.$router.push({ name: 'deleted-user' })
 
-              } else if (r.inactive) {
-                this.$user.isNotActivated = true;
+              } else if (!r.data.activated) {
+                this.$user.isActivated = false;
                 this.$user.email = r.email;
                 this.$router.push({ name: 'activation' })
 

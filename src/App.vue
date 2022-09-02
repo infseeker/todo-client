@@ -32,8 +32,8 @@ export default {
       this.$loader.show();
 
       // Load user auth data
-      UserService.getSession().then((data) => {
-        this.$user.login(data);
+      UserService.getSession().then((s) => {
+        this.$user.login(s.data);
 
         // Set app locale
         i18nUtils.setLocale(this.$user.locale);

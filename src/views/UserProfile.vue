@@ -115,7 +115,7 @@ export default {
     },
 
     meow() {
-      const catMeowSoundUrl = new URL(`../../assets/sounds/cat-meow-${Math.floor(Math.random() * 3) + 1}.mp3`, import.meta.url);
+      const catMeowSoundUrl = new URL(`../assets/sounds/cat-meow-${Math.floor(Math.random() * 3) + 1}.mp3`, import.meta.url);
       const audio = new Audio(catMeowSoundUrl);
       audio.play();
     },
