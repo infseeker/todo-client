@@ -30,7 +30,7 @@
             </ul>
           </div>
 
-          <todo-list v-if="list && list.items" :list="list" :listItems="list.items" @create="create" @check="check"
+          <todo-list v-if="list && list.items" :list="list" @create="create" @check="check"
             @range="range" @save-title="saveTitle" @like="like" @delete="deleteItem" @save-list-title="saveListTitle"
             @update="update">
           </todo-list>
@@ -115,8 +115,6 @@ export default {
               this.$router.push({ name: 'not-found' });
             }
           });
-        } else {
-          this.listItems = list.items;
         }
       } else {
         this.$router.push({ name: 'not-found' })
@@ -167,17 +165,15 @@ export default {
 
     create(title) {
       this.$loader.show(false);
-      const lastListItem = this.list.items[this.list.items.length - 1];
-      const position = lastListItem ? lastListItem.position + 1 : 1
 
-      ListService.createListItem(this.list, title, position).then(r => {
+      ListService.createListItem(this.list, title).then(r => {
         this.$loader.hide();
 
         if (r.code === 200) {
           if (!this.socket) {
             this.list.addItem(new ListItem(r.data));
           } else {
-            this.socket.emit('create_list_item', { ...r.data });
+            this.socket.emit('create_list_item', r.data);
           }
         }
       });
@@ -188,7 +184,7 @@ export default {
     check(listItem) {
       listItem.check();
       ListService.updateListItem(listItem).then(r => {
-        if (r.code === 200 && this.socket) this.socket.emit('check_list_item', { ...r.data })
+        if (r.code === 200 && this.socket) this.socket.emit('check_list_item', r.data)
       });
 
       this.checkInternetConnection();
@@ -203,7 +199,6 @@ export default {
           listItem.position = r.data.position;
 
           if (this.socket) {
-            this.list.items.sort((a, b) => a.position - b.position);
             this.socket.emit('range_list_item', r.data);
           }
         }
@@ -215,7 +210,7 @@ export default {
     saveTitle(listItem, title) {
       listItem.saveTitle(title);
       ListService.updateListItem(listItem).then(r => {
-        if (r.code === 200 && this.socket) this.socket.emit('edit_list_item_title', { ...r.data });
+        if (r.code === 200 && this.socket) this.socket.emit('edit_list_item_title', r.data);
       });
 
       this.checkInternetConnection();
@@ -224,7 +219,7 @@ export default {
     like(listItem) {
       listItem.like();
       ListService.updateListItem(listItem).then(r => {
-        if (r.code === 200 && this.socket) this.socket.emit('like_list_item', { ...r.data });
+        if (r.code === 200 && this.socket) this.socket.emit('like_list_item', r.data);
       });
 
       this.checkInternetConnection();
@@ -233,7 +228,7 @@ export default {
     deleteItem(listItem) {
       this.list.items = this.list.items.filter(item => item !== listItem);
       ListService.deleteListItem(listItem).then(r => {
-        if (r.code === 200 && this.socket) this.socket.emit('delete_list_item', { ...r.data });
+        if (r.code === 200 && this.socket) this.socket.emit('delete_list_item', r.data);
       });
 
       this.checkInternetConnection();
@@ -378,7 +373,7 @@ export default {
   },
 
   updated() {
-    if (this.list.shared && this.list.shared.length && !this.socket)
+    if (this.list && this.list.shared && this.list.shared.length && !this.socket)
       this.connectWebSocket();
   },
 

@@ -6,12 +6,8 @@
   </div>
 
   <ul class="todo-list-item-filters mb-2">
-    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'all' }" @click="currentListItemFilter = 'all'">
-      {{ this.$t('list.item.all') }}</li>
-    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'liked' }"
-      @click="currentListItemFilter = 'liked'">{{ this.$t('list.item.favorites') }}</li>
-    <li :class="{ 'todo-list-current-filter': currentListItemFilter === 'done' }"
-      @click="currentListItemFilter = 'done'">{{ this.$t('list.item.done') }}</li>
+    <li v-for="filter in listItemFilters" v-bind:key="filter" @click="currentListItemFilter = filter"
+      :class="{ 'todo-list-current-filter': currentListItemFilter === filter }">{{ filter.title }}</li>
   </ul>
 
   <!-- Hidden copy of current editing list item title to calculate textarea height to its resizing -->
@@ -27,32 +23,31 @@
     </li>
   </ul>
 
-  <div class="todo-list-empty mb-3" v-if="(currentListItemFilter === 'all' && listItems.length === 0) ||
-  (currentListItemFilter === 'liked' && listItems.filter(item => item.liked === true).length === 0) ||
-  (currentListItemFilter === 'done' && listItems.filter(item => item.done === true).length === 0)">
+  <div class="todo-list-empty mb-3" v-if="isCurrentFilterEmpty">
     {{ this.$t('list.item.nothing') }}
   </div>
 
-  <draggable ref="draggableList" :list="listItems" @change="rangeListItem" tag="ul" handle=".todo-list-item-handle"
-    item-key="id" :delay="200" :animation="300" easing="cubic-bezier(0.37, 0, 0.63, 1)" :force-fallback="true"
-    :force-autoscroll-fallback="true" :scroll-sensitivity="30" :scroll-speed="200"
+  <draggable v-else ref="draggableList" :list="list.items" @change="rangeListItem" tag="ul"
+    handle=".todo-list-item-handle" item-key="id" :delay="200" :animation="300" easing="cubic-bezier(0.37, 0, 0.63, 1)"
+    :force-fallback="true" :force-autoscroll-fallback="true" :scroll-sensitivity="30" :scroll-speed="200"
     class="todo-list-items list-group list-group-flush">
 
     <template #item="{ element: item }">
-      <li class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }"
-        v-if="currentListItemFilter === 'all' || (currentListItemFilter === 'liked' && item.liked) || (currentListItemFilter === 'done' && item.done)">
+      <li
+        v-if="currentListItemFilter.name === 'all' || (currentListItemFilter.name === 'liked' && item.liked) || (currentListItemFilter.name === 'done' && item.done)"
+        class="todo-list-item list-group-item" :class="{ 'todo-list-item-liked': item.liked }">
 
         <i class='todo-list-item-check bx' :class="{ 'bx-check-circle': item.done, 'bx-circle': !item.done }"
           @click="checkListItem(item)"></i>
 
-        <span :ref="`titleOfListItem-${listItems.indexOf(item)}`" class="todo-list-item-title todo-list-item-handle"
+        <span :ref="`titleOfListItem-${list.items.indexOf(item)}`" class="todo-list-item-title todo-list-item-handle"
           :class="{ 'todo-list-item-done': item.done }" @dblclick="editListItemTitle(item)" v-if="!item.titleEdit">{{
               item.title
           }}</span>
 
         <textarea :placeholder="this.$t('list.item.placeholder')" rows="1" class="todo-list-item-edit form-control"
           type="text" :value="currentListItemTitle" v-if="item.titleEdit"
-          :ref="`editTitleOfListItem-${listItems.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
+          :ref="`editTitleOfListItem-${list.items.indexOf(item)}`" @keypress.enter="saveEditedListItemTitle(item)"
           @input="inputListItemTitleText($event, item)" @blur.prevent="saveEditedListItemTitle(item)"
           @keyup.esc="discardEditedListItemTitle(item)" @keydown="keyPressOnListItemTitleText($event)"
           @paste="pasteListItemTitleText()"></textarea>
@@ -90,17 +85,40 @@ import { removeUselessSymbols } from '../../helpers/string-utils'
 
 export default {
   emits: ['create', 'check', 'range', 'saveTitle', 'like', 'delete', 'saveListTitle', 'update'],
-  props: ['list', 'listItems', 'listTitle'],
+  props: ['list', 'listTitle'],
 
   data() {
+    const filters = [
+      { name: 'all', title: this.$t('list.item.all') },
+      { name: 'liked', title: this.$t('list.item.favorites') },
+      { name: 'done', title: this.$t('list.item.done') }
+    ];
+
     return {
       newListItemTitle: '',
       currentListItemTitle: '',
-      currentListItemFilter: 'all',
+      listItemFilters: filters,
+      currentListItemFilter: filters[0],
       isPastedText: false,
       isEnterKey: false,
       isListItemEnterKey: false,
       discardedListItemTitleEdit: false,
+    }
+  },
+
+  computed: {
+    isCurrentFilterEmpty() {
+      if (this.list && this.list.items) {
+        if (this.currentListItemFilter.name === 'all') {
+          return this.list.items.length ? false : true;
+
+        } else if (this.currentListItemFilter.name === 'liked') {
+          return this.list.items.filter(i => i.liked).length ? false : true;
+
+        } else if (this.currentListItemFilter.name === 'done') {
+          return this.list.items.filter(i => i.done).length ? false : true;
+        }
+      }
     }
   },
 
@@ -139,7 +157,7 @@ export default {
       this.currentListItemTitle = item.title;
 
       this.$nextTick(() => {
-        const editField = this.$refs[`editTitleOfListItem-${this.listItems.indexOf(item)}`];
+        const editField = this.$refs[`editTitleOfListItem-${this.list.items.indexOf(item)}`];
         hiddenField.style.width = editField.clientWidth + 'px';
         editField.style.height = hiddenField.clientHeight + 'px';
         editField.focus({ preventScroll: true });
@@ -185,7 +203,7 @@ export default {
           hiddenField.innerHTML = '0';
         }
 
-        const editField = this.$refs[`editTitleOfListItem-${this.listItems.indexOf(item)}`];
+        const editField = this.$refs[`editTitleOfListItem-${this.list.items.indexOf(item)}`];
 
         if (hiddenField.clientWidth !== editField.clientWidth) {
           hiddenField.style.width = editField.clientWidth + 'px';

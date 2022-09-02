@@ -48,13 +48,13 @@ export default {
             this.isLoaded = true;
 
             // Show using cookies message
-            const cookieConfirm = localStorage.getItem('cookieConfirm') === 'true' ? true : false;
+            const cookieConfirm = localStorage.getItem(this.$lsItems.cookies) === 'true' ? true : false;
 
             if (!cookieConfirm) {
               this.$toast.info(this.$t('user.cookies'), {
                 timeout: false,
                 onClose: () => {
-                  localStorage.setItem('cookieConfirm', true);
+                  localStorage.setItem(this.$lsItems.cookies, true);
                 }
               })
             }

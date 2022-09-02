@@ -63,7 +63,7 @@ export default {
         return;
       }
 
-      const listItems = JSON.parse(localStorage.getItem('listItems'));
+      const listItems = JSON.parse(localStorage.getItem(this.$lsItems.unsaved));
       if (!listItems) {
         this.$toast.warning(this.$t('list.nothingToSave'));
         this.$emit('close');
@@ -81,7 +81,7 @@ export default {
 
         if (r.code === 200) {
           this.$store.lists.push(new List(r.data));
-          localStorage.removeItem('listItems');
+          localStorage.removeItem(this.$lsItems.unsaved);
 
           this.$toast.success(this.$t('list.saved', [title]));
           this.$emit('close');

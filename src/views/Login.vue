@@ -119,7 +119,7 @@ export default {
                 if (this.$user.isAdmin) {
                   this.$router.push({ name: 'admin' });
                 } else {
-                  const unsavedList = JSON.parse(localStorage.getItem('listItems'));
+                  const unsavedList = JSON.parse(localStorage.getItem(this.$lsItems.unsaved));
 
                   if (unsavedList && unsavedList.length > 0) {
                     this.showUnsavedListModal = true;

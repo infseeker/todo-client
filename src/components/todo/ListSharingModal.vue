@@ -6,6 +6,7 @@
 
     <template v-slot:content>
       <form>
+        <p>{{ this.$t('list.sharingMessage') }}</p>
         <p v-html="this.$t('list.sharingWith', [`<mark>${list.title}</mark>`])"></p>
         <input ref="input" v-model.trim="email" @keypress.enter.prevent="share(list, email)"
           :placeholder="this.$t('user.emailPlaceholder')" type="email" class="form-control" />

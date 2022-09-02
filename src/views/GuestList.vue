@@ -17,7 +17,7 @@
         </div>
 
         <div class="guest-todo-list">
-          <todo-list :listItems="listItems" @create="createListItem" @check="checkListItem"
+          <todo-list :list="{ items: listItems }" @create="createListItem" @check="checkListItem"
             @range="saveDataToLocalStorage" @save-title="saveListItemTitle" @like="likeListItem"
             @delete="deleteListItem">
           </todo-list>
@@ -45,14 +45,14 @@ export default {
 
   methods: {
     getDataFromLocalStorage() {
-      const data = JSON.parse(localStorage.getItem('listItems')) || []
+      const data = JSON.parse(localStorage.getItem(this.$lsItems.unsaved)) || []
       data.forEach(i => {
         this.listItems.push(new ListItem(i));
       });
     },
 
     saveDataToLocalStorage() {
-      localStorage.setItem('listItems', JSON.stringify(this.listItems));
+      localStorage.setItem(this.$lsItems.unsaved, JSON.stringify(this.listItems));
     },
 
     createListItem(title) {
@@ -81,12 +81,12 @@ export default {
     },
 
     toggleUnsavedListMessage() {
-      const lsItem = localStorage.getItem('unsavedListMessageHide');
+      const lsItem = localStorage.getItem(this.$lsItems.hideUnsaved);
       this.isUnsavedListMessageHidden = lsItem === 'true' ? true : false;
     },
 
     hideUnsavedListMessage() {
-      localStorage.setItem('unsavedListMessageHide', true);
+      localStorage.setItem(this.$lsItems.hideUnsaved, true);
     },
   },
 

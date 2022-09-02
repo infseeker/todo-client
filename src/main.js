@@ -21,6 +21,12 @@ import router from '@/router';
 
 export const app = createApp(App);
 
+app.config.globalProperties.$lsItems = {
+  cookies: 'cookieConfirm',
+  hideUnsaved: 'unsavedListMessageHide',
+  unsaved: 'unsaved',
+};
+
 app.config.globalProperties.$user = reactive(user);
 app.config.globalProperties.$store = reactive({ lists: [] });
 app.config.globalProperties.$loader = reactive(loader);
