@@ -130,17 +130,18 @@ export default {
                 }
               }
             } else {
-              if (r.data.deleted) {
-                this.$user.isDeleted = true;
-                this.$router.push({ name: 'deleted-user' })
+              if (r.data) {
+                if (r.data.deleted) {
+                  this.$user.isDeleted = true;
+                  this.$router.push({ name: 'deleted-user' })
 
-              } else if (!r.data.activated) {
-                this.$user.isActivated = false;
-                this.$user.email = r.email;
-                this.$router.push({ name: 'activation' })
+                } else if (!r.data.activated) {
+                  this.$user.isActivated = false;
+                  this.$user.email = r.email;
+                  this.$router.push({ name: 'activation' })
 
-                this.$toast.warning(this.$t('user.notActivated'));
-
+                  this.$toast.warning(this.$t('user.notActivated'));
+                }
               } else if (r.code === 400) {
                 this.isDisabled = false;
                 this.$toast.error(this.$t('user.wrongCredentials'));
