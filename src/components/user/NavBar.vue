@@ -9,7 +9,7 @@
 
       <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li v-if="!this.$user.isAuth">
-          <router-link :to="{ name: 'login' }" class="btn btn-primary ms-2" :title="this.$t('user.login')">
+          <router-link :to="{ name: 'login' }" class="login-link" :title="this.$t('user.login')">
             <i class='bx bx-log-in'></i>
           </router-link>
         </li>
@@ -55,6 +55,13 @@ export default {
   height: 3rem;
   margin-top: 0.4rem;
   margin-right: 0.5rem;
+  filter: brightness(0) saturate(100%) invert(51%) sepia(84%) saturate(4427%) hue-rotate(222deg) brightness(101%) contrast(102%);
+}
+
+.login-link .bx {
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.2rem;
   filter: brightness(0) saturate(100%) invert(51%) sepia(84%) saturate(4427%) hue-rotate(222deg) brightness(101%) contrast(102%);
 }
 </style>
