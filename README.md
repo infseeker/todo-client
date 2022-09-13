@@ -6,7 +6,7 @@ Server side: [todo-server](https://github.com/infseeker/todo-server) <br />
 Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
 
 
-## Tech Stack
+## Frontend Tech Stack
 - **JS Framework:** Vue 3
 - **Bundler:** Vite
 - **Routing:** Vue Router
@@ -17,6 +17,8 @@ Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
 - **Drag'n'Drop:** Vue Draggable Next
 - **User Image Editor:** Vue Advanced Cropper
 - **CSS Framework:** Bootstrap 5
+- **WebSocket:** SocketIO
+
 
 ## Features
 - No-DB list functionality for unauthorized users (Local Storage)
