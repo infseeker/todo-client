@@ -7,14 +7,8 @@ Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
 
 
 ## Tech Stack
-
- - **API:** Flask
- - **Frontend:** Vue 3
- - **Database:** PostgreSQL
- - **Web-server:** Gunicort + Nginx
-
-## Frontend Features
-- **Builder:** Vite
+- **JS Framework:** Vue 3
+- **Bundler:** Vite
 - **Routing:** Vue Router
 - **Spam Protection:** Google reCaptcha v3
 - **Form Validations:** Vuelidate
@@ -23,3 +17,10 @@ Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
 - **Drag'n'Drop:** Vue Draggable Next
 - **User Image Editor:** Vue Advanced Cropper
 - **CSS Framework:** Bootstrap 5
+
+## Features
+- No-DB list functionality for unauthorized users (Local Storage)
+- User registration and auth (with Google Recaptcha 3) for extra features (include data storing in DB)
+- Multiple list creation
+- List sharing
+- Real time shared list editing (WebSocket)
