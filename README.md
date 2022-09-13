@@ -4,6 +4,12 @@ This is client side of my first fullstack project. <br />
 <br />
 Server side: [todo-server](https://github.com/infseeker/todo-server) <br />
 Live demo: [infseeker-todo.tk](https://infseeker-todo.tk/)
+<br />
+Demo users:
+<br />
+User #1 (TestUserOne, TestUserOne123)
+<br />
+User #2 (TestUserTwo, TestUserTwo123)
 
 
 ## Frontend Tech Stack
