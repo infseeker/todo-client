@@ -3,7 +3,7 @@
 This is client side of my first fullstack project. <br />
 <br />
 Server side: [todo-server](https://github.com/infseeker/todo-server) <br />
-Live demo: [todo.infseeker.tk](https://todo.infseeker.tk/)
+Live demo: [todo.infseeker.ru](https://todo.infseeker.ru/)
 <br />
 Demo users:
 <br />
