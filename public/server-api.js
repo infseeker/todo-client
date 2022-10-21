@@ -1,4 +1,4 @@
-export const API_ROOT = `/todo/api`;
+export const API_ROOT = `/api`;
 
 const user_api = `${API_ROOT}/user`;
 const list_api = `${API_ROOT}/lists`;
